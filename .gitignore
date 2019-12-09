@@ -1,0 +1,7 @@
+.idea
+.env
+composer.phar
+clover.xml
+coveralls-upload.json
+vendor/
+nbproject/

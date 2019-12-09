@@ -1,0 +1,88 @@
+# image: docker
+# services:
+# - docker:dind
+image: php:7.2
+
+cache:
+  paths:
+    - vendor/
+
+variables:
+  APP_ENV: test
+
+before_script:
+  # update packages
+  - apt-get update -yqq
+  # install git
+  - apt-get install git zlib1g-dev libicu-dev g++ -yqq
+  # install php-json ext
+  - docker-php-ext-install json
+  - docker-php-ext-install zip
+  - docker-php-ext-install mysqli
+  - docker-php-ext-configure intl
+  - docker-php-ext-install intl
+  - docker-php-ext-install pdo_mysql
+  # install composer
+  - curl -sS https://getcomposer.org/installer | php
+  # install dependencies
+  - php composer.phar install
+
+stages:
+  - test
+  - analyse
+  - build
+  - deploy
+
+phpunit-unit:
+  stage: test
+  script: vendor/bin/phpunit --configuration phpunit.xml --testsuite unit
+
+phpcs:
+  stage: analyse
+  script: vendor/bin/phpcs src
+
+d2c:deploy:
+  stage: deploy
+  before_script:
+    - apt-get update && apt-get install -y gnupg1 gnupg2 apt-transport-https  curl
+  script:
+    - curl https://api.d2c.io/hook/service/4dc95a12261cf885b61c008c6e1de82cc07b934784d17aa5ea31a45c9d4c6204?actions=updateSources,updateLocalDeps
+  only:
+    - tags
+
+#docker:build:
+#  stage: build
+#  image: docker
+#  services:
+#    - docker:dind
+#  variables:
+#    IMAGE_NAME: registry.gitlab.com/$CI_PROJECT_PATH:$CI_COMMIT_TAG
+#  before_script:
+#    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN registry.gitlab.com
+#  script:
+#     - docker build -t $IMAGE_NAME .
+#     - docker push $IMAGE_NAME
+#  only:
+#    - tags
+
+#helm:deploy:
+#  image: debian
+#  stage: deploy
+#  variables:
+#    SERVICE_NAME: needled-dolphin
+#  before_script:
+#    - apt-get update && apt-get install -y gnupg1 gnupg2 apt-transport-https  curl
+#    - curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+#    - echo "deb https://apt.kubernetes.io/ kubernetes-xenial main" | tee -a /etc/apt/sources.list.d/kubernetes.list
+#    - apt-get update
+#    - apt-get install -y kubectl
+#    - curl https://raw.githubusercontent.com/helm/helm/master/scripts/get | bash
+#    - mkdir ~/.kube
+#    - echo ${CUBECONFIG} | base64 -d > ~/.kube/config
+#    - kubectl cluster-info
+#    - helm init --client-only
+#  script:
+#    - helm upgrade $SERVICE_NAME ./k8s/helm/usps-calculator --version $CI_COMMIT_TAG --set=image.php.tag=$CI_COMMIT_TAG
+#  only:
+#    - tags
+#

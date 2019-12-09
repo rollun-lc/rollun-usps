@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="vendor/phpunit/phpunit/phpunit.xsd"
+         bootstrap="test/bootstrap.php"
+         colors="true">
+
+    <testsuites>
+        <testsuite name="unit">
+            <directory>./test/unit</directory>
+        </testsuite>
+        <testsuite name="functional">
+            <directory>./test/functional</directory>
+        </testsuite>
+
+        <testsuite name="intagration">
+            <directory>./test/intagration</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+</phpunit>
