@@ -26,19 +26,12 @@ if (file_exists('.env')) {
 $appEnv = getenv('APP_ENV');
 
 $aggregator = new ConfigAggregator([
-    \Zend\Expressive\Authentication\Basic\ConfigProvider::class,
-    \Zend\Expressive\Authentication\Session\ConfigProvider::class,
-    \Zend\Expressive\Authentication\ConfigProvider::class,
-    \Zend\Expressive\Session\ConfigProvider::class,
-    \Zend\Expressive\Session\Ext\ConfigProvider::class,
     \Zend\Cache\ConfigProvider::class,
     \Zend\Mail\ConfigProvider::class,
     \Zend\Db\ConfigProvider::class,
     \Zend\Log\ConfigProvider::class,
     \Zend\Validator\ConfigProvider::class,
-    \Zend\Expressive\Router\FastRouteRouter\ConfigProvider::class,
     \Zend\HttpHandlerRunner\ConfigProvider::class,
-    \Zend\Expressive\Helper\ConfigProvider::class,
     \Zend\Expressive\ConfigProvider::class,
     \Zend\Expressive\Router\ConfigProvider::class,
     // Include cache configuration
@@ -47,10 +40,9 @@ $aggregator = new ConfigAggregator([
     \rollun\uploader\ConfigProvider::class,
     \rollun\callback\ConfigProvider::class,
     \rollun\datastore\ConfigProvider::class,
-    \rollun\permission\ConfigProvider::class,
     \rollun\tracer\ConfigProvider::class,
     \rollun\logger\ConfigProvider::class,
-    \rollun\api\megaplan\ConfigProvider::class,
+
     // Swoole config to overwrite some services (if installed)
     class_exists(\Zend\Expressive\Swoole\ConfigProvider::class) ? \Zend\Expressive\Swoole\ConfigProvider::class : function () {
         return [];

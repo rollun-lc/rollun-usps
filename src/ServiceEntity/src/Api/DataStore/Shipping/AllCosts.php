@@ -23,6 +23,10 @@ use rollun\datastore\DataStore\DataStoreAbstract;
 use rollun\Entity\Product\Item\ProductPack;
 use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
 use rollun\utils\Json\Serializer;
+use Xiag\Rql\Parser\Node\LimitNode;
+use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
+use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
+use Xiag\Rql\Parser\Node\SortNode;
 use Xiag\Rql\Parser\Query;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
 use Xiag\Rql\Parser\Node\Query\AbstractScalarOperatorNode;
@@ -220,5 +224,28 @@ class AllCosts extends DataStoreAbstract
         $span->addTag(new StringTag('outputQuery', Serializer::jsonSerialize($outputQuery)));
         $this->tracer->finish($span);
         return $outputQuery;
+    }
+
+    public function buildUspShippingQuery($zipOrigination, $zipDestination, $pounds, $width, $length, $height, $quantity = null)
+    {
+        $query = new Query();
+        $andNode = new AndNode([
+            new EqNode('ZipOrigination', $zipOrigination),
+            new EqNode('ZipDestination', $zipDestination),
+            new EqNode('Pounds', $pounds),
+            new EqNode('Width', $width),
+            new EqNode('Length', $length),
+            new EqNode('Height', $height),
+            new EqNode('Error', null),
+            new NeNode('cost', null),
+        ]);
+        if ($quantity) {
+            $andNode->addQuery(new EqNode('Quantity', $quantity));
+        }
+
+        $query->setQuery($andNode);
+        $query->setSort(new SortNode(['cost' => SortNode::SORT_ASC]));
+        $query->setLimit(new LimitNode(1));
+        return $query;
     }
 }

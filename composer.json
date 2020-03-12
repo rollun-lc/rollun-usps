@@ -36,10 +36,6 @@
     "forum": "https://discourse.zendframework.com/c/questions/expressive"
   },
   "repositories": [
-    {
-      "type": "vcs",
-      "url": "git@github.com:rollun-com/rollun-megaplan-api.git"
-    }
   ],
   "require": {
     "php": "^7.1",
@@ -49,7 +45,6 @@
     "rollun-com/rollun-callback": "^5.2",
     "rollun-com/rollun-datastore": "^6",
     "rollun-com/rollun-logger": "^4.2",
-    "rollun-com/rollun-megaplan-api": "^2.0",
     "symfony/dotenv": "^4.2",
     "vinceg/usps-php-api": "^1.0",
     "zendframework/zend-component-installer": "^2.1.1",
