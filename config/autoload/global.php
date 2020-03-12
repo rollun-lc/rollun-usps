@@ -10,12 +10,11 @@ use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
-use service\Shipping\Api\MegaplanDealRegister;
+
 
 return [
     'dependencies' => [
         'invokables' => [
-            "MegaplanDealRegister" => MegaplanDealRegister::class,
             'Usps' => UspsProvider::class,
             'shipping-all-coosts' => AllCosts::class
         ],
@@ -37,11 +36,6 @@ return [
             'shippingMethodList' => [
                 'RmPrepCntr'
             ]
-        ],
-    ],
-    CallablePluginManagerFactory::KEY_INTERRUPTERS => [
-        'invokables' => [
-            "MegaplanDealRegister" => MegaplanDealRegister::class,
         ],
     ],
 ];
