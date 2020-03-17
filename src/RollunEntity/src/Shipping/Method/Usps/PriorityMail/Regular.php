@@ -118,15 +118,15 @@ class Regular extends ShippingsAbstract
             return false;
         }
 
-        // get lbs
-        $lbs = $this->getLbs($shippingRequest);
+        // get weight
+        $weight = $shippingRequest->item->getWeight();
 
-        if ($this->shortName === 'PM-Regular' && $lbs > 40) {
+        if ($this->shortName === 'PM-Regular' && $weight > 40) {
             return false;
         }
 
         if ($this->shortName === 'PM-Large') {
-            if ($lbs > 70 || $lbs <= 40) {
+            if ($weight > 70 || $weight <= 40) {
                 return false;
             }
 
@@ -146,11 +146,8 @@ class Regular extends ShippingsAbstract
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
         if ($this->canBeShipped($shippingRequest)) {
-            // get lbs
-            $lbs = $this->getLbs($shippingRequest);
-
             foreach (self::UPSP_BOXES_COSTS as $row) {
-                if ($row[0] > $lbs) {
+                if ($row[0] >= $shippingRequest->item->getWeight()) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 

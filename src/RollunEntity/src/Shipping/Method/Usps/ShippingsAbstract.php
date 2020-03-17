@@ -298,14 +298,4 @@ abstract class ShippingsAbstract extends ShippingMethodAbstract
     {
         return mb_substr($zipCode, 0, 3);
     }
-
-    /**
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return float
-     */
-    protected function getLbs(ShippingRequest $shippingRequest): float
-    {
-        return $shippingRequest->item->getVolume() / 166;
-    }
 }

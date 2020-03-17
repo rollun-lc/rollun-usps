@@ -65,7 +65,7 @@ class Package extends ShippingsAbstract
             $oz = $shippingRequest->item->getWeight() * 16;
 
             foreach (self::USPS_PACKAGE_COSTS as $row) {
-                if ($row[0] > $oz) {
+                if ($row[0] >= $oz) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 
