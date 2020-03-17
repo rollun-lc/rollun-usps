@@ -29,7 +29,7 @@ class Regular extends ShippingsAbstract
     /**
      * Regular costs
      */
-    const UPSP_BOXES_COSTS
+    const USPS_BOXES_COSTS
         = [
             [1, 7.02, 7.02, 7.35, 7.56, 7.80, 7.98, 8.15, 8.42, 11.40],
             [2, 7.64, 7.64, 7.84, 8.12, 8.76, 9.99, 10.54, 11.19, 17.45],
@@ -146,7 +146,7 @@ class Regular extends ShippingsAbstract
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
         if ($this->canBeShipped($shippingRequest)) {
-            foreach (self::UPSP_BOXES_COSTS as $row) {
+            foreach (self::USPS_BOXES_COSTS as $row) {
                 if ($row[0] >= $shippingRequest->item->getWeight()) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
