@@ -23,21 +23,21 @@ class UspsProvider extends ShippingMethodProvider
 
     const SHORT_NAME = 'Usps';
 
-    public function __construct()
+    /**
+     * UspsProvider constructor.
+     *
+     * @param array|null $shippingMethods
+     */
+    public function __construct(array $shippingMethods = null)
     {
-        $shippingMethods = [];
-
-        $classes = [
-            FlatRate::class,
-            Package::class,
-            RegionalRate::class,
-            Regular::class
-        ];
-
-        foreach ($classes as $oneClass) {
-            $shortNames = $oneClass::getAllShortNames();
-            foreach ($shortNames as $shortName) {
-                $shippingMethods[] = new $oneClass($shortName);
+        if ($shippingMethods === null) {
+            $shippingMethods = [];
+            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
+            foreach ($classes as $oneClass) {
+                $shortNames = $oneClass::getAllShortNames();
+                foreach ($shortNames as $shortName) {
+                    $shippingMethods[] = new $oneClass($shortName);
+                }
             }
         }
 

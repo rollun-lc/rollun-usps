@@ -192,6 +192,18 @@ abstract class ShippingsAbstract extends ShippingMethodAbstract
     }
 
     /**
+     * @param bool $hasDefinedCost
+     *
+     * @return ShippingsAbstract
+     */
+    public function setDefinedCost(bool $hasDefinedCost): ShippingsAbstract
+    {
+        $this->hasDefinedCost = $hasDefinedCost;
+
+        return $this;
+    }
+
+    /**
      * @param string $zipFrom
      * @param string $zipTo
      *

@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\test\unit\Entity\Shipping\Method\Usps;
@@ -14,90 +9,83 @@ use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\Product;
 use rollun\Entity\Shipping\ShippingRequest;
 use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
-use rollun\Entity\Product\Container\Box;
-use rollun\Entity\Shipping\Method\ShippingMethodProvider;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 
+/**
+ * Class PackageTest
+ *
+ * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
 class PackageTest extends TestCase
 {
-
-    public function test_getShortName()
-    {
-        $firstClassPackage = new Package('FtCls-Package');
-        $this->assertEquals(
-            'FtCls-Package', $firstClassPackage->getShortName()
-        );
-    }
-
-    public function test_getShippingMetods()
-    {
-        $firstClassPackage = new Package('FtCls-Package');
-
-        $addressOrigination = new Address('', '91601');
-        $addressDestination = new Address('', '91730-1234');
-
-        $rectangular = new Rectangular(12, 10, 5);
-        $product = new Product($rectangular, 0.5);
-        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
-
-        $this->assertEquals(3.93, $firstClassPackage->getCost($shippingRequest));
-    }
-
-
-    public function canBeShippedTrueDataProvider(): array
+    /**
+     * @return array
+     */
+    public function shippingRequestsDataProvider(): array
     {
         return [
-            [0.5],
-            [0.25],
-            [0.2],
-            [0.8],
-            [0.79],
-            [0.79],
+            [$this->createShippingRequest(10, 12, 5, 0.5, '10002', '48204')],
+            [$this->createShippingRequest(21, 17, 2, 0.2, '10002', '48204')],
+            [$this->createShippingRequest(23, 17, 2, 0.2, '10002', '48204')],
+            [$this->createShippingRequest(2, 2, 2, 1.1, '90001', '90211')],
+            [$this->createShippingRequest(10, 12, 5, 0.5, '90001', '90211')],
         ];
     }
 
     /**
-     * @param $weight
-     * @dataProvider canBeShippedTrueDataProvider
+     * Is locally calculated cost is the same as api cost
+     *
+     * @param ShippingRequest $shippingRequest
+     *
+     * @dataProvider shippingRequestsDataProvider
      */
-    public function testCanBeShippedTrue($weight): void
+    public function testIsCostMatch(ShippingRequest $shippingRequest)
     {
-        $firstClassPackage = new Package('FtCls-Package');
-        $addressOrigination = new Address('', '84655');
-        $addressDestination = new Address('', '91430');
-
-        $rectangular = new Rectangular(3, 3, 2.75);
-        $product = new Product($rectangular, $weight);
-        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
-        $this->assertEquals(true, $firstClassPackage->canBeShipped($shippingRequest));
+        $this->assertEquals($this->getCost($shippingRequest), $this->getCost($shippingRequest, false));
     }
-
-
-    public function canBeShippedFalseDataProvider(): array
-    {
-        return [
-            [0.81],
-            [1],
-            [0.9],
-        ];
-    }
-
 
     /**
-     * @param $weight
-     * @dataProvider canBeShippedFalseDataProvider
+     * @param float  $width
+     * @param float  $length
+     * @param float  $height
+     * @param float  $weight
+     * @param string $zipFrom
+     * @param string $zipTo
+     *
+     * @return ShippingRequest
      */
-    public function testCanBeShippedFalse($weight): void
+    protected function createShippingRequest(float $width, float $length, float $height, float $weight, string $zipFrom, string $zipTo): ShippingRequest
     {
-        $firstClassPackage = new Package('FtCls-Package');
+        $addressOrigination = new Address('', $zipFrom);
+        $addressDestination = new Address('', $zipTo);
 
-        $addressOrigination = new Address('', '91601');
-        $addressDestination = new Address('', '91730-1234');
-
-        $rectangular = new Rectangular(12, 10, 5);
+        $rectangular = new Rectangular($length, $width, $height);
         $product = new Product($rectangular, $weight);
-        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
-        $this->assertEquals(false, $firstClassPackage->canBeShipped($shippingRequest));
+        return new ShippingRequest($product, $addressOrigination, $addressDestination);
+    }
+
+    /**
+     * @param ShippingRequest $shippingRequest
+     * @param bool            $definedCost
+     *
+     * @return float|null
+     */
+    protected function getCost(ShippingRequest $shippingRequest, bool $definedCost = true): ?float
+    {
+        $shippingMethods = [];
+        foreach (Package::getAllShortNames() as $shortName) {
+            $shippingMethods[] = (new Package($shortName))->setDefinedCost($definedCost);
+        }
+
+        $data = (new UspsProvider($shippingMethods))->getShippingMetods($shippingRequest);
+        if (!is_array($data)) {
+            $data = $data->toArray();
+        }
+
+        return (isset($data[0]['cost'])) ? (float)$data[0]['cost'] : null;
     }
 }
