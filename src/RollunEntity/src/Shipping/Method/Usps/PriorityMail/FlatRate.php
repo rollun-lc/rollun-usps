@@ -5,6 +5,7 @@ namespace rollun\Entity\Shipping\Method\Usps\PriorityMail;
 
 use rollun\Entity\Shipping\Method\Usps\ShippingsAbstract;
 use rollun\Entity\Shipping\ShippingRequest;
+use rollun\Entity\Usps\ShippingData;
 
 /**
  * Class FlatRate
@@ -17,8 +18,7 @@ use rollun\Entity\Shipping\ShippingRequest;
 class FlatRate extends ShippingsAbstract
 {
     /**
-     * Click_N_Shipp => ['ShortName','Click_N_Shipp','USPS_API_Service',
-     * 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width','Length',Weight,'Height',Price]
+     * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Weight', 'Height', 'Price']
      */
     const USPS_BOXES
         = [
@@ -63,6 +63,10 @@ class FlatRate extends ShippingsAbstract
     {
         if (!$this->canBeShipped($shippingRequest)) {
             return 'Can not be shipped';
+        }
+
+        if ($shippingDataOnly) {
+            return new ShippingData($this->getShippingData($shippingRequest));
         }
 
         return $this->price;

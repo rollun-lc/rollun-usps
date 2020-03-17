@@ -20,7 +20,7 @@ use rollun\Entity\Shipping\ShippingRequest;
 class Package extends ShippingsAbstract
 {
     /**
-     * Click_N_Shipp => ['ShortName','Click_N_Shipp','USPS_API_Service','USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width','Length',Weight,'Height']
+     * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      */
     const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.999]];
 
@@ -29,7 +29,7 @@ class Package extends ShippingsAbstract
      */
     const USPS_PACKAGE_COSTS
         = [
-            /* weight (oz.), zone 1, zone 2, zone 3, zone 4, zone 5, zone 6, zone 7, zone 8, zone 9*/
+            /* oz, zone 1, zone 2, zone 3, zone 4, zone 5, zone 6, zone 7, zone 8, zone 9*/
             [1, 2.74, 2.74, 2.76, 2.78, 2.84, 2.93, 3.05, 3.18, 3.18],
             [2, 2.74, 2.74, 2.76, 2.78, 2.84, 2.93, 3.05, 3.18, 3.18],
             [3, 2.74, 2.74, 2.76, 2.78, 2.84, 2.93, 3.05, 3.18, 3.18],
@@ -44,7 +44,8 @@ class Package extends ShippingsAbstract
             [12, 3.93, 3.93, 3.97, 4.00, 4.08, 4.18, 4.32, 4.46, 4.46],
             [13, 5.04, 5.04, 5.08, 5.12, 5.27, 5.40, 5.54, 5.70, 5.70],
             [14, 5.04, 5.04, 5.08, 5.12, 5.27, 5.40, 5.54, 5.70, 5.70],
-            [15, 5.04, 5.04, 5.08, 5.12, 5.27, 5.40, 5.54, 5.70, 5.70]
+            [15, 5.04, 5.04, 5.08, 5.12, 5.27, 5.40, 5.54, 5.70, 5.70],
+            [15.99, 5.04, 5.04, 5.08, 5.12, 5.27, 5.40, 5.54, 5.70, 5.70]
         ];
 
     /**
@@ -60,11 +61,11 @@ class Package extends ShippingsAbstract
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
         if ($this->canBeShipped($shippingRequest)) {
-            // pounds to oz
-            $weight = (int)($shippingRequest->item->getWeight() * 16);
+            // prepare oz
+            $oz = $shippingRequest->item->getWeight() * 16;
 
             foreach (self::USPS_PACKAGE_COSTS as $row) {
-                if ($row[0] == $weight) {
+                if ($row[0] > $oz) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 

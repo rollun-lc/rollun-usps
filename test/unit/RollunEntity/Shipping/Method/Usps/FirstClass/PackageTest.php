@@ -40,12 +40,7 @@ class PackageTest extends TestCase
         $product = new Product($rectangular, 0.5);
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
-        $this->assertEquals(
-            12, $firstClassPackage->getShippingData($shippingRequest)['Length']
-        );
-        $this->assertTrue(
-            5 > $firstClassPackage->getCost($shippingRequest)
-        );
+        $this->assertEquals(3.93, $firstClassPackage->getCost($shippingRequest));
     }
 
 

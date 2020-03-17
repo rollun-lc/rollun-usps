@@ -25,10 +25,15 @@ class UspsProvider extends ShippingMethodProvider
 
     public function __construct()
     {
-
         $shippingMethods = [];
 
-        $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
+        $classes = [
+            FlatRate::class,
+            Package::class,
+            RegionalRate::class,
+            Regular::class
+        ];
+
         foreach ($classes as $oneClass) {
             $shortNames = $oneClass::getAllShortNames();
             foreach ($shortNames as $shortName) {

@@ -45,6 +45,6 @@ class Product implements ItemInterface
      */
     public function getVolume(): int
     {
-        return $this->dimensions->getDimensionsRecord()['Volume'];
+        return (int)round($this->dimensions->getDimensionsRecord()['Volume']);
     }
 }
