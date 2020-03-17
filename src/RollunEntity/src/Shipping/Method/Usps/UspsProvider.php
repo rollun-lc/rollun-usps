@@ -47,13 +47,10 @@ class UspsProvider extends ShippingMethodProvider
     public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
         $shippingResponseSet = new ShippingResponseSet();
-        $calculatedShippingMetods = [];
         $requestedShippingMetods = [];
         $shippingDataArray = [];
         foreach ($this->data as $shippingMethod) {
-            /* @var $shippingMethod ShippingMethodInterface */
-            if ($shippingMethod instanceof FlatRate) {
-                $calculatedShippingMetods[] = $shippingMethod;
+            if ($shippingMethod->hasDefinedCost()) {
                 $calculatedhippingResponseSet = $shippingMethod->getShippingMetods($shippingRequest);
                 $calculatedhippingResponseSet = $this->addCost($calculatedhippingResponseSet);
                 $shippingResponseSet->mergeResponseSet($calculatedhippingResponseSet, $this->getShortName());
