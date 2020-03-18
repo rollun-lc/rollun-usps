@@ -1,9 +1,4 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace service\Entity;
@@ -19,45 +14,43 @@ use service\Entity\Handler\Shipping\BestShippingHandler;
 use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
-
 /**
- * The configuration provider for the App module
+ * Class ConfigProvider
  *
- * @see https://docs.zendframework.com/zend-component-installer/
+ * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
  */
 class ConfigProvider
 {
-
     /**
      * Returns the configuration array
-     *
-     * To add a bit of a structure, each section is defined in a separate
-     * method which returns an array with its configuration.
-     *
      */
     public function __invoke(): array
     {
         return [
-            'dependencies' => $this->getDependencies(),
-            'aliases' => [
+            'dependencies'   => $this->getDependencies(),
+            'dataStore'      => $this->getDataStores(),
+            'aliases'        => [
                 RootProvider::class => 'Root'
             ],
             'ShippingMethod' => [
                 'RmPrepCntr' => [
-                    'class' => RmPrepCenter::class,
-                    'shortName' => 'RmPrepCntr',
+                    'class'              => RmPrepCenter::class,
+                    'shortName'          => 'RmPrepCntr',
                     'shippingMethodList' => [
                         'Usps'
                     ]
                 ],
-                'Root' => [
-                    'class' => RootProvider::class,
-                    'shortName' => 'Root',
+                'Root'       => [
+                    'class'              => RootProvider::class,
+                    'shortName'          => 'Root',
                     'shippingMethodList' => [
                         'RmPrepCntr'
                     ]
                 ],
-            ],
+            ]
         ];
     }
 
@@ -67,8 +60,8 @@ class ConfigProvider
     public function getDependencies(): array
     {
         return [
-            'aliases' => [
-                RootProvider::class => 'Root'
+            'aliases'            => [
+                RootProvider::class => 'Root',
             ],
             'abstract_factories' => [
                 //RmatvProdNoUspsRateAbstractFactory::class
@@ -76,11 +69,23 @@ class ConfigProvider
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class
             ],
-            'invokables' => [
+            'invokables'         => [
                 BestShippingHandler::class => BestShippingHandler::class,
-                LoggerHandler::class => LoggerHandler::class,
-                'Usps' => UspsProvider::class,
-                'shipping-all-coosts' => AllCosts::class
+                LoggerHandler::class       => LoggerHandler::class,
+                'Usps'                     => UspsProvider::class,
+                'shipping-all-costs'       => AllCosts::class
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getDataStores(): array
+    {
+        return [
+            'shipping-all-costs' => [
+                'class' => 'shipping-all-costs'
             ],
         ];
     }

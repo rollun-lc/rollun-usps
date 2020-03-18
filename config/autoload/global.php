@@ -16,7 +16,7 @@ return [
     'dependencies' => [
         'invokables' => [
             'Usps' => UspsProvider::class,
-            'shipping-all-coosts' => AllCosts::class
+            'shipping-all-costs' => AllCosts::class
         ],
     ],
     'aliases' => [

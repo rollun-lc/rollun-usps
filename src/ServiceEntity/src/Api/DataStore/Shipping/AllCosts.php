@@ -41,13 +41,13 @@ use rollun\Entity\Subject\Address;
 
 class AllCosts extends DataStoreAbstract
 {
-    //http://service-usps.loc/api/datastore/shipping-all-coosts?
+    //http://service-usps.loc/api/datastore/shipping-all-costs?
     //ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=0.5&Click_N_Shipp=Priority%20Mail
     //
     //
     //ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=0.5&Error=null()&sort(+Price)&limit(1)
     //
-    //http://service-usps.loc/api/datastore/shipping-all-coosts?ZipOrigination=91601&ZipDestination=91730&
+    //http://service-usps.loc/api/datastore/shipping-all-costs?ZipOrigination=91601&ZipDestination=91730&
     //Width=1&Length=10&Height=5&Pounds=1&like(id,*FtCls*)&limit(2,1)&select(id)
     //http://service-usps.loc/api/datastore/all-price?ZipOrigination=84655&ZipDestination=$zip&Pounds=$pound&Ounces=$ounce&Width=$width&Length=$lenght&Height=$height&Error=null()&sort(+Price)&limit(1)
 
