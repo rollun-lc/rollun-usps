@@ -26,9 +26,9 @@ $container->setService(LifeCycleToken::class, $lifeCycleToken);
 $allCosts = $container->get(AllCosts::class);
 
 //$zipOrigination, $zipDestination, $pounds, $width, $length, $height, $quantity = null
-$query = $allCosts->buildUspShippingQuery('10001', '00601', 0.6, 10, 8, 1, 1);
-$result = $allCosts->query($query);
-
-echo '<pre>';
-print_r($result);
-die();
+//$query = $allCosts->buildUspShippingQuery('10001', '00601', 0.6, 10, 8, 1, 1);
+//$result = $allCosts->query($query);
+//
+//echo '<pre>';
+//print_r($result);
+//die();
