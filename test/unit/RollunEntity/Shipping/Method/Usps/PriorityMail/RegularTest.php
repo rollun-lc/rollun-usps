@@ -1,26 +1,26 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\test\unit\Entity\Shipping\Method\Usps\FirstClass;
+namespace rollun\test\unit\Entity\Shipping\Method\Usps\PriorityMail;
 
+use rollun\Entity\Shipping\Method\Usps\PriorityMail\Regular;
 use rollun\Entity\Shipping\ShippingRequest;
-use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
 use rollun\test\unit\Entity\Shipping\Method\Usps\UspsShippingAbstract;
 
 /**
- * Class PackageTest
+ * Class RegularTest
  *
  * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
  *
  * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
  * @license   LICENSE.md New BSD License
  */
-class PackageTest extends UspsShippingAbstract
+class RegularTest extends UspsShippingAbstract
 {
     /**
      * @var string
      */
-    protected $class = Package::class;
+    protected $class = Regular::class;
 
     /**
      * @return array
@@ -28,11 +28,12 @@ class PackageTest extends UspsShippingAbstract
     public function shippingRequestsDataProvider(): array
     {
         return [
-            [$this->createShippingRequest(10, 12, 5, 0.5, '10002', '48204')],
-            [$this->createShippingRequest(21, 17, 2, 0.2, '10002', '48204')],
-            [$this->createShippingRequest(23, 17, 2, 0.2, '10002', '48204')],
-            [$this->createShippingRequest(2, 2, 2, 1.1, '90001', '90211')],
-            [$this->createShippingRequest(10, 12, 5, 0.5, '90001', '90211')],
+            [$this->createShippingRequest(11, 11, 11, 0.2, '10002', '48204')],
+            [$this->createShippingRequest(12, 12, 12, 65, '90001', '90211')],
+            [$this->createShippingRequest(1, 1, 1, 30, '10002', '48204')],
+            [$this->createShippingRequest(17, 16, 12, 2, '90001', '90211')],
+            [$this->createShippingRequest(1, 104, 1, 0.2, '90001', '90211')],
+            [$this->createShippingRequest(2, 2, 2, 65, '90001', '90211')],
         ];
     }
 

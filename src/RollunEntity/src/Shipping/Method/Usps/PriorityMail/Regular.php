@@ -19,11 +19,15 @@ class Regular extends ShippingsAbstract
 {
     /**
      * Click_N_Shipp => ['id', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
+     *
+     * 1) The weight limit for Priority Mail items is 70 lbs.
+     * 2) The maximum size for Priority Mail items is 108 inches in combined length and girth (the length of the longest side, plus the distance around its thickest part).
+     * 3) Length, Width, Height are required for accurate pricing of a rectangular package when any dimension of the item exceeds 12 inches. In addition, Girth is required for non-rectangular packages.
      */
     const USPS_BOXES
         = [
             ['PM-Regular', 'Priority Mail', 'PRIORITY COMMERCIAL', '', 'VARIABLE', 12, 12, 12, 70],
-            ['PM-Large', 'Priority Mail', 'PRIORITY COMMERCIAL', '', 'RECTANGULAR', 108, 0, 0, 70],
+            ['PM-Large', 'Priority Mail', 'PRIORITY COMMERCIAL', '', 'RECTANGULAR', 108, 108, 108, 70],
         ];
 
     /**
@@ -118,23 +122,26 @@ class Regular extends ShippingsAbstract
             return false;
         }
 
-        // get weight
-        $weight = $shippingRequest->item->getWeight();
-
-        if ($this->shortName === 'PM-Regular' && $weight > 40) {
-            return false;
-        }
-
         if ($this->shortName === 'PM-Large') {
-            if ($weight > 70 || $weight <= 40) {
+            // The weight limit for Priority Mail items is 70 lbs.
+            if ($this->getWeight($shippingRequest) > 70) {
                 return false;
             }
 
-            $dimensions = $item->getDimensionsList()[0]['dimensions'];
-            $maxDimension = $dimensions->getDimensionsRecord()['Length'];
-            if ($maxDimension <= 12) {
+            /** @var array $dimensions */
+            $dimensions = $item->getDimensionsList()[0]['dimensions']->getDimensionsRecord();
+
+            // exit because it PM-Regular shipping
+            if ($dimensions['Length'] <= 12) {
                 return false;
             }
+
+            // The maximum size for Priority Mail items is 108 inches in combined length and girth
+            if (($dimensions['Girth'] + $dimensions['Length']) > 108) {
+                return false;
+            }
+
+            return true;
         }
 
         return parent::canBeShipped($shippingRequest);
@@ -146,8 +153,11 @@ class Regular extends ShippingsAbstract
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
         if ($this->canBeShipped($shippingRequest)) {
+            // prepare weight
+            $weight = $this->getWeight($shippingRequest);
+
             foreach (self::USPS_BOXES_COSTS as $row) {
-                if ($row[0] >= $shippingRequest->item->getWeight()) {
+                if ($row[0] >= $weight) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 
@@ -157,5 +167,23 @@ class Regular extends ShippingsAbstract
         }
 
         return 'Can not be shipped';
+    }
+
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return float
+     */
+    protected function getWeight(ShippingRequest $shippingRequest): float
+    {
+        $weight = $shippingRequest->item->getWeight();
+        if ($this->shortName === 'PM-Large') {
+            $lbs = $shippingRequest->item->getVolume() / 166;
+            if ($lbs > $weight) {
+                $weight = $lbs;
+            }
+        }
+
+        return $weight;
     }
 }

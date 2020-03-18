@@ -68,8 +68,8 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "rollun\\test\\unit\\Entity\\": "test/unit/RollunEntity/src/",
-      "service\\test\\unit\\Entity\\": "test/unit/ServiceEntity/src/"
+      "rollun\\test\\unit\\Entity\\": "test/unit/RollunEntity/",
+      "service\\test\\unit\\Entity\\": "test/unit/ServiceEntity/"
     }
   },
   "scripts": {
