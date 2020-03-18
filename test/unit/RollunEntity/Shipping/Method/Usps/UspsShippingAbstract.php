@@ -26,6 +26,23 @@ abstract class UspsShippingAbstract extends TestCase
     protected $class;
 
     /**
+     * @return array
+     */
+    abstract public function shippingRequestsDataProvider(): array;
+
+    /**
+     * Is locally calculated cost is the same as api cost
+     *
+     * @param ShippingRequest $shippingRequest
+     *
+     * @dataProvider shippingRequestsDataProvider
+     */
+    public function testIsCostMatch(ShippingRequest $shippingRequest)
+    {
+        $this->assertEquals($this->getCost($shippingRequest, false), $this->getCost($shippingRequest));
+    }
+
+    /**
      * @param float  $width
      * @param float  $length
      * @param float  $height

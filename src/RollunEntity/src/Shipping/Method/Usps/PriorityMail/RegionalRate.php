@@ -17,14 +17,14 @@ use rollun\Entity\Shipping\ShippingRequest;
 class RegionalRate extends ShippingsAbstract
 {
     /**
-     * Click_N_Shipp => ['ShortName','Click_N_Shipp','USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width','Length',Weight,'Height']
+     * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      */
     const USPS_BOXES
         = [
-            ['PM-RR-BoxA1', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10, 7, 4.75, 70],
-            ['PM-RR-BoxA2', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10.9375, 12.8125, 2.375, 70],
-            ['PM-RR-BoxB1', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 12, 10.25, 5, 70],
-            ['PM-RR-BoxB2', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 15.875, 14.375, 2.875, 70],
+            ['PM-RR-BoxA1', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10, 7, 4.75, 15],
+            ['PM-RR-BoxA2', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10.9375, 12.8125, 2.375, 15],
+            ['PM-RR-BoxB1', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 12, 10.25, 5, 20],
+            ['PM-RR-BoxB2', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 15.875, 14.375, 2.875, 20],
         ];
 
     /**
