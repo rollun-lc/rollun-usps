@@ -18,7 +18,7 @@ use rollun\Entity\Usps\ShippingData;
 class FlatRate extends ShippingsAbstract
 {
     /**
-     * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight', 'Price']
+     * Costs got from https://pe.usps.com/text/dmm300/Notice123.htm#_c078
      */
     const USPS_BOXES
         = [

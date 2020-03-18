@@ -25,7 +25,7 @@ class Package extends ShippingsAbstract
     const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.999]];
 
     /**
-     * Defined costs
+     * Defined costs, got from https://pe.usps.com/text/dmm300/Notice123.htm#_c107
      */
     const USPS_PACKAGE_COSTS
         = [

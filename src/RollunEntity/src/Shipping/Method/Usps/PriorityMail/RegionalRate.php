@@ -28,7 +28,7 @@ class RegionalRate extends ShippingsAbstract
         ];
 
     /**
-     * Regional costs
+     * Regional costs, got from https://pe.usps.com/text/dmm300/Notice123.htm#_c091
      */
     const USPS_BOXES_COSTS
         = [

@@ -31,7 +31,7 @@ class Regular extends ShippingsAbstract
         ];
 
     /**
-     * Regular costs
+     * Regular costs, got from https://pe.usps.com/text/dmm300/Notice123.htm#_c078
      */
     const USPS_BOXES_COSTS
         = [
