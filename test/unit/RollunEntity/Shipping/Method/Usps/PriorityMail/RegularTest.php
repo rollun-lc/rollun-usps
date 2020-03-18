@@ -33,7 +33,7 @@ class RegularTest extends UspsShippingAbstract
             [$this->createShippingRequest(17, 16, 12, 2, '90001', '90211')],
             [$this->createShippingRequest(1, 104, 1, 0.2, '90001', '90211')],
             [$this->createShippingRequest(2, 2, 2, 65, '90001', '90211')],
-            // should return null
+            // canBeShipped should return false
             [$this->createShippingRequest(1, 105, 1, 0.2, '90001', '90211')],
             [$this->createShippingRequest(2, 2, 2, 71, '90001', '90211')],
         ];

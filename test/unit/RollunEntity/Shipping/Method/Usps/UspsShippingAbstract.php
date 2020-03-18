@@ -83,6 +83,10 @@ abstract class UspsShippingAbstract extends TestCase
         $result = array_column($data, 'cost', 'id');
         ksort($result);
 
+        foreach ($result as $k => $v){
+            $result[$k] = (float)$v;
+        }
+
         return $result;
     }
 }
