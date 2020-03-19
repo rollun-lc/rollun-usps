@@ -3,16 +3,20 @@ declare(strict_types=1);
 
 namespace service\Entity;
 
+use rollun\Entity\Product\Container\Box;
 use rollun\Entity\Product\Container\Factory\BoxAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\ProviderAbstractFactory;
+use rollun\Entity\Shipping\Method\FixedPrice;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
+use service\Entity\Api\DataStore\Shipping\UspsAllCosts;
 use service\Entity\Handler\LoggerHandler;
 use service\Entity\Handler\MegaplanHandler;
 use service\Entity\Handler\Shipping\BestShippingHandler;
 use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
+
 
 /**
  * Class ConfigProvider
@@ -31,26 +35,8 @@ class ConfigProvider
     {
         return [
             'dependencies'   => $this->getDependencies(),
-            'dataStore'      => $this->getDataStores(),
-            'aliases'        => [
-                RootProvider::class => 'Root'
-            ],
-            'ShippingMethod' => [
-                'RmPrepCntr' => [
-                    'class'              => RmPrepCenter::class,
-                    'shortName'          => 'RmPrepCntr',
-                    'shippingMethodList' => [
-                        'Usps'
-                    ]
-                ],
-                'Root'       => [
-                    'class'              => RootProvider::class,
-                    'shortName'          => 'Root',
-                    'shippingMethodList' => [
-                        'RmPrepCntr'
-                    ]
-                ],
-            ]
+            'ShippingMethod' => $this->getShippingMethods(),
+            'Container'      => $this->getShippingContainers()
         ];
     }
 
@@ -73,7 +59,7 @@ class ConfigProvider
                 BestShippingHandler::class => BestShippingHandler::class,
                 LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
-                'shipping-all-costs'       => AllCosts::class
+                'shipping-all-costs'       => AllCosts::class,
             ],
         ];
     }
@@ -81,12 +67,31 @@ class ConfigProvider
     /**
      * @return array
      */
-    public function getDataStores(): array
+    public function getShippingMethods(): array
     {
         return [
-            'shipping-all-costs' => [
-                'class' => 'shipping-all-costs'
+            'RmPrepCntr' => [
+                'class'              => RmPrepCenter::class,
+                'shortName'          => 'RmPrepCntr',
+                'shippingMethodList' => [
+                    'Usps'
+                ]
+            ],
+            'Root'       => [
+                'class'              => RootProvider::class,
+                'shortName'          => 'Root',
+                'shippingMethodList' => [
+                    'RmPrepCntr',
+                ]
             ],
         ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getShippingContainers(): array
+    {
+        return [];
     }
 }

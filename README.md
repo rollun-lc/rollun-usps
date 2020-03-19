@@ -14,33 +14,44 @@
 - USPS PriorityMail Regular
 - Fixed Price
 
-### Добавление собственного способа доставки (Fixed Price)  
+### Добавление собственного способа доставки
+Библиотека предоставляет возможность добавлять собственные способы доставки. Все возможные способы доставки должны быть объявлены в **RootShippingProvider**, так как здесь используется древовидная структура и началом дерево является root. 
+
+Пример того как при помощи конфигураций добавить способ доставки который будет называтся **FixedPrice1**.
 ```php
 <?php
 use rollun\Entity\Product\Container\Box; 
 use rollun\Entity\Shipping\Method\FixedPrice;
-use service\Entity\Rollun\Shipping\Method\Provider\Root;
+use service\Entity\Rollun\Shipping\Method\Provider\Root as RootShippingProvider;
+use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
 
 return [
    'ShippingMethod' => [
        'Root' => [
-           'class' => Root::class,
-           'shortName' => 'Root',
-           'shippingMethodList' => [  // здесь могут быть как shippingMethod так и shippingMethodSubProvider
-              'RmPrepCntr',
-              'FixedPrice1'
+           'class' => RootShippingProvider::class, // указываем элемент сервис менеджера
+           'shortName' => 'Root', 
+           'shippingMethodList' => [
+              'RmPrepCntr', // добавляем первый способ доставки который по своей сути является еще одним ShippingMethodProvider со своими способами доставки
+              'FixedPrice1' // добавляем наш способ доставки
            ]
        ],
-       'FixedPrice1' => [
-           'class'            => FixedPrice::class,
+       'RmPrepCntr' => [ // объявляем ShippingMethodProvider
+           'class'                 => RmPrepCenter::class, // указываем элемент сервис менеджера
+              'shortName'          => 'RmPrepCntr',
+              'shippingMethodList' => [
+                 'Usps' // указываем способы доставки
+              ]
+       ],
+       'FixedPrice1' => [ // добавляем наш способ доставки
+           'class'            => FixedPrice::class, // указываем элемент сервис менеджера
               'shortName'        => 'FP1',
-              'price'            => 8,
-              'maxWeight'        => 20,
-              'containerService' => 'Fixed Price Box 1'
+              'price'            => 8,  // характерно только для FixedPrice::class, указываем цену
+              'maxWeight'        => 20, // характерно только для FixedPrice::class, максимально допустимый вес
+              'containerService' => 'Fixed Price Box 1' // // характерно только для FixedPrice::class, указываем контейнер
        ],
    ],
    'Container' => [
-       'Fixed Price Box 1' => [
+       'Fixed Price Box 1' => [ // объявляем контейнер
           'class'  => Box::class,
           'Length' => 10,
           'Width'  => 10,

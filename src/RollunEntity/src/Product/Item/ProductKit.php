@@ -39,7 +39,7 @@ class ProductKit implements ItemInterface
         $dimensionsList = [];
         foreach ($this->items as $item) {
             /* @var $item ItemInterface */
-            array_merge($dimensionsList, $item->getDimensionsList());
+            $dimensionsList = array_merge($dimensionsList, $item->getDimensionsList());
         }
         return $dimensionsList;
     }
