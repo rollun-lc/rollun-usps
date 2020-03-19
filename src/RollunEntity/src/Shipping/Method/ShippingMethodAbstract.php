@@ -104,4 +104,21 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
     {
         return [];
     }
+
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return float
+     */
+    protected function getLbs(ShippingRequest $shippingRequest): float
+    {
+        $weight = $shippingRequest->item->getWeight();
+        $lbs = $shippingRequest->item->getVolume() / 166;
+
+        if ($lbs > $weight) {
+            $weight = $lbs;
+        }
+
+        return $weight;
+    }
 }

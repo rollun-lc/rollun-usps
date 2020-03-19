@@ -3,18 +3,18 @@ declare(strict_types=1);
 
 namespace service\Entity;
 
-use rollun\Entity\Product\Container\Box;
 use rollun\Entity\Product\Container\Factory\BoxAbstractFactory;
+use rollun\Entity\Shipping\Method\DropShip\PuDropShip;
+use rollun\Entity\Shipping\Method\DropShip\RmDropShip;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\ProviderAbstractFactory;
-use rollun\Entity\Shipping\Method\FixedPrice;
+use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
+use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
-use service\Entity\Api\DataStore\Shipping\UspsAllCosts;
 use service\Entity\Handler\LoggerHandler;
 use service\Entity\Handler\MegaplanHandler;
 use service\Entity\Handler\Shipping\BestShippingHandler;
-use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
 
@@ -50,7 +50,6 @@ class ConfigProvider
                 RootProvider::class => 'Root',
             ],
             'abstract_factories' => [
-                //RmatvProdNoUspsRateAbstractFactory::class
                 BoxAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class
@@ -60,6 +59,8 @@ class ConfigProvider
                 LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
                 'shipping-all-costs'       => AllCosts::class,
+                'RM-DS'                    => RmDropShip::class,
+                'PU-DS'                    => PuDropShip::class,
             ],
         ];
     }
@@ -70,18 +71,36 @@ class ConfigProvider
     public function getShippingMethods(): array
     {
         return [
-            'RmPrepCntr' => [
-                'class'              => RmPrepCenter::class,
-                'shortName'          => 'RmPrepCntr',
+            'Root'      => [
+                'class'              => RootProvider::class,
+                'shortName'          => 'Root',
+                'shippingMethodList' => [
+                    'RM-DS',
+                    'RM-PickUp',
+                    'PU-DS',
+                    'PU-PickUp'
+                ]
+            ],
+            'RM-DS'     => [
+                'class'     => RmDropShip::class,
+                'shortName' => 'RM-DS'
+            ],
+            'RM-PickUp' => [
+                'class'              => RmPickUp::class,
+                'shortName'          => 'RM-PickUp',
                 'shippingMethodList' => [
                     'Usps'
                 ]
             ],
-            'Root'       => [
-                'class'              => RootProvider::class,
-                'shortName'          => 'Root',
+            'PU-DS'     => [
+                'class'     => RmDropShip::class,
+                'shortName' => 'PU-DS'
+            ],
+            'PU-PickUp' => [
+                'class'              => PuPickUp::class,
+                'shortName'          => 'PU-PickUp',
                 'shippingMethodList' => [
-                    'RmPrepCntr',
+                    'Usps'
                 ]
             ],
         ];
