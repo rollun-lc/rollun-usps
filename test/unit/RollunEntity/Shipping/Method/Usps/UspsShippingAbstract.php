@@ -9,6 +9,7 @@ use rollun\Entity\Product\Item\Product;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 use rollun\Entity\Shipping\ShippingRequest;
 use rollun\Entity\Subject\Address;
+use rollun\test\unit\Entity\Shipping\Method\CreateShippingRequestTrait;
 
 /**
  * Class UspsShippingAbstract
@@ -20,6 +21,8 @@ use rollun\Entity\Subject\Address;
  */
 abstract class UspsShippingAbstract extends TestCase
 {
+    use CreateShippingRequestTrait;
+
     /**
      * @var string
      */
@@ -43,27 +46,6 @@ abstract class UspsShippingAbstract extends TestCase
     }
 
     /**
-     * @param float  $width
-     * @param float  $length
-     * @param float  $height
-     * @param float  $weight
-     * @param string $zipFrom
-     * @param string $zipTo
-     *
-     * @return ShippingRequest
-     */
-    protected function createShippingRequest(float $width, float $length, float $height, float $weight, string $zipFrom, string $zipTo): ShippingRequest
-    {
-        $addressOrigination = new Address('', $zipFrom);
-        $addressDestination = new Address('', $zipTo);
-
-        $rectangular = new Rectangular($length, $width, $height);
-        $product = new Product($rectangular, $weight);
-
-        return new ShippingRequest($product, $addressOrigination, $addressDestination);
-    }
-
-    /**
      * @param ShippingRequest $shippingRequest
      * @param bool            $definedCost
      *
@@ -83,7 +65,7 @@ abstract class UspsShippingAbstract extends TestCase
         $result = array_column($data, 'cost', 'id');
         ksort($result);
 
-        foreach ($result as $k => $v){
+        foreach ($result as $k => $v) {
             $result[$k] = (float)$v;
         }
 

@@ -21,6 +21,21 @@ abstract class LevelBasedShippingMethod extends ShippingMethodAbstract
     protected $levels = [];
 
     /**
+     * LevelBasedShippingMethod constructor.
+     *
+     * @param string $shortName
+     * @param array  $levels
+     */
+    public function __construct(string $shortName, array $levels = null)
+    {
+        $this->shortName = $shortName;
+
+        if ($levels !== null) {
+            $this->levels = $levels;
+        }
+    }
+
+    /**
      * @inheritDoc
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool

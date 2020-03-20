@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method\DropShip;
 
+use rollun\Entity\Shipping\Method\LevelBasedShippingMethod;
 use rollun\Entity\Shipping\ShippingRequest;
 
 /**
@@ -13,7 +14,7 @@ use rollun\Entity\Shipping\ShippingRequest;
  * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
  * @license   LICENSE.md New BSD License
  */
-class RmDropShip extends AbstractDropShip
+class RmDropShip extends LevelBasedShippingMethod
 {
     const MAX_WEIGHT = 70;
 
