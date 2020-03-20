@@ -6,23 +6,24 @@ namespace rollun\Entity\Shipping\Method\Factory;
 use Interop\Container\ContainerInterface;
 
 /**
- * Class DropShipAbstractFactory
+ * Class LevelBasedShippingAbstractFactory
  *
  * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
  *
  * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
  * @license   LICENSE.md New BSD License
  */
-class DropShipAbstractFactory extends ShippingMethodAbstractFactory
+class LevelBasedShippingAbstractFactory extends ShippingMethodAbstractFactory
 {
-    const KEY_DS = 'isDropShip';
+    const KEY = 'levels';
 
     /**
      * @inheritDoc
      */
     public function canCreate(ContainerInterface $container, $requestedName)
     {
-        return !empty($container->get('config')[static::KEY_SHIPPING_METHOD][$requestedName][self::KEY_DS]);
+        return !empty($container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName])
+            && key_exists(self::KEY, $container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName]);
     }
 
     /**
@@ -30,9 +31,12 @@ class DropShipAbstractFactory extends ShippingMethodAbstractFactory
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        // get class name
-        $className = $container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName][self::KEY_CLASS];
+        // get config
+        $config = $container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName];
 
-        return new $className($requestedName);
+        // get class name
+        $className = $config[self::KEY_CLASS];
+
+        return new $className($requestedName, $config['levels']);
     }
 }

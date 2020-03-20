@@ -9,8 +9,8 @@ use rollun\Entity\Shipping\Method\DropShip\PuDropShip;
 use rollun\Entity\Shipping\Method\DropShip\RmDropShip;
 use rollun\Entity\Shipping\Method\DropShip\TrDropShip;
 use rollun\Entity\Shipping\Method\DropShip\WpsDropShip;
-use rollun\Entity\Shipping\Method\Factory\DropShipAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
+use rollun\Entity\Shipping\Method\Factory\LevelBasedShippingAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\ProviderAbstractFactory;
 use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
 use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
@@ -55,7 +55,7 @@ class ConfigProvider
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
-                DropShipAbstractFactory::class,
+                LevelBasedShippingAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class
             ],
@@ -88,8 +88,8 @@ class ConfigProvider
                 ]
             ],
             'RM-DS'     => [
-                'class'      => RmDropShip::class,
-                'isDropShip' => true
+                'class'  => RmDropShip::class,
+                'levels' => null
             ],
             'RM-PickUp' => [
                 'class'              => RmPickUp::class,
@@ -99,8 +99,8 @@ class ConfigProvider
                 ]
             ],
             'PU-DS'     => [
-                'class'      => PuDropShip::class,
-                'isDropShip' => true
+                'class'  => PuDropShip::class,
+                'levels' => null
             ],
             'PU-PickUp' => [
                 'class'              => PuPickUp::class,
@@ -110,16 +110,16 @@ class ConfigProvider
                 ]
             ],
             'WPS-DS'    => [
-                'class'      => WpsDropShip::class,
-                'isDropShip' => true
+                'class'  => WpsDropShip::class,
+                'levels' => null
             ],
             'TR-DS'     => [
-                'class'      => TrDropShip::class,
-                'isDropShip' => true
+                'class'  => TrDropShip::class,
+                'levels' => null
             ],
             'AU-DS'     => [
-                'class'      => AuDropShip::class,
-                'isDropShip' => true
+                'class'  => AuDropShip::class,
+                'levels' => null
             ],
         ];
     }
