@@ -4,8 +4,12 @@ declare(strict_types=1);
 namespace service\Entity;
 
 use rollun\Entity\Product\Container\Factory\BoxAbstractFactory;
+use rollun\Entity\Shipping\Method\DropShip\AuDropShip;
 use rollun\Entity\Shipping\Method\DropShip\PuDropShip;
 use rollun\Entity\Shipping\Method\DropShip\RmDropShip;
+use rollun\Entity\Shipping\Method\DropShip\TrDropShip;
+use rollun\Entity\Shipping\Method\DropShip\WpsDropShip;
+use rollun\Entity\Shipping\Method\Factory\DropShipAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\ProviderAbstractFactory;
 use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
@@ -51,6 +55,7 @@ class ConfigProvider
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
+                DropShipAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class
             ],
@@ -59,8 +64,6 @@ class ConfigProvider
                 LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
                 'shipping-all-costs'       => AllCosts::class,
-                'RM-DS'                    => RmDropShip::class,
-                'PU-DS'                    => PuDropShip::class,
             ],
         ];
     }
@@ -78,12 +81,15 @@ class ConfigProvider
                     'RM-DS',
                     'RM-PickUp',
                     'PU-DS',
-                    'PU-PickUp'
+                    'PU-PickUp',
+                    'WPS-DS',
+                    'TR-DS',
+                    'AU-DS',
                 ]
             ],
             'RM-DS'     => [
-                'class'     => RmDropShip::class,
-                'shortName' => 'RM-DS'
+                'class'      => RmDropShip::class,
+                'isDropShip' => true
             ],
             'RM-PickUp' => [
                 'class'              => RmPickUp::class,
@@ -93,8 +99,8 @@ class ConfigProvider
                 ]
             ],
             'PU-DS'     => [
-                'class'     => RmDropShip::class,
-                'shortName' => 'PU-DS'
+                'class'      => PuDropShip::class,
+                'isDropShip' => true
             ],
             'PU-PickUp' => [
                 'class'              => PuPickUp::class,
@@ -102,6 +108,18 @@ class ConfigProvider
                 'shippingMethodList' => [
                     'Usps'
                 ]
+            ],
+            'WPS-DS'    => [
+                'class'      => WpsDropShip::class,
+                'isDropShip' => true
+            ],
+            'TR-DS'     => [
+                'class'      => TrDropShip::class,
+                'isDropShip' => true
+            ],
+            'AU-DS'     => [
+                'class'      => AuDropShip::class,
+                'isDropShip' => true
             ],
         ];
     }

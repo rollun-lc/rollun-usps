@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method\DropShip;
 
-use rollun\Entity\Shipping\Method\ShippingMethodAbstract;
 use rollun\Entity\Shipping\ShippingRequest;
 
 /**
@@ -14,24 +13,19 @@ use rollun\Entity\Shipping\ShippingRequest;
  * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
  * @license   LICENSE.md New BSD License
  */
-class PuDropShip extends ShippingMethodAbstract
+class PuDropShip extends AbstractDropShip
 {
-    const BASE_COST = 8.5;
+    const MAX_WEIGHT = 70;
 
     /**
-     * 1) For UPS length plus girth [(2 x width) + (2 x height)] combined exceeds 118 inches, but does not exceed the maximum size of 157 inches
-     * 2) For FedEx exceeds 96 inches in length or 130 inches in length and girth
-     * 3) >70 lbs
+     * @var array
      */
-    const OVERSIZE_COST = 20;
-
-    /**
-     * RmDropShip constructor.
-     */
-    public function __construct()
-    {
-        $this->shortName = 'PU-DS';
-    }
+    protected $levels
+        = [
+            // isOversize, price
+            [false, 8.5],
+            [true, 20],
+        ];
 
     /**
      * @inheritDoc
@@ -44,28 +38,49 @@ class PuDropShip extends ShippingMethodAbstract
     /**
      * @inheritDoc
      */
-    public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
+    protected function isLevelValid(ShippingRequest $shippingRequest, array $level): bool
     {
+        return $this->isOversize($shippingRequest) === $level[0];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function getLevelCost(array $level): ?float
+    {
+        return $level[1];
+    }
+
+    /**
+     * Length plus girth [(2 x width) + (2 x height)] combined exceeds 118 inches, but does not exceed the maximum size of 157 inches
+     * OR exceeds 96 inches in length or 130 inches in length and girth
+     * OR >70 lbs
+     *
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return bool
+     */
+    protected function isOversize(ShippingRequest $shippingRequest): bool
+    {
+        if ($shippingRequest->item->getWeight() > self::MAX_WEIGHT) {
+            return true;
+        }
+
         /** @var array $dimensions */
         $dimensions = $shippingRequest->item->getDimensionsList()[0]['dimensions']->getDimensionsRecord();
 
         // For UPS length plus girth [(2 x width) + (2 x height)] combined exceeds 118 inches, but does not exceed the maximum size of 157 inches
         if (($dimensions['Girth'] + $dimensions['Length']) > 118) {
-            return self::OVERSIZE_COST;
+            return true;
         }
 
         // For FedEx exceeds 96 inches in length or 130 inches in length and girth
-        if ($dimensions['Length'] > 96 || ($dimensions['Girth'] + $dimensions['Length']) > 130) {
-            return self::OVERSIZE_COST;
-        }
-
-        // >70 lbs
-        if ($this->getLbs($shippingRequest) > 70) {
-            return self::OVERSIZE_COST;
+        if ($dimensions['Length'] > 96) {
+            return true;
         }
 
         // @todo if the tire (commodity_code from 0301 to 0329), than $14
 
-        return self::BASE_COST;
+        return false;
     }
 }
