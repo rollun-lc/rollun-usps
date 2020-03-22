@@ -23,16 +23,21 @@ class UspsProvider extends ShippingMethodProvider
 
     const SHORT_NAME = 'Usps';
 
-    public function __construct()
+    /**
+     * UspsProvider constructor.
+     *
+     * @param array|null $shippingMethods
+     */
+    public function __construct(array $shippingMethods = null)
     {
-
-        $shippingMethods = [];
-
-        $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
-        foreach ($classes as $oneClass) {
-            $shortNames = $oneClass::getAllShortNames();
-            foreach ($shortNames as $shortName) {
-                $shippingMethods[] = new $oneClass($shortName);
+        if ($shippingMethods === null) {
+            $shippingMethods = [];
+            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
+            foreach ($classes as $oneClass) {
+                $shortNames = $oneClass::getAllShortNames();
+                foreach ($shortNames as $shortName) {
+                    $shippingMethods[] = new $oneClass($shortName);
+                }
             }
         }
 
@@ -47,13 +52,10 @@ class UspsProvider extends ShippingMethodProvider
     public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
         $shippingResponseSet = new ShippingResponseSet();
-        $calculatedShippingMetods = [];
         $requestedShippingMetods = [];
         $shippingDataArray = [];
         foreach ($this->data as $shippingMethod) {
-            /* @var $shippingMethod ShippingMethodInterface */
-            if ($shippingMethod instanceof FlatRate) {
-                $calculatedShippingMetods[] = $shippingMethod;
+            if ($shippingMethod->hasDefinedCost()) {
                 $calculatedhippingResponseSet = $shippingMethod->getShippingMetods($shippingRequest);
                 $calculatedhippingResponseSet = $this->addCost($calculatedhippingResponseSet);
                 $shippingResponseSet->mergeResponseSet($calculatedhippingResponseSet, $this->getShortName());

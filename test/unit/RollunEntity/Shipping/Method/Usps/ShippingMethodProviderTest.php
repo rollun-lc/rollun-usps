@@ -41,30 +41,30 @@ class ShippingMethodProviderTest extends TestCase
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
         $this->assertEquals(
-                null, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
+                13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-SmBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['id']
+                'Usps-PM-FR-MdBox1', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['id']
         );
         $this->assertEquals(
-                null, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
+            13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-LgBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['id']
+                'Usps-PM-FR-BgBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['id']
         );
         $this->assertEquals(
-                17.6, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['cost']
+                18.3, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['cost']
         );
 
         $this->assertEquals(
                 Array(
             'id' => 'Usps-FtCls-Package',
-            'cost' => 3.18
+            'cost' => 3.21
             , 'Service' => 'FIRST CLASS COMMERCIAL'
             , 'FirstClassMailType' => 'PACKAGE SERVICE'
             , 'Container' => ''
-            , 'ZipOrigination' => 91601
-            , 'ZipDestination' => 91730
+            , 'ZipOrigination' => '91601'
+            , 'ZipDestination' => '91730'
             , 'Pounds' => 0.5
             , 'Type' => 'Rectangular'
             , 'Length' => 10

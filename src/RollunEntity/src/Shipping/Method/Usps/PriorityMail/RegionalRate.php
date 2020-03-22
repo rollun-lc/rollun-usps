@@ -1,41 +1,69 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method\Usps\PriorityMail;
 
-use rollun\Entity\Product\Container\ContainerInterface as ProductContainerInterface;
+use rollun\Entity\Shipping\Method\Usps\ShippingsAbstract;
 use rollun\Entity\Shipping\ShippingRequest;
-use rollun\Entity\Shipping\Method\FixedPrice;
-use rollun\Entity\Product\Container\Box;
-use rollun\Entity\Shipping\Method\Usps\ShippingsAbstract as UspsShippingsAbstract;
 
-class RegionalRate extends UspsShippingsAbstract
+/**
+ * Class RegionalRate
+ *
+ * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
+class RegionalRate extends ShippingsAbstract
 {
-
-    public $atributes = [];
+    /**
+     * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
+     */
+    const USPS_BOXES
+        = [
+            ['PM-RR-BoxA1', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10, 7, 4.75, 15],
+            ['PM-RR-BoxA2', 'Priority Mail Regional Rate Box A', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10.9375, 12.8125, 2.375, 15],
+            ['PM-RR-BoxB1', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 12, 10.25, 5, 20],
+            ['PM-RR-BoxB2', 'Priority Mail Regional Rate Box B', 'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 15.875, 14.375, 2.875, 20],
+        ];
 
     /**
-     * Click_N_Shipp => ['ShortName','Click_N_Shipp','USPS_API_Service',
-     * 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width','Length',Weight,'Height',Price]
+     * Regional costs, got from https://pe.usps.com/text/dmm300/Notice123.htm#_c091
      */
-    const USPS_BOXES = [
-        ['PM-RR-BoxA1', 'Priority Mail Regional Rate Box A',
-            'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10, 7, 4.75, 70],
-        ['PM-RR-BoxA2', 'Priority Mail Regional Rate Box A',
-            'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX A', 10.9375, 12.8125, 2.375, 70],
-        ['PM-RR-BoxB1', 'Priority Mail Regional Rate Box B',
-            'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 12, 10.25, 5, 70],
-        ['PM-RR-BoxB2', 'Priority Mail Regional Rate Box B',
-            'PRIORITY COMMERCIAL', '', 'REGIONAL RATE BOX B', 15.875, 14.375, 2.875, 70],
-    ];
+    const USPS_BOXES_COSTS
+        = [
+            [7.68, 7.68, 7.92, 8.21, 8.92, 10.42, 11.13, 12.10, 18.69],
+            [8.07, 8.07, 8.51, 9.42, 11.53, 16.72, 19.21, 21.89, 34.38],
+        ];
 
-    public function canBeShipped(ShippingRequest $shippingRequest): bool
+    /**
+     * @var bool
+     */
+    protected $hasDefinedCost = true;
+
+    /**
+     * @inheritDoc
+     */
+    public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
-        return parent::canBeShipped($shippingRequest);
+        if ($this->canBeShipped($shippingRequest)) {
+
+            if (in_array($this->shortName, ['PM-RR-BoxA1', 'PM-RR-BoxA2'])) {
+                $costs = self::USPS_BOXES_COSTS[0];
+            } elseif (in_array($this->shortName, ['PM-RR-BoxB1', 'PM-RR-BoxB2'])) {
+                $costs = self::USPS_BOXES_COSTS[1];
+            } else {
+                $costs = [];
+            }
+
+            if (!empty($costs)) {
+                $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode()) - 1;
+                if (isset($costs[$zone])) {
+                    return $costs[$zone];
+                }
+            }
+        }
+
+        return 'Can not be shipped';
     }
 }
