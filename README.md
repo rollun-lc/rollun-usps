@@ -1,18 +1,28 @@
 ## Getting Started
 Библиотека предоставляет возможность получать стоимость для разных способов доставки. В библиотеку интегрировано USPS API, но все исчисления производяться самой библиотекой.
 
-Библиотека добавляет **shipping-all-costs** DataStore для удобного получения информации.
- 
-**Пример запроса:**
-
-`http://SOME_URL/api/datastore/shipping-all-costs?and(eq(ZipOrigination,10005),eq(ZipDestination,91730),eq(Width,2),eq(Length,2),eq(Height,5),eq(Pounds,2),ne(cost,null()))&sort(+cost)&limit(50)`
-
 ### Способы доставки ###
-- USPS First-Class Package
-- USPS PriorityMail FlatRate
-- USPS PriorityMail RegionalRate
-- USPS PriorityMail Regular
-- Fixed Price
+- RM-DS
+- RM-PickUp (USPS)
+- PU-DS
+- PU-PickUp (USPS)
+- WPS-DS
+- TR-DS
+- AU-DS
+- AU-DS-COVID19
+
+
+### DataStore: shipping-all-costs
+Библиотека предоставляет shipping-all-costs DataStore, который возвращает цены по все объявленным (в конфиге) методам доставки. 
+
+Примеры запросов:
+```
+http://SOME_URL/api/datastore/shipping-all-costs?and(eq(ZipOrigination,10005),eq(ZipDestination,91730),eq(Width,2),eq(Length,2),eq(Height,5),eq(Pounds,2),ne(cost,null()))&sort(+cost)&limit(50)
+http://SOME_URL/api/datastore/shipping-all-costs?and(eq(ZipOrigination,28790),eq(ZipDestination,91730),eq(Width,2),eq(Length,2),eq(Height,1),eq(Pounds,2),eq(attr_CommodityCode,301),ne(cost,null()))&sort(+cost)&limit(50)
+http://SOME_URL/api/datastore/shipping-all-costs?ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=0.5&Click_N_Shipp=Priority%20Mail
+http://SOME_URL/api/datastore/shipping-all-costs?ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=1&like(id,*FtCls*)&limit(2,1)&select(id)
+```
+Есть возможность отправить в методы доставки дополнительные атрибуты. Для этого в запросе укажите ```...,еq(attr_CommodityCode,301),...```, это означает что все методы доставки получат атрибут CommodityCode со значением 301.
 
 ### Добавление собственного способа доставки
 Библиотека предоставляет возможность добавлять собственные способы доставки. Все возможные способы доставки должны быть объявлены в **RootShippingProvider**, так как здесь используется древовидная структура и началом дерево является root. 
@@ -23,7 +33,7 @@
 use rollun\Entity\Product\Container\Box; 
 use rollun\Entity\Shipping\Method\FixedPrice;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootShippingProvider;
-use service\Entity\Rollun\Shipping\Method\Provider\RmPrepCenter;
+use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
 
 return [
    'ShippingMethod' => [
@@ -31,13 +41,13 @@ return [
            'class' => RootShippingProvider::class, // указываем элемент сервис менеджера
            'shortName' => 'Root', 
            'shippingMethodList' => [
-              'RmPrepCntr', // добавляем первый способ доставки который по своей сути является еще одним ShippingMethodProvider со своими способами доставки
+              'RM-PickUp', // добавляем первый способ доставки который по своей сути является еще одним ShippingMethodProvider со своими способами доставки
               'FixedPrice1' // добавляем наш способ доставки
            ]
        ],
-       'RmPrepCntr' => [ // объявляем ShippingMethodProvider
-           'class'                 => RmPrepCenter::class, // указываем элемент сервис менеджера
-              'shortName'          => 'RmPrepCntr',
+       'RM-PickUp' => [ // объявляем ShippingMethodProvider
+           'class'                 => RmPickUp::class, // указываем элемент сервис менеджера
+              'shortName'          => 'RM-PickUp',
               'shippingMethodList' => [
                  'Usps' // указываем способы доставки
               ]
@@ -59,7 +69,7 @@ return [
        ],
    ]
 ];
-```
+``` 
 
 ### API USPS
 Для работы с API USPS нужно указать **USPS_API_PASS** в .env (требуется только в dev режиме)
