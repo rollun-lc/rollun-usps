@@ -56,6 +56,13 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
         return abs($diff) < PHP_FLOAT_EPSILON || $diff > 0;
     }
 
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return bool
+     *
+     * @todo should return the dimensions of the package after packaging
+     */
     public function canBeShipped(ShippingRequest $shippingRequest): bool
     {
         return $this->passesByWeight($shippingRequest->item) &&
