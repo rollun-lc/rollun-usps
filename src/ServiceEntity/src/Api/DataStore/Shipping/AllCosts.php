@@ -39,6 +39,7 @@ use rollun\Entity\Subject\Address;
  * @example http://service-usps.loc/api/datastore/shipping-all-costs?and(eq(ZipOrigination,10005),eq(ZipDestination,91730),eq(Width,2),eq(Length,2),eq(Height,5),eq(Pounds,2),ne(cost,null()))&sort(+cost)&limit(50)
  * @example http://service-usps.loc/api/datastore/shipping-all-costs?ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=0.5&Click_N_Shipp=Priority%20Mail
  * @example http://service-usps.loc/api/datastore/shipping-all-costs?ZipOrigination=91601&ZipDestination=91730&Width=1&Length=10&Height=5&Pounds=1&like(id,*FtCls*)&limit(2,1)&select(id)
+ * @example http://service-usps.loc/api/datastore/shipping-all-costs?and(eq(ZipOrigination,28790),eq(ZipDestination,91730),eq(Width,2),eq(Length,2),eq(Height,1),eq(Pounds,2),eq(attr_CommodityCode,301),ne(cost,null()))&sort(+cost)&limit(50)
  *
  * @author    Roman Ratsun <r.ratsun.rollun@gmail.com>
  *
@@ -47,6 +48,11 @@ use rollun\Entity\Subject\Address;
  */
 class AllCosts extends DataStoreAbstract
 {
+    /**
+     * Define attributes query prefix
+     */
+    const ATTRIBUTE_PREFIX = 'attr_';
+
     /**
      * @var LoggerInterface
      */
@@ -119,7 +125,7 @@ class AllCosts extends DataStoreAbstract
         }
         /* @var $innerQuery AndNode */
         $andQueries = $innerQuery->getQueries();
-        $queryParams = [];
+        $queryParams = ['Attributes' => []];
         $addQuery = [];
         foreach ($andQueries as $node) {
             /* @var $node AbstractScalarOperatorNode */
@@ -127,6 +133,8 @@ class AllCosts extends DataStoreAbstract
                 $queryParams[$node->getField()] = $node->getValue();
             } elseif ($node->getField() === 'Quantity') {
                 $queryParams[$node->getField()] = $node->getValue();
+            } elseif ('eq' === $node->getNodeName() && $this->isAttribute($node->getField())) {
+                $queryParams['Attributes'][str_replace(self::ATTRIBUTE_PREFIX, '', $node->getField())] = $node->getValue();
             } else {
                 $addQuery[] = $node;
             }
@@ -177,7 +185,7 @@ class AllCosts extends DataStoreAbstract
             $queryParams['Pounds'] *= $queryParams['Quantity'];
         }
         $product = new Product($rectangular, $queryParams['Pounds']);
-        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
+        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination, $queryParams['Attributes']);
 
 
         $span->addTag(new StringTag('addressOrigination', json_encode($addressOrigination)));
@@ -237,5 +245,15 @@ class AllCosts extends DataStoreAbstract
         $query->setSort(new SortNode(['cost' => SortNode::SORT_ASC]));
         $query->setLimit(new LimitNode(1));
         return $query;
+    }
+
+    /**
+     * @param string $field
+     *
+     * @return bool
+     */
+    private function isAttribute(string $field): bool
+    {
+        return strpos($field, self::ATTRIBUTE_PREFIX) === 0 && count($parts = explode(self::ATTRIBUTE_PREFIX, $field)) === 2 && !empty($parts[1]);
     }
 }
