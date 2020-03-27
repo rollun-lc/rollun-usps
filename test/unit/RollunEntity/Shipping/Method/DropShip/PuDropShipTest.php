@@ -31,6 +31,11 @@ class PuDropShipTest extends TestCase
             [$this->createShippingRequest(100, 10, 2, 3, '10002', '48204'), 20],
             [$this->createShippingRequest(2, 2, 2, 75, '10002', '48204'), 20],
             [$this->createShippingRequest(20, 20, 20, 200, '10002', '48204'), 20],
+            [$this->createShippingRequest(2, 2, 5, 2, '10002', '48204', ['commodity_code1' => 329]), 8.5],
+            [$this->createShippingRequest(2, 2, 5, 2, '10002', '48204', ['commodity_code' => 329]), 14],
+            [$this->createShippingRequest(2, 2, 5, 2, '10002', '48204', ['CommodityCode' => 329]), 14],
+            [$this->createShippingRequest(20, 20, 20, 200, '10002', '48204', ['commodity_code' => 322]), 14],
+            [$this->createShippingRequest(20, 20, 20, 200, '10002', '48204', ['commodity_code' => 300]), 20],
         ];
     }
 
@@ -42,6 +47,6 @@ class PuDropShipTest extends TestCase
      */
     public function testGetCost(ShippingRequest $shippingRequest, $expected)
     {
-        $this->assertEquals($expected, (new PuDropShip('PU-DS', [[false, 8.5], [true, 20]]))->getCost($shippingRequest));
+        $this->assertEquals($expected, (new PuDropShip('PU-DS', [[null, [301, 329], 14], [false, null, 8.5], [true, null, 20]]))->getCost($shippingRequest));
     }
 }

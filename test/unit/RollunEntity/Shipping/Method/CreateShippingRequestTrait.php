@@ -25,10 +25,11 @@ trait CreateShippingRequestTrait
      * @param float  $weight
      * @param string $zipFrom
      * @param string $zipTo
+     * @param array  $attributes
      *
      * @return ShippingRequest
      */
-    protected function createShippingRequest(float $width, float $length, float $height, float $weight, string $zipFrom, string $zipTo): ShippingRequest
+    protected function createShippingRequest(float $width, float $length, float $height, float $weight, string $zipFrom, string $zipTo, array $attributes = []): ShippingRequest
     {
         $addressOrigination = new Address('', $zipFrom);
         $addressDestination = new Address('', $zipTo);
@@ -36,6 +37,6 @@ trait CreateShippingRequestTrait
         $rectangular = new Rectangular($length, $width, $height);
         $product = new Product($rectangular, $weight);
 
-        return new ShippingRequest($product, $addressOrigination, $addressDestination);
+        return new ShippingRequest($product, $addressOrigination, $addressDestination, $attributes);
     }
 }

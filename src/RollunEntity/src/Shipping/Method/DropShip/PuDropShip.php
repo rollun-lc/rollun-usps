@@ -23,9 +23,10 @@ class PuDropShip extends LevelBasedShippingMethod
      */
     protected $levels
         = [
-            // isOversize, price
-            [false, 8.5],
-            [true, 20],
+            // isOversize, commodity_code_range, price
+            [null, [301, 329], 14],
+            [false, null, 8.5],
+            [true, null, 20],
         ];
 
     /**
@@ -41,6 +42,18 @@ class PuDropShip extends LevelBasedShippingMethod
      */
     protected function isLevelValid(ShippingRequest $shippingRequest, array $level): bool
     {
+        // if the tire (commodity_code from 0301 to 0329), than $14
+        if ($level[1] !== null && is_array($level[1])) {
+            foreach (['CommodityCode', 'commodity_code'] as $attr) {
+                if (!empty($value = $shippingRequest->getAttribute($attr))) {
+                    $value = (int)$value;
+                    if ($value >= $level[1][0] && $value <= $level[1][1]) {
+                        return true;
+                    }
+                }
+            }
+        }
+
         return $this->isOversize($shippingRequest) === $level[0];
     }
 
@@ -49,7 +62,7 @@ class PuDropShip extends LevelBasedShippingMethod
      */
     protected function getLevelCost(array $level): ?float
     {
-        return $level[1];
+        return $level[2];
     }
 
     /**
@@ -79,8 +92,6 @@ class PuDropShip extends LevelBasedShippingMethod
         if ($dimensions['Length'] > 96) {
             return true;
         }
-
-        // @todo if the tire (commodity_code from 0301 to 0329), than $14
 
         return false;
     }
