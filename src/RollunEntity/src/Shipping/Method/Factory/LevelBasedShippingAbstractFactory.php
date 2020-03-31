@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace rollun\Entity\Shipping\Method\Factory;
 
 use Interop\Container\ContainerInterface;
+use rollun\Entity\Shipping\Method\LevelBasedShippingMethod;
 
 /**
  * Class LevelBasedShippingAbstractFactory
@@ -15,15 +16,15 @@ use Interop\Container\ContainerInterface;
  */
 class LevelBasedShippingAbstractFactory extends ShippingMethodAbstractFactory
 {
-    const KEY = 'levels';
+    const KEY_LEVELS = 'levels';
 
     /**
      * @inheritDoc
      */
     public function canCreate(ContainerInterface $container, $requestedName)
     {
-        return !empty($container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName])
-            && key_exists(self::KEY, $container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName]);
+        return !empty($container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName][self::KEY_CLASS])
+            && is_a($container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName][self::KEY_CLASS], LevelBasedShippingMethod::class, true);
     }
 
     /**
@@ -34,9 +35,6 @@ class LevelBasedShippingAbstractFactory extends ShippingMethodAbstractFactory
         // get config
         $config = $container->get('config')[self::KEY_SHIPPING_METHOD][$requestedName];
 
-        // get class name
-        $className = $config[self::KEY_CLASS];
-
-        return new $className($requestedName, $config['levels']);
+        return new $config[self::KEY_CLASS]($requestedName, isset($config[self::KEY_LEVELS]) ? $config[self::KEY_LEVELS] : null);
     }
 }
