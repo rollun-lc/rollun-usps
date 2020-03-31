@@ -10,6 +10,7 @@ use rollun\Entity\Shipping\Method\DropShip\AuDropShipCovid19\AuDropShipCovid19At
 use rollun\Entity\Shipping\Method\DropShip\AuDropShipCovid19\AuDropShipCovid19MotorcycleTires;
 use rollun\Entity\Shipping\Method\DropShip\PuDropShip;
 use rollun\Entity\Shipping\Method\DropShip\RmDropShip;
+use rollun\Entity\Shipping\Method\DropShip\SltDropShip;
 use rollun\Entity\Shipping\Method\DropShip\TrDropShip;
 use rollun\Entity\Shipping\Method\DropShip\WpsDropShip;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
@@ -89,12 +90,12 @@ class ConfigProvider
                     'WPS-DS',
                     'TR-DS',
                     'AU-DS',
-                    'AU-DS-COVID19',
+                    'SLT-DS',
+                    'AU-DS-COVID19'
                 ]
             ],
             'RM-DS'                     => [
-                'class'  => RmDropShip::class,
-                'levels' => null
+                'class'  => RmDropShip::class
             ],
             'RM-PickUp'                 => [
                 'class'              => RmPickUp::class,
@@ -104,8 +105,7 @@ class ConfigProvider
                 ]
             ],
             'PU-DS'                     => [
-                'class'  => PuDropShip::class,
-                'levels' => null
+                'class'  => PuDropShip::class
             ],
             'PU-PickUp'                 => [
                 'class'              => PuPickUp::class,
@@ -115,16 +115,16 @@ class ConfigProvider
                 ]
             ],
             'WPS-DS'                    => [
-                'class'  => WpsDropShip::class,
-                'levels' => null
+                'class'  => WpsDropShip::class
             ],
             'TR-DS'                     => [
-                'class'  => TrDropShip::class,
-                'levels' => null
+                'class'  => TrDropShip::class
+            ],
+            'SLT-DS'          => [
+                'class'  => SltDropShip::class
             ],
             'AU-DS'                     => [
-                'class'  => AuDropShip::class,
-                'levels' => null
+                'class'  => AuDropShip::class
             ],
             'AU-DS-COVID19' => [
                 'class'              => ShippingMethodProvider::class,
@@ -136,16 +136,13 @@ class ConfigProvider
                 ]
             ],
             'ATV/UTV-TIRES'             => [
-                'class'  => AuDropShipCovid19AtvUtvTires::class,
-                'levels' => null
+                'class'  => AuDropShipCovid19AtvUtvTires::class
             ],
             'ATV/UTV-WHEELS'            => [
-                'class'  => AuDropShipCovid19AtvUtvWheels::class,
-                'levels' => null
+                'class'  => AuDropShipCovid19AtvUtvWheels::class
             ],
             'MOTORCYCLE-TIRES'          => [
-                'class'  => AuDropShipCovid19MotorcycleTires::class,
-                'levels' => null
+                'class'  => AuDropShipCovid19MotorcycleTires::class
             ],
         ];
     }

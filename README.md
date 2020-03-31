@@ -8,6 +8,7 @@
 - PU-PickUp (USPS)
 - WPS-DS
 - TR-DS
+- SLT-DS
 - AU-DS
 - AU-DS-COVID19
 
