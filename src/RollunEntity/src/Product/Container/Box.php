@@ -46,44 +46,20 @@ class Box extends ContainerAbstract
      */
     protected function canFitProductPack(ItemInterface $item): bool
     {
-        $packDimensions = $this->getPackDimensions($item);
+        $dimensionsList = $item->getDimensionsList();
+        $dimensions = $dimensionsList[0]['dimensions'];
 
-        return $this->max >= $packDimensions['max'] && $this->mid >= $packDimensions['mid'] && $this->min >= $packDimensions['min'];
+        if ($this->max < $dimensions->max || $this->mid < $dimensions->mid || $this->min < $dimensions->min) {
+            return false;
+        }
+
+        $maxQuantity = intdiv($this->max, $dimensions->max) * intdiv($this->mid, $dimensions->mid) * intdiv($this->min, $dimensions->min);
+
+        return $item->quantity <= $maxQuantity;
     }
 
     public function getType(): string
     {
         return static::TYPE_BOX;
-    }
-
-    /**
-     * @param ItemInterface $item
-     *
-     * @return array
-     */
-    public function getPackDimensions(ItemInterface $item): array
-    {
-        $dimensions = $item->getDimensionsList()[0]['dimensions'];
-
-        $packDimension = ['max' => $dimensions->max, 'mid' => $dimensions->mid, 'min' => $dimensions->min];
-
-        $quantity = $item->quantity;
-
-        while ($quantity > 1) {
-            $min = 99999;
-            foreach ($packDimension as $key => $value) {
-                $tmpMin = $packDimension[$key] + $dimensions->$key;
-                if ($tmpMin < $min) {
-                    $min = $tmpMin;
-                    $side = $key;
-                }
-            }
-            $packDimension[$side] = $packDimension[$side] + $dimensions->$side;
-            $quantity--;
-        }
-
-        rsort($packDimension, SORT_NUMERIC);
-
-        return ['max' => $packDimension[0], 'mid' => $packDimension[1], 'min' => $packDimension[2]];
     }
 }

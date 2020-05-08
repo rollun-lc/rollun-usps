@@ -23,37 +23,32 @@ class BoxTest extends TestCase
     /**
      * @return array
      */
-    public function getProductPackDataProvider(): array
+    public function getCanFitProductPackDataProvider(): array
     {
         return [
-            // $box, $pack, $packDimensions
-            [new Box(35, 40, 50), new ProductPack(new Product(new Rectangular(10, 30, 5), 0.5), 7), ['max' => 30, 'mid' => 30, 'min' => 25]],
-            [new Box(3, 2, 2), new ProductPack(new Product(new Rectangular(1, 1, 2), 0.5), 3), ['max' => 2, 'mid' => 2, 'min' => 2]],
-            [new Box(5, 11, 20), new ProductPack(new Product(new Rectangular(10, 1, 20), 0.5), 5), ['max' => 20, 'mid' => 10, 'min' => 5]],
+            // $box, $pack, $expected
+            [new Box(11, 4, 2), new ProductPack(new Product(new Rectangular(2, 2, 2), 0.5), 10), true],
+            [new Box(11, 4, 1), new ProductPack(new Product(new Rectangular(1, 3, 3), 0.5), 3), true],
+            [new Box(10, 7, 10), new ProductPack(new Product(new Rectangular(2, 2, 7), 0.5), 15), true],
+            [new Box(10, 7, 10), new ProductPack(new Product(new Rectangular(2, 6, 6), 0.5), 3), true],
+            [new Box(10, 7, 10), new ProductPack(new Product(new Rectangular(8, 8, 8), 0.5), 3), false],
+            [new Box(2, 2, 1), new ProductPack(new Product(new Rectangular(3, 2, 1), 0.5), 3), false],
+            [new Box(2, 2, 1), new ProductPack(new Product(new Rectangular(2, 2, 1), 0.5), 2), false],
+            [new Box(5, 4, 4), new ProductPack(new Product(new Rectangular(1, 1, 1), 0.5), 81), false],
+            [new Box(5, 4, 4), new ProductPack(new Product(new Rectangular(1, 2, 2), 0.5), 17), false],
         ];
     }
 
     /**
      * @param Box         $box
      * @param ProductPack $pack
-     * @param array       $packDimensions
+     * @param bool        $expected
      *
-     * @dataProvider getProductPackDataProvider
+     * @dataProvider getCanFitProductPackDataProvider
      */
-    public function testGetPackDimensions(Box $box, ProductPack $pack, array $packDimensions)
+    public function testCanFitProductPack(Box $box, ProductPack $pack, bool $expected)
     {
-        $this->assertEquals($packDimensions, $box->getPackDimensions($pack));
-    }
-
-    /**
-     * @param Box         $box
-     * @param ProductPack $pack
-     *
-     * @dataProvider getProductPackDataProvider
-     */
-    public function testCanFitProductPack(Box $box, ProductPack $pack)
-    {
-        $this->assertTrue($box->canFit($pack));
+        $this->assertEquals($expected, $box->canFit($pack));
     }
 
     /**
@@ -80,56 +75,5 @@ class BoxTest extends TestCase
         $product = new Product($rectangular, 0.5);
 
         $this->assertFalse($box->canFit($product));
-    }
-
-    /**
-     * @return array
-     */
-    public function boxWithPackTrueDataProvider()
-    {
-        return [
-            [new Box(35, 20, 10), new Rectangular(10, 10, 5), 2],
-            [new Box(20, 20, 20), new Rectangular(5, 5, 5), 4],
-        ];
-    }
-
-    /**
-     * @param Box         $box
-     * @param Rectangular $productDim
-     * @param int         $qty
-     *
-     * @dataProvider boxWithPackTrueDataProvider
-     */
-    public function testBoxWithPackTrue(Box $box, Rectangular $productDim, int $qty)
-    {
-        $productPack = new ProductPack(new Product($productDim, 0.5), $qty);
-
-        $this->assertTrue($box->canFit($productPack));
-    }
-
-    /**
-     * @return array
-     */
-    public function boxWithPackFalseDataProvider(): array
-    {
-        return [
-            [new Box(35, 20, 10), new Rectangular(10, 10, 5), 5],
-            [new Box(10, 10, 10), new Rectangular(10, 10, 10), 2],
-            [new Box(30, 20, 10), new Rectangular(10, 10, 10), 4],
-        ];
-    }
-
-    /**
-     * @param Box         $box
-     * @param Rectangular $productDim
-     * @param int         $qty
-     *
-     * @dataProvider boxWithPackFalseDataProvider
-     */
-    public function testBoxWithPackFalse(Box $box, Rectangular $productDim, int $qty)
-    {
-        $productPack = new ProductPack(new Product($productDim, 0.5), $qty);
-
-        $this->assertFalse($box->canFit($productPack));
     }
 }
