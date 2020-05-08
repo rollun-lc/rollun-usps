@@ -83,16 +83,16 @@ class Box extends ContainerAbstract
         if (count($data) <= 1) {
             $result = $data;
         } else {
-            $result = array();
+            $result = [];
             for ($i = 0; $i < count($data); ++$i) {
                 $firstword = $data[$i];
-                $remainingwords = array();
+                $input = [];
                 for ($j = 0; $j < count($data); ++$j) {
                     if ($i <> $j) {
-                        $remainingwords[] = $data[$j];
+                        $input[] = $data[$j];
                     }
                 }
-                $combos = $this->arrayCombinations($remainingwords);
+                $combos = $this->arrayCombinations($input);
                 for ($j = 0; $j < count($combos); ++$j) {
                     $result[] = $firstword . '-' . $combos[$j];
                 }
