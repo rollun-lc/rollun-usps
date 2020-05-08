@@ -28,6 +28,7 @@ class BoxTest extends TestCase
         return [
             // $box, $pack, $expected
             [new Box(13, 9, 2), new ProductPack(new Product(new Rectangular(8, 2, 2), 0.5), 6), true],
+            [new Box(13, 9, 2), new ProductPack(new Product(new Rectangular(12, 5, 1), 0.5), 1), true],
             [new Box(11, 4, 2), new ProductPack(new Product(new Rectangular(2, 2, 2), 0.5), 10), true],
             [new Box(11, 4, 1), new ProductPack(new Product(new Rectangular(1, 3, 3), 0.5), 3), true],
             [new Box(10, 7, 10), new ProductPack(new Product(new Rectangular(2, 2, 7), 0.5), 15), true],
