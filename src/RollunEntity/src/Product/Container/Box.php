@@ -41,8 +41,49 @@ class Box extends ContainerAbstract
             $this->min >= $dimensions->min;
     }
 
+    /**
+     * @inheritDoc
+     */
+    protected function canFitProductPack(ItemInterface $item): bool
+    {
+        $packDimensions = $this->getPackDimensions($item);
+
+        return $this->max >= $packDimensions['max'] && $this->mid >= $packDimensions['mid'] && $this->min >= $packDimensions['min'];
+    }
+
     public function getType(): string
     {
         return static::TYPE_BOX;
+    }
+
+    /**
+     * @param ItemInterface $item
+     *
+     * @return array
+     */
+    public function getPackDimensions(ItemInterface $item): array
+    {
+        $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+        $packDimension = ['max' => $dimensions->max, 'mid' => $dimensions->mid, 'min' => $dimensions->min];
+
+        $quantity = $item->quantity;
+
+        while ($quantity > 1) {
+            $min = 99999;
+            foreach ($packDimension as $key => $value) {
+                $tmpMin = $packDimension[$key] + $dimensions->$key;
+                if ($tmpMin < $min) {
+                    $min = $tmpMin;
+                    $side = $key;
+                }
+            }
+            $packDimension[$side] = $packDimension[$side] + $dimensions->$side;
+            $quantity--;
+        }
+
+        rsort($packDimension, SORT_NUMERIC);
+
+        return ['max' => $packDimension[0], 'mid' => $packDimension[1], 'min' => $packDimension[2]];
     }
 }

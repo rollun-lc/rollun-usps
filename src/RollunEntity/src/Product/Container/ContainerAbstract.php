@@ -43,20 +43,7 @@ abstract class ContainerAbstract implements ContainerInterface
 
     protected function canFitProductPack(ItemInterface $item): bool
     {
-        if (!$item instanceof ProductPack) {
-            return false;
-        }
-        if ($item->quantity !== 2 && $item->quantity !== 4) {
-            return false;
-        }
-        //
-        $dimensions = current($item->getDimensionsList())['dimensions'];
-        $rectangular = new Rectangular($dimensions->max, $dimensions->mid, $dimensions->min * 2);
-        if ($item->quantity === 4) {
-            $rectangular->min *= 2;
-        }
-        $product = new Product($rectangular, $item->getWeight());
-        return $this->canFitProduct($product);
+        return false;
     }
 
     protected function canFitProductKit(ItemInterface $item): bool
