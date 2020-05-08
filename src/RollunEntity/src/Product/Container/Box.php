@@ -53,7 +53,17 @@ class Box extends ContainerAbstract
             return false;
         }
 
-        $maxQuantity = intdiv($this->max, $dimensions->max) * intdiv($this->mid, $dimensions->mid) * intdiv($this->min, $dimensions->min);
+        // find max possible quantity
+        $maxQuantity = 0;
+        foreach ($this->arrayCombinations([$dimensions->max, $dimensions->mid, $dimensions->min]) as $row) {
+            $itemDimensions = explode("-", $row);
+
+            $rowQuantity = intdiv($this->max, (int)$itemDimensions[0]) * intdiv($this->mid, (int)$itemDimensions[1]) * intdiv($this->min, (int)$itemDimensions[2]);
+
+            if ($rowQuantity > $maxQuantity){
+                $maxQuantity = $rowQuantity;
+            }
+        }
 
         return $item->quantity <= $maxQuantity;
     }
@@ -61,5 +71,34 @@ class Box extends ContainerAbstract
     public function getType(): string
     {
         return static::TYPE_BOX;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function arrayCombinations(array $data): array
+    {
+        if (count($data) <= 1) {
+            $result = $data;
+        } else {
+            $result = array();
+            for ($i = 0; $i < count($data); ++$i) {
+                $firstword = $data[$i];
+                $remainingwords = array();
+                for ($j = 0; $j < count($data); ++$j) {
+                    if ($i <> $j) {
+                        $remainingwords[] = $data[$j];
+                    }
+                }
+                $combos = $this->arrayCombinations($remainingwords);
+                for ($j = 0; $j < count($combos); ++$j) {
+                    $result[] = $firstword . '-' . $combos[$j];
+                }
+            }
+        }
+
+        return $result;
     }
 }
