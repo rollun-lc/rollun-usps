@@ -88,7 +88,10 @@ class Box extends ContainerAbstract
             )
         ];
 
-        return count($this->pack($items)->getContainers()) === 1;
+        // how many containers we need for fitting items?
+        $containersCount = count($this->pack($items)->getContainers());
+
+        return $containersCount === 1;
     }
 
     /**
@@ -112,7 +115,10 @@ class Box extends ContainerAbstract
             );
         }
 
-        return count($this->pack($items)->getContainers()) === 1;
+        // how many containers we need for fitting items?
+        $containersCount = count($this->pack($items)->getContainers());
+
+        return $containersCount === 1;
     }
 
     /**
