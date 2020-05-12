@@ -2,17 +2,18 @@
 
 /**
  * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
+ * @license   LICENSE.md New BSD License
  */
 declare(strict_types=1);
 
 namespace rollun\Entity\Product\Container;
 
+use OpenAPI\Client\Api\PackerApi;
 use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
-use rollun\Entity\Product\Container\ContainerAbstract;
 use rollun\Entity\Product\Item\Product;
 use rollun\Entity\Product\Item\ProductPack;
+use OpenAPI\Client\Model\Result;
 
 class Box extends ContainerAbstract
 {
@@ -46,6 +47,8 @@ class Box extends ContainerAbstract
      */
     protected function canFitProductPack(ItemInterface $item): bool
     {
+//        return count($this->pack($item)->getContainers()) === 1;
+
         $dimensionsList = $item->getDimensionsList();
         $dimensions = $dimensionsList[0]['dimensions'];
 
@@ -100,5 +103,43 @@ class Box extends ContainerAbstract
         }
 
         return $result;
+    }
+
+    /**
+     * @param ItemInterface $item
+     *
+     * @return Result
+     * @throws \OpenAPI\Client\ApiException
+     */
+    protected function pack(ItemInterface $item): Result
+    {
+        // get item dimensions
+        $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+        // prepare data
+        $data = [
+            'container' => [
+                'name'      => 'no-name',
+                'price'     => 1,
+                'width'     => $this->max,
+                'height'    => $this->mid,
+                'length'    => $this->min,
+                'thickness' => 0,
+            ],
+            'item'      => [
+                'name'     => 'no-name',
+                'width'    => $dimensions->max,
+                'height'   => $dimensions->mid,
+                'length'   => $dimensions->min,
+                'quantity' => $item->quantity,
+            ]
+        ];
+
+        // prepare request body
+        $body = new \OpenAPI\Client\Model\Body();
+        $body->setContainer([new \OpenAPI\Client\Model\Container($data['container'])]);
+        $body->setItems([new \OpenAPI\Client\Model\Item($data['item'])]);
+
+        return (new PackerApi(new \GuzzleHttp\Client()))->pack($body);
     }
 }
