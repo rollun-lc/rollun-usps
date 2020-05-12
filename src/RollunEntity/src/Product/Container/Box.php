@@ -1,74 +1,55 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license   LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Product\Container;
 
+use OpenAPI\Client\Model\Item as ApiItem;
 use OpenAPI\Client\Api\PackerApi;
-use rollun\Entity\Product\Dimensions\Rectangular;
-use rollun\Entity\Product\Item\ItemInterface;
-use rollun\Entity\Product\Item\Product;
-use rollun\Entity\Product\Item\ProductPack;
 use OpenAPI\Client\Model\Result;
+use rollun\Entity\Product\Item\ItemInterface;
 
+/**
+ * Class Box
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
 class Box extends ContainerAbstract
 {
-
+    /**
+     * Container type
+     */
     const TYPE_BOX = 'Box';
 
+    /**
+     * @var float
+     */
     public $max;
+
+    /**
+     * @var float
+     */
     public $mid;
+
+    /**
+     * @var float
+     */
     public $min;
 
+    /**
+     * Box constructor.
+     *
+     * @param float $max
+     * @param float $mid
+     * @param float $min
+     */
     public function __construct($max, $mid, $min)
     {
         $dim = compact('max', 'mid', 'min');
         rsort($dim, SORT_NUMERIC);
         [$this->max, $this->mid, $this->min] = $dim;
-    }
-
-    protected function canFitProduct(ItemInterface $item): bool
-    {
-        $dimensionsList = $item->getDimensionsList();
-        $dimensions = $dimensionsList[0]['dimensions'];
-        return
-
-            $this->max >= $dimensions->max &&
-            $this->mid >= $dimensions->mid &&
-            $this->min >= $dimensions->min;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function canFitProductPack(ItemInterface $item): bool
-    {
-//        return count($this->pack($item)->getContainers()) === 1;
-
-        $dimensionsList = $item->getDimensionsList();
-        $dimensions = $dimensionsList[0]['dimensions'];
-
-        if ($this->max < $dimensions->max || $this->mid < $dimensions->mid || $this->min < $dimensions->min) {
-            return false;
-        }
-
-        // find max possible quantity
-        $maxQuantity = 0;
-        foreach ($this->arrayCombinations([$dimensions->max, $dimensions->mid, $dimensions->min]) as $row) {
-            $itemDimensions = explode("-", $row);
-
-            $rowQuantity = intdiv($this->max, (int)$itemDimensions[0]) * intdiv($this->mid, (int)$itemDimensions[1]) * intdiv($this->min, (int)$itemDimensions[2]);
-
-            if ($rowQuantity > $maxQuantity){
-                $maxQuantity = $rowQuantity;
-            }
-        }
-
-        return $item->quantity <= $maxQuantity;
     }
 
     public function getType(): string
@@ -77,68 +58,84 @@ class Box extends ContainerAbstract
     }
 
     /**
-     * @param array $data
-     *
-     * @return array
+     * @inheritDoc
      */
-    protected function arrayCombinations(array $data): array
-    {
-        if (count($data) <= 1) {
-            $result = $data;
-        } else {
-            $result = [];
-            for ($i = 0; $i < count($data); ++$i) {
-                $firstword = $data[$i];
-                $input = [];
-                for ($j = 0; $j < count($data); ++$j) {
-                    if ($i <> $j) {
-                        $input[] = $data[$j];
-                    }
-                }
-                $combos = $this->arrayCombinations($input);
-                for ($j = 0; $j < count($combos); ++$j) {
-                    $result[] = $firstword . '-' . $combos[$j];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param ItemInterface $item
-     *
-     * @return Result
-     * @throws \OpenAPI\Client\ApiException
-     */
-    protected function pack(ItemInterface $item): Result
+    protected function canFitProduct(ItemInterface $item): bool
     {
         // get item dimensions
         $dimensions = $item->getDimensionsList()[0]['dimensions'];
 
-        // prepare data
-        $data = [
-            'container' => [
-                'name'      => 'no-name',
-                'price'     => 1,
-                'width'     => $this->max,
-                'height'    => $this->mid,
-                'length'    => $this->min,
-                'thickness' => 0,
-            ],
-            'item'      => [
-                'name'     => 'no-name',
-                'width'    => $dimensions->max,
-                'height'   => $dimensions->mid,
-                'length'   => $dimensions->min,
-                'quantity' => $item->quantity,
-            ]
+        return $this->max >= $dimensions->max && $this->mid >= $dimensions->mid && $this->min >= $dimensions->min;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function canFitProductPack(ItemInterface $item): bool
+    {
+        // get item dimensions
+        $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+        $items = [
+            new ApiItem(
+                [
+                    'name'     => 'no-name',
+                    'width'    => $dimensions->max,
+                    'height'   => $dimensions->mid,
+                    'length'   => $dimensions->min,
+                    'quantity' => $item->quantity,
+                ]
+            )
+        ];
+
+        return count($this->pack($items)->getContainers()) === 1;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function canFitProductKit(ItemInterface $item): bool
+    {
+        $items = [];
+        foreach ($item->items as $product) {
+            // get product dimensions
+            $dimensions = $product->getDimensionsList()[0]['dimensions'];
+
+            $items[] = new ApiItem(
+                [
+                    'name'     => 'no-name',
+                    'width'    => $dimensions->max,
+                    'height'   => $dimensions->mid,
+                    'length'   => $dimensions->min,
+                    'quantity' => isset($product->quantity) ? $product->quantity : 1,
+                ]
+            );
+        }
+
+        return count($this->pack($items)->getContainers()) === 1;
+    }
+
+    /**
+     * @param array $items
+     *
+     * @return Result
+     * @throws \OpenAPI\Client\ApiException
+     */
+    protected function pack(array $items): Result
+    {
+        $containerData = [
+            'name'      => 'no-name',
+            'price'     => 1,
+            'width'     => $this->max,
+            'height'    => $this->mid,
+            'length'    => $this->min,
+            'thickness' => 0,
         ];
 
         // prepare request body
-        $body = new \OpenAPI\Client\Model\Body();
-        $body->setContainer([new \OpenAPI\Client\Model\Container($data['container'])]);
-        $body->setItems([new \OpenAPI\Client\Model\Item($data['item'])]);
+        $body = (new \OpenAPI\Client\Model\Body())
+            ->setContainer([new \OpenAPI\Client\Model\Container($containerData)])
+            ->setItems($items);
 
         return (new PackerApi(new \GuzzleHttp\Client()))->pack($body);
     }
