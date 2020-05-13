@@ -39,9 +39,11 @@
   ],
   "require": {
     "php": "^7.1",
+    "ext-curl": "*",
     "ext-json": "*",
     "ext-mbstring": "*",
     "code-tool/jaeger-client-php": "^2.16",
+    "guzzlehttp/guzzle": "^6.5",
     "rollun-com/rollun-callback": "^5.2",
     "rollun-com/rollun-datastore": "^6",
     "rollun-com/rollun-logger": "^4.2",
@@ -63,7 +65,8 @@
     "psr-4": {
       "rollun\\Entity\\": "src/RollunEntity/src/",
       "service\\Entity\\": "src/ServiceEntity/src/",
-      "service\\Shipping\\": "src/ServiceShipping/src/"
+      "service\\Shipping\\": "src/ServiceShipping/src/",
+      "OpenAPI\\Client\\": "src/OpenAPI/Client/"
     }
   },
   "autoload-dev": {
