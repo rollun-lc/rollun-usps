@@ -80,6 +80,12 @@ class BoxTest extends TestCase
                     new Product(new Rectangular(2, 3, 9), 0.5),
                 ]
             ), false],
+            [new Box(7, 8, 10), new ProductKit(
+                [
+                    new Product(new Rectangular(2, 2, 2), 0.5),
+                    new Product(new Rectangular(2, 3, 11), 0.5),
+                ]
+            ), false],
         ];
     }
 

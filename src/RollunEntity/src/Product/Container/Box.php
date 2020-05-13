@@ -88,10 +88,12 @@ class Box extends ContainerAbstract
             )
         ];
 
-        // how many containers we need for fitting items?
-        $containersCount = count($this->pack($items)->getContainers());
+        // is can be packed ?
+        if (empty($pack = $this->pack($items))) {
+            return false;
+        }
 
-        return $containersCount === 1;
+        return count($pack->getContainers()) === 1;
     }
 
     /**
@@ -115,19 +117,20 @@ class Box extends ContainerAbstract
             );
         }
 
-        // how many containers we need for fitting items?
-        $containersCount = count($this->pack($items)->getContainers());
+        // is can be packed ?
+        if (empty($pack = $this->pack($items))) {
+            return false;
+        }
 
-        return $containersCount === 1;
+        return count($pack->getContainers()) === 1;
     }
 
     /**
      * @param array $items
      *
-     * @return Result
-     * @throws \OpenAPI\Client\ApiException
+     * @return Result|null
      */
-    protected function pack(array $items): Result
+    protected function pack(array $items): ?Result
     {
         $containerData = [
             'name'      => 'no-name',
@@ -143,6 +146,12 @@ class Box extends ContainerAbstract
             ->setContainer([new \OpenAPI\Client\Model\Container($containerData)])
             ->setItems($items);
 
-        return (new PackerApi(new \GuzzleHttp\Client()))->pack($body);
+        try {
+            $result = (new PackerApi(new \GuzzleHttp\Client()))->pack($body);
+        } catch (\OpenAPI\Client\ApiException $e) {
+            $result = null;
+        }
+
+        return $result;
     }
 }
