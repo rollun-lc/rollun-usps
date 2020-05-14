@@ -15,7 +15,10 @@ use Xiag\Rql\Parser\Query;
 /**
  * Class AbstractSupplier
  *
- * @author r.ratsun <r.ratsun.rollun@gmail.com>
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
  */
 abstract class AbstractSupplier
 {
@@ -79,7 +82,7 @@ abstract class AbstractSupplier
 
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
-                if (strpos($shippingMethod['id'], $supplierShippingMethod['name']) !== false && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
+                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
                     return $shippingMethod;
                 }
             }
@@ -97,6 +100,35 @@ abstract class AbstractSupplier
      */
     protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
     {
+        /**
+         * For all usps methods
+         */
+        $parts = explode('-Usps-', $shippingMethod);
+        if (isset($parts[1])) {
+            $uspsMethod = $parts[1];
+
+            if ($item->getWeight() >= 10) {
+                return false;
+            }
+            if (empty($item->quantity)) {
+                return false;
+            }
+            if ((float)$item->getAttribute('price') > 100) {
+                return false;
+            }
+            if (empty($item->getAttribute('airAllowed'))) {
+                return false;
+            }
+
+            if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
+                return false;
+            }
+
+            if ($uspsMethod === 'PM-FR-Env' && $item->getWeight() > 5) {
+                return false;
+            }
+        }
+
         return true;
     }
 
