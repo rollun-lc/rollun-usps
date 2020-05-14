@@ -20,6 +20,7 @@ use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
 use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
 use rollun\Entity\Shipping\Method\ShippingMethodProvider;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
+use rollun\Entity\Supplier\PartsUnlimited;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use service\Entity\Handler\LoggerHandler;
 use service\Entity\Handler\MegaplanHandler;
@@ -64,11 +65,12 @@ class ConfigProvider
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class
             ],
-            'invokables'         => [
+            'invokables' => [
                 BestShippingHandler::class => BestShippingHandler::class,
                 LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
                 'shipping-all-costs'       => AllCosts::class,
+                PartsUnlimited::class      => PartsUnlimited::class,
             ],
         ];
     }

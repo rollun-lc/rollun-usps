@@ -1,19 +1,23 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Product\Item;
 
-use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Dimensions\DimensionsInterface;
 
-class Product implements ItemInterface
+/**
+ * Class Product
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
+class Product extends AbstractItem
 {
-
+    /**
+     * @var float
+     */
     public $weight;
 
     /**
@@ -22,26 +26,36 @@ class Product implements ItemInterface
      */
     public $dimensions;
 
+    /**
+     * AbstractItem constructor.
+     *
+     * @param DimensionsInterface $dimensions
+     * @param float               $weight
+     */
     public function __construct(DimensionsInterface $dimensions, $weight)
     {
-        /* @var $dimensions DimensionsInterface */
         $this->dimensions = $dimensions;
         $this->weight = $weight;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getWeight()
     {
         return $this->weight;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getDimensionsList(): array
     {
-        return[['dimensions' => $this->dimensions, 'quantity' => 1]];
+        return [['dimensions' => $this->dimensions, 'quantity' => 1]];
     }
 
     /**
-     *
-     * @return int Volume in cubic foots
+     * @inheritDoc
      */
     public function getVolume(): int
     {

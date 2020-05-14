@@ -1,30 +1,31 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Product\Item;
 
-//use rollun\datastore\DataStore\Memory as MemoryDataStore;
-
+/**
+ * Interface ItemInterface
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
 interface ItemInterface
 {
+    const KEYS_DIMENSIONS_LIST = ['dimensions', 'quantity'];
 
-    const KEYS_DIMENSIONS_LIST = [
-        'dimensions',
-        'quantity'
-    ];
-
+    /**
+     * @return float
+     */
     public function getWeight();
 
-    //[[dimensions=>dimensionsObject, 'quantity' =>1], [dimensions...]]
+    /**
+     * @return array
+     */
     public function getDimensionsList(): array;
 
     /**
-     *
      * @return int Volume in cubic foots
      */
     public function getVolume(): int;
