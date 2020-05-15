@@ -92,8 +92,23 @@ class PartsUnlimited extends AbstractSupplier
                 return false;
             }
 
-            if ($parts[1] === 'PM-FR-Env' && $item->getWeight() > 5) {
-                return false;
+            if ($parts[1] === 'PM-FR-Env') {
+                // get item dimensions
+                $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+                if ($dimensions->max <= 0) {
+                    return false;
+                }
+
+                $weight = $item->getWeight();
+                $lbs = $item->getVolume() / 166;
+                if ($lbs > $item->getWeight()) {
+                    $weight = $lbs;
+                }
+
+                if ($weight > 5) {
+                    return false;
+                }
             }
         }
 

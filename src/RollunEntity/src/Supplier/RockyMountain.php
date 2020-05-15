@@ -39,6 +39,14 @@ class RockyMountain extends AbstractSupplier
                 'priority' => 3
             ],
             [
+                'name'     => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv',
+                'priority' => 5
+            ],
+            [
+                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env',
+                'priority' => 6
+            ],
+            [
                 'name'     => 'Root-RM-DS',
                 'priority' => 7
             ],
@@ -93,8 +101,33 @@ class RockyMountain extends AbstractSupplier
                 return false;
             }
 
-            if ($parts[1] === 'PM-FR-Env' && $item->getWeight() > 5) {
-                return false;
+            // get item dimensions
+            $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+            $weight = $item->getWeight();
+            $lbs = $item->getVolume() / 166;
+            if ($lbs > $item->getWeight()) {
+                $weight = $lbs;
+            }
+
+            if ($parts[1] === 'PM-FR-Env') {
+                if ($dimensions->max <= 0) {
+                    return false;
+                }
+
+                if ($weight > 5) {
+                    return false;
+                }
+            }
+
+            if ($parts[1] === 'PM-FR-LegalEnv' || $parts[1] === 'PM-FR-Pad-Env') {
+                if ($dimensions->max <= 0) {
+                    return false;
+                }
+
+                if ($weight > 7) {
+                    return false;
+                }
             }
         }
 
