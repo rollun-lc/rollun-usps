@@ -23,16 +23,72 @@ class SupplierTest extends TestCase
     public function getBestShippingMethodDataProvider(): array
     {
         return [
-            [PartsUnlimited::class, $this->createProductPack(8, 9, 2, 3, 50), '91730', 'Root-PU-PickUp-Usps-PM-FR-Env'],
-            [PartsUnlimited::class, $this->createProductPack(2, 2, 1, 0.5, 89), '91730', 'Root-PU-PickUp-Usps-FtCls-Package'],
-            [PartsUnlimited::class, $this->createProductPack(2, 2, 1, 0.5, 101), '91730', 'Root-PU-DS'],
-            [PartsUnlimited::class, $this->createProductPack(2, 2, 1, 0.5, 55, 1, false), '91730', 'Root-PU-DS'],
-            [RockyMountain::class, $this->createProductPack(8, 9, 2, 3, 50), '80000', 'Root-RM-PickUp-Usps-PM-FR-Env'],
-            [RockyMountain::class, $this->createProductPack(2, 2, 1, 0.5, 89), '91730', 'Root-RM-PickUp-Usps-FtCls-Package'],
-            [RockyMountain::class, $this->createProductPack(2, 2, 1, 0.5, 101, 0), '91730', 'Root-RM-DS-Ontrack'],
-            [Slt::class, $this->createProductPack(2, 2, 1, 0.5, 101), '91730', 'Root-SLT-DS'],
-            [AutoDist::class, $this->createProductPack(2, 2, 1, 0.5, 101), '91730', 'Root-AU-DS'],
-            [AutoDist::class, $this->createProductPack(2, 2, 1, 71, 101), '91730', null],
+            [
+                PartsUnlimited::class,
+                (new Product(new Rectangular(9, 8, 2), 3))->setAttributes(['your_dealer_price' => 50, 'nc_availability' => 4]),
+                '91730',
+                'Root-PU-PickUp-Usps-PM-FR-Env'
+            ],
+            [
+                PartsUnlimited::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 89, 'nc_availability' => 4]),
+                '91730',
+                'Root-PU-PickUp-Usps-FtCls-Package'
+            ],
+            [
+                PartsUnlimited::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 101, 'nc_availability' => 4]),
+                '91730',
+                'Root-PU-DS'
+            ],
+            [
+                PartsUnlimited::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 55, 'nc_availability' => 0]),
+                '91730',
+                'Root-PU-DS'
+            ],
+            [
+                RockyMountain::class,
+                (new Product(new Rectangular(9, 8, 2), 3))->setAttributes(['rmatv_price' => 50, 'qty_ut' => 2]),
+                '80000',
+                'Root-RM-PickUp-Usps-PM-FR-Env'
+            ],
+            [
+                RockyMountain::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['rmatv_price' => 89, 'qty_ut' => 2]),
+                '91730',
+                'Root-RM-PickUp-Usps-FtCls-Package'
+            ],
+            [
+                RockyMountain::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['rmatv_price' => 101, 'qty_ut' => 2]),
+                '91730',
+                'Root-RM-DS-Ontrack'
+            ],
+            [
+                RockyMountain::class,
+                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['rmatv_price' => 101, 'qty_ut' => 0]),
+                '91730',
+                'Root-RM-DS'
+            ],
+            [
+                Slt::class,
+                new Product(new Rectangular(2, 2, 1), 0.5),
+                '91730',
+                'Root-SLT-DS'
+            ],
+            [
+                AutoDist::class,
+                new Product(new Rectangular(2, 2, 1), 0.5),
+                '91730',
+                'Root-AU-DS'
+            ],
+            [
+                AutoDist::class,
+                new Product(new Rectangular(2, 2, 1), 75),
+                '91730',
+                null
+            ],
         ];
     }
 
@@ -50,26 +106,6 @@ class SupplierTest extends TestCase
 
         $actual = $container->get($supplierClass)->getBestShippingMethod($item, $zipDestination);
 
-        $this->assertEquals($expected, empty($actual) ? null : $actual['id']);
-    }
-
-    /**
-     * @param float $max
-     * @param float $mid
-     * @param float $min
-     * @param float $weight
-     * @param float $price
-     * @param int   $quantity
-     * @param bool  $airAllowed
-     *
-     * @return ProductPack
-     */
-    protected function createProductPack(float $max, float $mid, float $min, float $weight, float $price, int $quantity = 1, bool $airAllowed = true): ProductPack
-    {
-        $productPack = new ProductPack(new Product(new Rectangular($max, $mid, $min), $weight), $quantity);
-        $productPack->addAttribute('price', $price);
-        $productPack->addAttribute('airAllowed', $airAllowed);
-
-        return $productPack;
+        $this->assertEquals($expected, empty($actual) ? null : $actual['name']);
     }
 }

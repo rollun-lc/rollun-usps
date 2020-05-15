@@ -63,7 +63,7 @@ class RockyMountain extends AbstractSupplier
      */
     protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
     {
-        if ($shippingMethod === 'RM-DS-Ontrack' && empty($item->getAttribute('qty_ut'))) {
+        if ($shippingMethod === 'Root-RM-DS-Ontrack' && empty($item->getAttribute('qty_ut'))) {
             return false;
         }
 
