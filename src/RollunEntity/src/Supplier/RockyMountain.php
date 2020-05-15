@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace rollun\Entity\Supplier;
 
 use rollun\Entity\Product\Item\ItemInterface;
+use service\Entity\Api\DataStore\Shipping\BestShipping;
 
 /**
  * Class RockyMountain
@@ -48,7 +49,7 @@ class RockyMountain extends AbstractSupplier
      */
     public function isInStock(string $rollunId): bool
     {
-        $response = self::httpSend("api/datastore/RockyMountainInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
+        $response = BestShipping::httpSend("api/datastore/RockyMountainInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
         if (empty($response[0])) {
             return false;
         }
@@ -86,7 +87,9 @@ class RockyMountain extends AbstractSupplier
                 return false;
             }
 
-            // @todo add air allowed
+            if (!$this->isAirAllowed((string)$item->getAttribute('name'))) {
+                return false;
+            }
 
             if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
                 return false;

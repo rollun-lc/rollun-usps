@@ -9,6 +9,7 @@ use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
 use rollun\utils\Json\Serializer;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
+use service\Entity\Api\DataStore\Shipping\BestShipping;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
@@ -72,38 +73,6 @@ abstract class AbstractSupplier
                 'allCosts' => AllCosts::class
             ]
         );
-    }
-
-    /**
-     * @param string $url
-     *
-     * @return array
-     */
-    public static function httpSend(string $url): array
-    {
-        if (empty(getenv('CATALOG_API_URL'))) {
-            throw new \InvalidArgumentException('Empty CATALOG_API_URL env variable');
-        }
-
-        $client = new Client(getenv('CATALOG_API_URL') . '/' . $url);
-
-        $headers['Content-Type'] = 'application/json';
-        $headers['Accept'] = 'application/json';
-        $headers['APP_ENV'] = getenv('APP_ENV');
-
-        $client->setHeaders($headers);
-
-        $client->setMethod('GET');
-
-        $response = $client->send();
-
-        if ($response->isSuccess()) {
-            $result = Serializer::jsonUnserialize($response->getBody());
-        } else {
-            $result = [];
-        }
-
-        return $result;
     }
 
     /**
@@ -230,7 +199,7 @@ abstract class AbstractSupplier
      */
     protected function getDimensions(string $rollunId): array
     {
-        $response = self::httpSend("api/datastore/DimensionStore?eq(id,$rollunId)&limit(20,0)");
+        $response = BestShipping::httpSend("api/datastore/DimensionStore?eq(id,$rollunId)&limit(20,0)");
         if (empty($response[0])) {
             return [
                 'width'  => -1000,
@@ -246,5 +215,32 @@ abstract class AbstractSupplier
             'length' => $response[0]['length'],
             'weight' => $response[0]['weight']
         ];
+    }
+
+    /**
+     * @param string $title
+     *
+     * @return bool
+     */
+    protected function isAirAllowed(string $title): bool
+    {
+        // get stop words
+        $stopWords = BestShipping::httpSend("api/datastore/AirStopWords");
+
+        if (!empty($stopWords)) {
+            foreach ($stopWords as $row) {
+                // prepare stop word
+                $stopWord = trim(strtolower($row['stop_phrase']));
+
+                // prepare product title
+                $title = trim(strtolower($title));
+
+                if (strpos($title, $stopWord) !== false) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 }

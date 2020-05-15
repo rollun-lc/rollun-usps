@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace rollun\Entity\Supplier;
 
 use rollun\Entity\Product\Item\ItemInterface;
+use service\Entity\Api\DataStore\Shipping\BestShipping;
 
 /**
  * Class PartsUnlimited
@@ -44,7 +45,7 @@ class PartsUnlimited extends AbstractSupplier
      */
     public function isInStock(string $rollunId): bool
     {
-        $response = self::httpSend("api/datastore/PartsUnlimitedInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
+        $response = BestShipping::httpSend("api/datastore/PartsUnlimitedInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
         if (empty($response[0])) {
             return false;
         }
@@ -78,7 +79,9 @@ class PartsUnlimited extends AbstractSupplier
                 return false;
             }
 
-            // @todo add air allowed
+            if (!$this->isAirAllowed((string)$item->getAttribute('part_description'))) {
+                return false;
+            }
 
             if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
                 return false;

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace rollun\Entity\Supplier;
 
 use rollun\Entity\Product\Item\ItemInterface;
+use service\Entity\Api\DataStore\Shipping\BestShipping;
 
 /**
  * Class AutoDist
@@ -36,7 +37,7 @@ class AutoDist extends AbstractSupplier
      */
     public function isInStock(string $rollunId): bool
     {
-        $response = self::httpSend("api/datastore/AutodistInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
+        $response = BestShipping::httpSend("api/datastore/AutodistInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
         if (empty($response[0])) {
             return false;
         }

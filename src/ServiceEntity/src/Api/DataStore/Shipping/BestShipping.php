@@ -18,7 +18,9 @@ use rollun\Entity\Supplier\AutoDist;
 use rollun\Entity\Supplier\PartsUnlimited;
 use rollun\Entity\Supplier\RockyMountain;
 use rollun\Entity\Supplier\Slt;
+use rollun\utils\Json\Serializer;
 use Xiag\Rql\Parser\Query;
+use Zend\Http\Client;
 
 /**
  * Class BestShipping
@@ -73,6 +75,11 @@ class BestShipping extends DataStoreAbstract
     protected $autoDist;
 
     /**
+     * @var array
+     */
+    protected static $httpResponses = [];
+
+    /**
      * BestShipping constructor.
      *
      * @param PartsUnlimited|null $partsUnlimited
@@ -118,6 +125,44 @@ class BestShipping extends DataStoreAbstract
     }
 
     /**
+     * @param string $url
+     *
+     * @return array
+     */
+    public static function httpSend(string $url): array
+    {
+        if (empty(getenv('CATALOG_API_URL'))) {
+            throw new \InvalidArgumentException('Empty CATALOG_API_URL env variable');
+        }
+
+        $url = getenv('CATALOG_API_URL') . '/' . $url;
+
+        if (isset(self::$httpResponses[$url])) {
+            return self::$httpResponses[$url];
+        }
+
+        $client = new Client($url);
+
+        $headers['Content-Type'] = 'application/json';
+        $headers['Accept'] = 'application/json';
+        $headers['APP_ENV'] = getenv('APP_ENV');
+
+        $client->setHeaders($headers);
+
+        $client->setMethod('GET');
+
+        $response = $client->send();
+
+        if ($response->isSuccess()) {
+            self::$httpResponses[$url] = Serializer::jsonUnserialize($response->getBody());
+        } else {
+            self::$httpResponses[$url] = [];
+        }
+
+        return self::$httpResponses[$url];
+    }
+
+    /**
      * @inheritDoc
      */
     public function query(Query $query)
@@ -126,11 +171,15 @@ class BestShipping extends DataStoreAbstract
         $queryParams = $this->getQueryParams($query);
 
         // get all suppliers for product
-        $supplierMapping = AbstractSupplier::httpSend("api/datastore/SupplierMappingDataStore?eq(rollun_id,{$queryParams['RollunId']})&limit(20,0)");
+        $supplierMapping = self::httpSend("api/datastore/SupplierMappingDataStore?eq(rollun_id,{$queryParams['RollunId']})&limit(20,0)");
+
+        if (empty($supplierMapping)) {
+            return [];
+        }
 
         $bestShipping = [];
 
-        // find supplier
+        // find best shipping methods
         foreach ($this->suppliers as $supplierName => $service) {
             foreach ($supplierMapping as $v) {
                 if ($v['supplier_name'] == $supplierName && $this->$service->isInStock($queryParams['RollunId'])) {
