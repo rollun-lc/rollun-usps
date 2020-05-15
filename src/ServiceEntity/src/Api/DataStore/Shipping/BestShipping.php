@@ -177,22 +177,39 @@ class BestShipping extends DataStoreAbstract
             return [];
         }
 
-        $bestShipping = [];
-
-        // find best shipping methods
+        $suppliers = [];
         foreach ($this->suppliers as $supplierName => $service) {
             foreach ($supplierMapping as $v) {
                 if ($v['supplier_name'] == $supplierName && $this->$service->isInStock($queryParams['RollunId'])) {
-                    /** @var AbstractSupplier $supplier */
-                    $supplier = $this->$service;
-
-                    $bestShipping[] = $supplier->getBestShippingMethod($supplier->createItem($queryParams['RollunId']), (string)$queryParams['ZipDestination']);
+                    $suppliers[] = [
+                        'supplier' => $this->$service,
+                        'item'     => $this->$service->createItem($queryParams['RollunId']),
+                    ];
                 }
             }
         }
 
-        if (empty($bestShipping[0])) {
+        if (empty($suppliers)) {
             return [];
+        }
+
+        /**
+         * Is air allowed?
+         */
+        $isAirAllowed = true;
+        foreach ($suppliers as $row) {
+            if ($isAirAllowed) {
+                $isAirAllowed = $row['supplier']->isAirAllowed();
+            }
+        }
+
+        /**
+         * Get best shipping methods
+         */
+        $bestShipping = [];
+        foreach ($suppliers as $row) {
+            $item = $row['supplier']->createItem($queryParams['RollunId']);
+            $bestShipping[] = $row['supplier']->getBestShippingMethod($item, (string)$queryParams['ZipDestination'], $isAirAllowed);
         }
 
         usort($bestShipping, [$this, 'cmpResult']);

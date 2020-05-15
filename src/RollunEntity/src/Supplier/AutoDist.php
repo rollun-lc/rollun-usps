@@ -50,7 +50,7 @@ class AutoDist extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool
     {
         return true;
     }

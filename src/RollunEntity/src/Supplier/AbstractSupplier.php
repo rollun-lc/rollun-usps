@@ -26,6 +26,13 @@ use Xiag\Rql\Parser\Query;
 abstract class AbstractSupplier
 {
     /**
+     * Product title (for defining airAllowed)
+     *
+     * @var string
+     */
+    protected $productTitle = 'name';
+
+    /**
      * @var AllCosts
      */
     protected $allCosts;
@@ -98,10 +105,12 @@ abstract class AbstractSupplier
     /**
      * @param ItemInterface $item
      * @param string        $zipDestination
+     * @param bool          $isAirAllowed
      *
      * @return array|null
+     * @throws \Exception
      */
-    public function getBestShippingMethod(ItemInterface $item, string $zipDestination): ?array
+    public function getBestShippingMethod(ItemInterface $item, string $zipDestination, bool $isAirAllowed = true): ?array
     {
         // get all available shipping methods
         $shippingMethods = $this->allCosts->query($this->buildShippingQuery($item, $zipDestination));
@@ -112,7 +121,7 @@ abstract class AbstractSupplier
 
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
-                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
+                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'], $isAirAllowed)) {
                     $supplierShippingMethod['cost'] = $shippingMethod['cost'];
                     return $supplierShippingMethod;
                 }
@@ -123,13 +132,39 @@ abstract class AbstractSupplier
     }
 
     /**
+     * @return bool
+     */
+    public function isAirAllowed(): bool
+    {
+        // get stop words
+        $stopWords = BestShipping::httpSend("api/datastore/AirStopWords");
+
+        if (!empty($stopWords)) {
+            foreach ($stopWords as $row) {
+                // prepare stop word
+                $stopWord = trim(strtolower($row['stop_phrase']));
+
+                // prepare product title
+                $title = trim(strtolower($this->productTitle));
+
+                if (strpos($title, $stopWord) !== false) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param ItemInterface $item
      * @param string        $zipDestination
      * @param string        $shippingMethod
+     * @param bool          $isAirAllowed
      *
      * @return bool
      */
-    abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool;
+    abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool;
 
     /**
      * @return string
@@ -213,32 +248,5 @@ abstract class AbstractSupplier
             'length' => $response[0]['length'],
             'weight' => $response[0]['weight']
         ];
-    }
-
-    /**
-     * @param string $title
-     *
-     * @return bool
-     */
-    protected function isAirAllowed(string $title): bool
-    {
-        // get stop words
-        $stopWords = BestShipping::httpSend("api/datastore/AirStopWords");
-
-        if (!empty($stopWords)) {
-            foreach ($stopWords as $row) {
-                // prepare stop word
-                $stopWord = trim(strtolower($row['stop_phrase']));
-
-                // prepare product title
-                $title = trim(strtolower($title));
-
-                if (strpos($title, $stopWord) !== false) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
     }
 }

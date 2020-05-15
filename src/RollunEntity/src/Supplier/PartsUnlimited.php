@@ -17,6 +17,13 @@ use service\Entity\Api\DataStore\Shipping\BestShipping;
 class PartsUnlimited extends AbstractSupplier
 {
     /**
+     * Product title (for defining airAllowed)
+     *
+     * @var string
+     */
+    protected $productTitle = 'part_description';
+
+    /**
      * @var string
      */
     protected $zipOriginal = '28790';
@@ -58,14 +65,16 @@ class PartsUnlimited extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool
     {
         /**
          * For all usps methods
          */
         $parts = explode('-Usps-', $shippingMethod);
         if (isset($parts[1])) {
-            $uspsMethod = $parts[1];
+            if (!$isAirAllowed) {
+                return false;
+            }
 
             if ($item->getWeight() > 10) {
                 return false;
@@ -79,15 +88,11 @@ class PartsUnlimited extends AbstractSupplier
                 return false;
             }
 
-            if (!$this->isAirAllowed((string)$item->getAttribute('part_description'))) {
+            if ($parts[1] === 'FtCls-Package' && $item->getWeight() > 0.9) {
                 return false;
             }
 
-            if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
-                return false;
-            }
-
-            if ($uspsMethod === 'PM-FR-Env' && $item->getWeight() > 5) {
+            if ($parts[1] === 'PM-FR-Env' && $item->getWeight() > 5) {
                 return false;
             }
         }

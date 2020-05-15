@@ -62,7 +62,7 @@ class RockyMountain extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool
     {
         if ($shippingMethod === 'Root-RM-DS-Ontrack' && empty($item->getAttribute('qty_ut'))) {
             return false;
@@ -73,7 +73,9 @@ class RockyMountain extends AbstractSupplier
          */
         $parts = explode('-Usps-', $shippingMethod);
         if (isset($parts[1])) {
-            $uspsMethod = $parts[1];
+            if (!$isAirAllowed) {
+                return false;
+            }
 
             if ($item->getWeight() > 20) {
                 return false;
@@ -87,15 +89,11 @@ class RockyMountain extends AbstractSupplier
                 return false;
             }
 
-            if (!$this->isAirAllowed((string)$item->getAttribute('name'))) {
+            if ($parts[1] === 'FtCls-Package' && $item->getWeight() > 0.9) {
                 return false;
             }
 
-            if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
-                return false;
-            }
-
-            if ($uspsMethod === 'PM-FR-Env' && $item->getWeight() > 5) {
+            if ($parts[1] === 'PM-FR-Env' && $item->getWeight() > 5) {
                 return false;
             }
         }
