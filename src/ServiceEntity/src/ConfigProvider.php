@@ -22,8 +22,10 @@ use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
 use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
 use rollun\Entity\Shipping\Method\ShippingMethodProvider;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
+use rollun\Entity\Supplier\AutoDist;
 use rollun\Entity\Supplier\PartsUnlimited;
 use rollun\Entity\Supplier\RockyMountain;
+use rollun\Entity\Supplier\Slt;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use service\Entity\Handler\LoggerHandler;
 use service\Entity\Handler\MegaplanHandler;
@@ -75,6 +77,8 @@ class ConfigProvider
                 'shipping-all-costs'       => AllCosts::class,
                 PartsUnlimited::class      => PartsUnlimited::class,
                 RockyMountain::class       => RockyMountain::class,
+                Slt::class                 => Slt::class,
+                AutoDist::class                 => AutoDist::class,
             ],
         ];
     }

@@ -8,8 +8,10 @@ use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
 use rollun\Entity\Product\Item\ProductPack;
+use rollun\Entity\Supplier\AutoDist;
 use rollun\Entity\Supplier\PartsUnlimited;
 use rollun\Entity\Supplier\RockyMountain;
+use rollun\Entity\Supplier\Slt;
 
 /**
  * Class SupplierTest
@@ -28,6 +30,9 @@ class SupplierTest extends TestCase
             [RockyMountain::class, $this->createProductPack(8, 9, 2, 3, 50), '80000', 'Root-RM-PickUp-Usps-PM-FR-Env'],
             [RockyMountain::class, $this->createProductPack(2, 2, 1, 0.5, 89), '91730', 'Root-RM-PickUp-Usps-FtCls-Package'],
             [RockyMountain::class, $this->createProductPack(2, 2, 1, 0.5, 101, 0), '91730', 'Root-RM-DS-Ontrack'],
+            [Slt::class, $this->createProductPack(2, 2, 1, 0.5, 101), '91730', 'Root-SLT-DS'],
+            [AutoDist::class, $this->createProductPack(2, 2, 1, 0.5, 101), '91730', 'Root-AU-DS'],
+            [AutoDist::class, $this->createProductPack(2, 2, 1, 71, 101), '91730', null],
         ];
     }
 
