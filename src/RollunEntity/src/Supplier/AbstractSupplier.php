@@ -120,7 +120,9 @@ abstract class AbstractSupplier
 
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
-                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
+                if ($shippingMethod['id'] === $supplierShippingMethod['name']
+                    && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])
+                    && $this->isUspsValid($item, $zipDestination, $supplierShippingMethod['name'])) {
                     $supplierShippingMethod['cost'] = $shippingMethod['cost'];
                     return $supplierShippingMethod;
                 }
@@ -163,6 +165,58 @@ abstract class AbstractSupplier
      * @return bool
      */
     abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool;
+
+    /**
+     * @param ItemInterface $item
+     * @param string        $zipDestination
+     * @param string        $shippingMethod
+     *
+     * @return bool
+     */
+    protected function isUspsValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    {
+        $parts = explode('-Usps-', $shippingMethod);
+        if (isset($parts[1])) {
+            if (empty($item->getAttribute('isAirAllowed'))) {
+                return false;
+            }
+
+            if ($parts[1] === 'FtCls-Package' && $item->getWeight() > 0.9) {
+                return false;
+            }
+
+            // get item dimensions
+            $dimensions = $item->getDimensionsList()[0]['dimensions'];
+
+            $weight = $item->getWeight();
+            $lbs = $item->getVolume() / 166;
+            if ($lbs > $item->getWeight()) {
+                $weight = $lbs;
+            }
+
+            if ($parts[1] === 'PM-FR-Env') {
+                if ($dimensions->max <= 0) {
+                    return false;
+                }
+
+                if ($weight > 5) {
+                    return false;
+                }
+            }
+
+            if ($parts[1] === 'PM-FR-LegalEnv' || $parts[1] === 'PM-FR-Pad-Env') {
+                if ($dimensions->max <= 0) {
+                    return false;
+                }
+
+                if ($weight > 7) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
     /**
      * @return string

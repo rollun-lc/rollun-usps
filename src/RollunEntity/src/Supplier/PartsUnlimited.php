@@ -67,15 +67,16 @@ class PartsUnlimited extends AbstractSupplier
      */
     protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
     {
-        /**
-         * For all usps methods
-         */
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function isUspsValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    {
         $parts = explode('-Usps-', $shippingMethod);
         if (isset($parts[1])) {
-            if (empty($item->getAttribute('isAirAllowed'))) {
-                return false;
-            }
-
             if ($item->getWeight() > 10) {
                 return false;
             }
@@ -87,31 +88,8 @@ class PartsUnlimited extends AbstractSupplier
             if (empty($item->getAttribute('nc_availability'))) {
                 return false;
             }
-
-            if ($parts[1] === 'FtCls-Package' && $item->getWeight() > 0.9) {
-                return false;
-            }
-
-            if ($parts[1] === 'PM-FR-Env') {
-                // get item dimensions
-                $dimensions = $item->getDimensionsList()[0]['dimensions'];
-
-                if ($dimensions->max <= 0) {
-                    return false;
-                }
-
-                $weight = $item->getWeight();
-                $lbs = $item->getVolume() / 166;
-                if ($lbs > $item->getWeight()) {
-                    $weight = $lbs;
-                }
-
-                if ($weight > 5) {
-                    return false;
-                }
-            }
         }
 
-        return true;
+        return parent::isUspsValid($item, $zipDestination, $shippingMethod);
     }
 }
