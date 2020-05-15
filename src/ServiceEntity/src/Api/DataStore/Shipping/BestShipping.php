@@ -185,7 +185,7 @@ class BestShipping extends DataStoreAbstract
         $suppliers = [];
         foreach ($this->suppliers as $supplierName => $service) {
             foreach ($supplierMapping as $v) {
-                if ($v['supplier_name'] == $supplierName && $this->$service->isInStock($queryParams['RollunId'])) {
+                if ($v['supplier_name'] == $supplierName && $this->$service->isInStock((string)$queryParams['RollunId'])) {
                     $suppliers[] = $this->$service;
                 }
             }
@@ -238,7 +238,7 @@ class BestShipping extends DataStoreAbstract
         $queryParams = [];
         foreach ($innerQuery->getQueries() as $node) {
             if ('eq' === $node->getNodeName() && in_array($node->getField(), self::REQUIRED_PARAMS)) {
-                $queryParams[$node->getField()] = $node->getValue();
+                $queryParams[$node->getField()] = (string)$node->getValue();
             }
         }
         foreach (self::REQUIRED_PARAMS as $param) {
