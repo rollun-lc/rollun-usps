@@ -241,10 +241,10 @@ abstract class AbstractSupplier
         }
 
         return [
-            'width'  => $response[0]['width'],
-            'height' => $response[0]['height'],
-            'length' => $response[0]['length'],
-            'weight' => $response[0]['weight']
+            'width'  => (float)$response[0]['width'],
+            'height' => (float)$response[0]['height'],
+            'length' => (float)$response[0]['length'],
+            'weight' => (float)$response[0]['weight']
         ];
     }
 }
