@@ -243,7 +243,7 @@ class AllCosts extends DataStoreAbstract
 
         $query->setQuery($andNode);
         $query->setSort(new SortNode(['cost' => SortNode::SORT_ASC]));
-        $query->setLimit(new LimitNode(1));
+//        $query->setLimit(new LimitNode(1));
         return $query;
     }
 

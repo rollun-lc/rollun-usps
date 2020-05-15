@@ -4,13 +4,17 @@ declare(strict_types=1);
 namespace rollun\Entity\Supplier;
 
 use rollun\dic\InsideConstruct;
+use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
+use rollun\Entity\Product\Item\Product;
+use rollun\utils\Json\Serializer;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
 use Xiag\Rql\Parser\Node\SortNode;
 use Xiag\Rql\Parser\Query;
+use Zend\Http\Client;
 
 /**
  * Class AbstractSupplier
@@ -36,6 +40,11 @@ abstract class AbstractSupplier
      * @var null|array
      */
     protected $shippingMethods = null;
+
+    /**
+     * @var array
+     */
+    protected $inventory = [];
 
     /**
      * AbstractSupplier constructor.
@@ -66,6 +75,60 @@ abstract class AbstractSupplier
     }
 
     /**
+     * @param string $url
+     *
+     * @return array
+     */
+    public static function httpSend(string $url): array
+    {
+        if (empty(getenv('CATALOG_API_URL'))) {
+            throw new \InvalidArgumentException('Empty CATALOG_API_URL env variable');
+        }
+
+        $client = new Client(getenv('CATALOG_API_URL') . '/' . $url);
+
+        $headers['Content-Type'] = 'application/json';
+        $headers['Accept'] = 'application/json';
+        $headers['APP_ENV'] = getenv('APP_ENV');
+
+        $client->setHeaders($headers);
+
+        $client->setMethod('GET');
+
+        $response = $client->send();
+
+        if ($response->isSuccess()) {
+            $result = Serializer::jsonUnserialize($response->getBody());
+        } else {
+            $result = [];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param string $rollunId
+     *
+     * @return bool
+     */
+    abstract public function isInStock(string $rollunId): bool;
+
+    /**
+     * @param string $rollunId
+     *
+     * @return ItemInterface
+     */
+    public function createItem(string $rollunId): ItemInterface
+    {
+        $dimensions = $this->getDimensions($rollunId);
+
+        $product = new Product(new Rectangular($dimensions['length'], $dimensions['width'], $dimensions['height']), $dimensions['weight']);
+        $product->setAttributes($this->inventory);
+
+        return $product;
+    }
+
+    /**
      * @param ItemInterface $item
      * @param string        $zipDestination
      *
@@ -83,7 +146,8 @@ abstract class AbstractSupplier
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
                 if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
-                    return $shippingMethod;
+                    $supplierShippingMethod['cost'] = $shippingMethod['cost'];
+                    return $supplierShippingMethod;
                 }
             }
         }
@@ -98,39 +162,7 @@ abstract class AbstractSupplier
      *
      * @return bool
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
-    {
-        /**
-         * For all usps methods
-         */
-        $parts = explode('-Usps-', $shippingMethod);
-        if (isset($parts[1])) {
-            $uspsMethod = $parts[1];
-
-            if ($item->getWeight() >= 10) {
-                return false;
-            }
-            if (empty($item->quantity)) {
-                return false;
-            }
-            if ((float)$item->getAttribute('price') > 100) {
-                return false;
-            }
-            if (empty($item->getAttribute('airAllowed'))) {
-                return false;
-            }
-
-            if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
-                return false;
-            }
-
-            if ($uspsMethod === 'PM-FR-Env' && $item->getWeight() > 5) {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool;
 
     /**
      * @return string
@@ -189,5 +221,30 @@ abstract class AbstractSupplier
         $query->setSort(new SortNode(['cost' => SortNode::SORT_ASC]));
 
         return $query;
+    }
+
+    /**
+     * @param string $rollunId
+     *
+     * @return array
+     */
+    protected function getDimensions(string $rollunId): array
+    {
+        $response = self::httpSend("api/datastore/DimensionStore?eq(id,$rollunId)&limit(20,0)");
+        if (empty($response[0])) {
+            return [
+                'width'  => -1000,
+                'height' => -1000,
+                'length' => -1000,
+                'weight' => -1000
+            ];
+        }
+
+        return [
+            'width'  => $response[0]['width'],
+            'height' => $response[0]['height'],
+            'length' => $response[0]['length'],
+            'weight' => $response[0]['weight']
+        ];
     }
 }

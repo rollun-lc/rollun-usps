@@ -46,12 +46,57 @@ class RockyMountain extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    public function isInStock(string $rollunId): bool
     {
-        if ($shippingMethod === 'RM-DS-Ontrack' && empty($item->quantity)) {
+        $response = self::httpSend("api/datastore/RockyMountainInventoryCacheDataStore?eq(rollun_id,$rollunId)&limit(20,0)");
+        if (empty($response[0])) {
             return false;
         }
 
-        return parent::isValid($item, $zipDestination, $shippingMethod);
+        $this->inventory = $response[0];
+
+        return !empty($this->inventory['qty_ut']) || !empty($this->inventory['qty_ky']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
+    {
+        if ($shippingMethod === 'RM-DS-Ontrack' && empty($item->getAttribute('qty_ut'))) {
+            return false;
+        }
+
+        /**
+         * For all usps methods
+         */
+        $parts = explode('-Usps-', $shippingMethod);
+        if (isset($parts[1])) {
+            $uspsMethod = $parts[1];
+
+            if ($item->getWeight() > 20) {
+                return false;
+            }
+
+            if ((float)$item->getAttribute('rmatv_price') > 100) {
+                return false;
+            }
+
+            if (empty($item->getAttribute('qty_ut'))) {
+                return false;
+            }
+
+            // @todo add air allowed
+
+            if ($uspsMethod === 'FtCls-Package' && $item->getWeight() > 0.9) {
+                return false;
+            }
+
+            if ($uspsMethod === 'PM-FR-Env' && $item->getWeight() > 5) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

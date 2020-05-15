@@ -27,6 +27,7 @@ use rollun\Entity\Supplier\PartsUnlimited;
 use rollun\Entity\Supplier\RockyMountain;
 use rollun\Entity\Supplier\Slt;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
+use service\Entity\Api\DataStore\Shipping\BestShipping;
 use service\Entity\Handler\LoggerHandler;
 use service\Entity\Handler\MegaplanHandler;
 use service\Entity\Handler\Shipping\BestShippingHandler;
@@ -75,10 +76,11 @@ class ConfigProvider
                 LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
                 'shipping-all-costs'       => AllCosts::class,
+                'best-shipping'            => BestShipping::class,
                 PartsUnlimited::class      => PartsUnlimited::class,
                 RockyMountain::class       => RockyMountain::class,
                 Slt::class                 => Slt::class,
-                AutoDist::class                 => AutoDist::class,
+                AutoDist::class            => AutoDist::class,
             ],
         ];
     }
@@ -93,11 +95,11 @@ class ConfigProvider
                 'class'              => RootProvider::class,
                 'shortName'          => 'Root',
                 'shippingMethodList' => [
+                    'RM-PickUp',
+                    'PU-PickUp',
                     'RM-DS',
                     'RM-DS-Ontrack',
-                    'RM-PickUp',
                     'PU-DS',
-                    'PU-PickUp',
                     'WPS-DS',
                     'TR-DS',
                     'AU-DS',

@@ -59,7 +59,7 @@ while (($line = fgetcsv($file, 99999, ";")) !== false) {
 fclose($file);
 
 // Open a file in write mode ('w')
-$fp = fopen('data/USPSprice_2.csv', 'w');
+$fp = fopen('data/USPSprice_processed.csv', 'w');
 
 // Loop through file pointer and a line
 foreach ($content as $fields) {
