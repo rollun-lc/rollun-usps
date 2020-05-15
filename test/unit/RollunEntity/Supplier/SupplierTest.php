@@ -7,7 +7,6 @@ use PHPUnit\Framework\TestCase;
 use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
-use rollun\Entity\Product\Item\ProductPack;
 use rollun\Entity\Supplier\AutoDist;
 use rollun\Entity\Supplier\PartsUnlimited;
 use rollun\Entity\Supplier\RockyMountain;

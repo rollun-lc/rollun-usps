@@ -7,7 +7,6 @@ use rollun\dic\InsideConstruct;
 use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
-use rollun\utils\Json\Serializer;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use service\Entity\Api\DataStore\Shipping\BestShipping;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
@@ -15,7 +14,6 @@ use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
 use Xiag\Rql\Parser\Node\SortNode;
 use Xiag\Rql\Parser\Query;
-use Zend\Http\Client;
 
 /**
  * Class AbstractSupplier
