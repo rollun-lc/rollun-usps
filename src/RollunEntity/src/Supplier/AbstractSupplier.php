@@ -105,12 +105,11 @@ abstract class AbstractSupplier
     /**
      * @param ItemInterface $item
      * @param string        $zipDestination
-     * @param bool          $isAirAllowed
      *
      * @return array|null
      * @throws \Exception
      */
-    public function getBestShippingMethod(ItemInterface $item, string $zipDestination, bool $isAirAllowed = true): ?array
+    public function getBestShippingMethod(ItemInterface $item, string $zipDestination): ?array
     {
         // get all available shipping methods
         $shippingMethods = $this->allCosts->query($this->buildShippingQuery($item, $zipDestination));
@@ -121,7 +120,7 @@ abstract class AbstractSupplier
 
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
-                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'], $isAirAllowed)) {
+                if ($shippingMethod['id'] === $supplierShippingMethod['name'] && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])) {
                     $supplierShippingMethod['cost'] = $shippingMethod['cost'];
                     return $supplierShippingMethod;
                 }
@@ -160,11 +159,10 @@ abstract class AbstractSupplier
      * @param ItemInterface $item
      * @param string        $zipDestination
      * @param string        $shippingMethod
-     * @param bool          $isAirAllowed
      *
      * @return bool
      */
-    abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool;
+    abstract protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool;
 
     /**
      * @return string

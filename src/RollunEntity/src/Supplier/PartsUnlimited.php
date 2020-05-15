@@ -65,14 +65,14 @@ class PartsUnlimited extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
     {
         /**
          * For all usps methods
          */
         $parts = explode('-Usps-', $shippingMethod);
         if (isset($parts[1])) {
-            if (!$isAirAllowed) {
+            if (empty($item->getAttribute('isAirAllowed'))) {
                 return false;
             }
 

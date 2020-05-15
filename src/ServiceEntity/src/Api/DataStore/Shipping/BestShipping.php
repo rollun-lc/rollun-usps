@@ -209,7 +209,9 @@ class BestShipping extends DataStoreAbstract
         $bestShipping = [];
         foreach ($suppliers as $row) {
             $item = $row['supplier']->createItem($queryParams['RollunId']);
-            $bestShipping[] = $row['supplier']->getBestShippingMethod($item, (string)$queryParams['ZipDestination'], $isAirAllowed);
+            $item->addAttribute('isAirAllowed', $isAirAllowed);
+
+            $bestShipping[] = $row['supplier']->getBestShippingMethod($item, (string)$queryParams['ZipDestination']);
         }
 
         usort($bestShipping, [$this, 'cmpResult']);

@@ -62,7 +62,7 @@ class RockyMountain extends AbstractSupplier
     /**
      * @inheritDoc
      */
-    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod, bool $isAirAllowed = true): bool
+    protected function isValid(ItemInterface $item, string $zipDestination, string $shippingMethod): bool
     {
         if ($shippingMethod === 'Root-RM-DS-Ontrack' && empty($item->getAttribute('qty_ut'))) {
             return false;
@@ -73,7 +73,7 @@ class RockyMountain extends AbstractSupplier
          */
         $parts = explode('-Usps-', $shippingMethod);
         if (isset($parts[1])) {
-            if (!$isAirAllowed) {
+            if (empty($item->getAttribute('isAirAllowed'))) {
                 return false;
             }
 
