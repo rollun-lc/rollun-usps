@@ -31,6 +31,22 @@ class RockyMountain extends AbstractSupplier
                 'priority' => 1
             ],
             [
+                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Env-COVID19',
+                'priority' => 1.5
+            ],
+            [
+                'name'     => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv-COVID19',
+                'priority' => 1.5
+            ],
+            [
+                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env-COVID19',
+                'priority' => 1.5
+            ],
+            [
+                'name'     => 'Root-RM-PickUp-Usps-PM-COVID19',
+                'priority' => 1.5
+            ],
+            [
                 'name'     => 'Root-RM-DS-Ontrack',
                 'priority' => 2
             ],

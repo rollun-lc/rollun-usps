@@ -267,7 +267,8 @@ abstract class AbstractSupplier
                 new EqNode('Height', $dimensions->min),
                 new EqNode('Error', null),
                 new NeNode('cost', null),
-                new EqNode('Quantity', 1)
+                new EqNode('Quantity', 1),
+                new EqNode('attr_csn', $item->getAttribute('csn'))
             ]
         );
 
