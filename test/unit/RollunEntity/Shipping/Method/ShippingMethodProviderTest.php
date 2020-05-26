@@ -50,11 +50,11 @@ class ShippingMethodProviderTest extends TestCase
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
         $this->assertEquals(
-                ['id' => 'Fr-Md1', 'cost' => 20, 'Error' => null], $provider->getShippingMetods($shippingRequest)->getArrayCopy()[0]
+                ['id' => 'Fr-Md1', 'cost' => 20, 'Error' => null, 'name' => ''], $provider->getShippingMetods($shippingRequest)->getArrayCopy()[0]
         );
 
         $this->assertEquals(
-                ['id' => 'Fr-Md2', 'cost' => null, 'Error' => null], $provider->getShippingMetods($shippingRequest)->getArrayCopy()[1]
+                ['id' => 'Fr-Md2', 'cost' => null, 'Error' => null, 'name' => ''], $provider->getShippingMetods($shippingRequest)->getArrayCopy()[1]
         );
     }
 
@@ -77,11 +77,11 @@ class ShippingMethodProviderTest extends TestCase
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
         $this->assertEquals(
-                ['id' => 'Usps-Fr-Md1', 'cost' => 20, 'Error' => null], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[0]
+                ['id' => 'Usps-Fr-Md1', 'cost' => 20, 'Error' => null, 'name' => ''], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[0]
         );
 
         $this->assertEquals(
-                ['id' => 'Usps-Fr-Md2', 'cost' => null, 'Error' => null], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[1]
+                ['id' => 'Usps-Fr-Md2', 'cost' => null, 'Error' => null, 'name' => ''], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[1]
         );
     }
 }

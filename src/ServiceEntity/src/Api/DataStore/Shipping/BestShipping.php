@@ -125,23 +125,29 @@ class BestShipping extends DataStoreAbstract
     }
 
     /**
-     * @param string $url
+     * @param string $path
      *
      * @return array
      */
-    public static function httpSend(string $url): array
+    public static function httpSend(string $path): array
     {
-        if (empty(getenv('CATALOG_API_URL'))) {
-            throw new \InvalidArgumentException('Empty CATALOG_API_URL env variable');
+        if (empty(getenv('CATALOG_URL'))) {
+            throw new \InvalidArgumentException('Empty CATALOG_URL env variable');
         }
 
-        $url = getenv('CATALOG_API_URL') . '/' . $url;
+        $url = getenv('CATALOG_URL') . '/' . $path;
 
         if (isset(self::$httpResponses[$url])) {
             return self::$httpResponses[$url];
         }
 
         $client = new Client($url);
+        $client->setOptions(
+            [
+                'maxredirects' => 0,
+                'timeout'      => 60,
+            ]
+        );
 
         $headers['Content-Type'] = 'application/json';
         $headers['Accept'] = 'application/json';
@@ -174,7 +180,7 @@ class BestShipping extends DataStoreAbstract
         $supplierMapping = self::httpSend("api/datastore/SupplierMappingDataStore?eq(rollun_id,{$queryParams['RollunId']})&limit(20,0)");
 
         if (empty($supplierMapping)) {
-            return [];
+            return null;
         }
 
         /**
@@ -186,6 +192,11 @@ class BestShipping extends DataStoreAbstract
         foreach ($this->suppliers as $supplierName => $service) {
             foreach ($supplierMapping as $v) {
                 if ($v['supplier_name'] == $supplierName && $this->$service->isInStock((string)$queryParams['RollunId'])) {
+                    // exit because product in stock in more than one supplier
+                    if (count($suppliers) > 0) {
+                        return null;
+                    }
+
                     $suppliers[] = [
                         'supplier' => $this->$service,
                         'csn'      => $v['supplier_id'],
@@ -195,7 +206,7 @@ class BestShipping extends DataStoreAbstract
         }
 
         if (empty($suppliers)) {
-            return [];
+            return null;
         }
 
         /**
@@ -223,7 +234,10 @@ class BestShipping extends DataStoreAbstract
         }
         usort($bestShipping, [$this, 'cmpResult']);
 
-        return $bestShipping;
+        // return first because we should return only one supplier result
+        return $bestShipping[0];
+
+//        return $bestShipping;
     }
 
     /**

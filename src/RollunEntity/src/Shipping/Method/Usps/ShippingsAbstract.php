@@ -179,7 +179,7 @@ abstract class ShippingsAbstract extends ShippingMethodAbstract
     public function getAddData(ShippingRequest $shippingRequest): array
     {
         $sShippingData = $this->getShippingData($shippingRequest);
-        $result = array_merge($sShippingData, ['Click_N_Shipp' => $this->atributes['Click_N_Shipp']]);
+        $result = array_merge($sShippingData, ['Click_N_Shipp' => $this->atributes['Click_N_Shipp'], 'name' => $this->atributes['Click_N_Shipp']]);
         return $result;
     }
 

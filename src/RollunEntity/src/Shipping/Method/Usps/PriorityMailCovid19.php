@@ -14,7 +14,7 @@ use service\Entity\Api\DataStore\Shipping\BestShipping;
  *
  * @author r.ratsun <r.ratsun.rollun@gmail.com>
  */
-class PriorityMailCovid19 extends ShippingMethodAbstract
+class PriorityMailCovid19 extends ShippingsAbstract
 {
     /**
      * @var array
@@ -50,7 +50,14 @@ class PriorityMailCovid19 extends ShippingMethodAbstract
         if (isset($this->mapping[$this->shortName]) && !empty($csn = $shippingRequest->getAttribute('csn'))) {
             $data = BestShipping::httpSend("api/datastore/RockyMountainUSPSPriorityMailAvailable?eq(supplier_id,$csn)&limit(1,0)");
             if (isset($data[0]['shipping_type']) && isset($data[0]['price'])) {
-                if ($this->prepareStr($data[0]['shipping_type']) === $this->prepareStr($this->mapping[$this->shortName])) {
+                if ($data[0]['shipping_type'] === $this->mapping[$this->shortName]) {
+                    if ($data[0]['shipping_type'] == 'Priority Mail') {
+                        $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
+                        if ($zone > 5) {
+                            return false;
+                        }
+                    }
+
                     $this->price = $data[0]['price'];
 
                     return true;
@@ -74,12 +81,14 @@ class PriorityMailCovid19 extends ShippingMethodAbstract
     }
 
     /**
-     * @param string $str
+     * @param ShippingRequest $shippingRequest
      *
-     * @return string
+     * @return array
      */
-    protected function prepareStr(string $str): string
+    public function getAddData(ShippingRequest $shippingRequest): array
     {
-        return strtolower(str_replace(' ', '', $str));
+        return [
+            'name' => $this->mapping[$this->shortName]
+        ];
     }
 }

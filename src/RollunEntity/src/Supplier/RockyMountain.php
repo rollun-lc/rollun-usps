@@ -16,6 +16,8 @@ use service\Entity\Api\DataStore\Shipping\BestShipping;
  */
 class RockyMountain extends AbstractSupplier
 {
+    const PICKUP_COURIER = 'Jeremy';
+
     /**
      * @var string
      */
@@ -27,43 +29,61 @@ class RockyMountain extends AbstractSupplier
     protected $shippingMethods
         = [
             [
-                'name'     => 'Root-RM-PickUp-Usps-FtCls-Package',
-                'priority' => 1
+                'id'       => 'Root-RM-PickUp-Usps-FtCls-Package',
+                'type'     => self::TYPE_PU,
+                'priority' => 1,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Env-COVID19',
-                'priority' => 1.5
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-Env-COVID19',
+                'type'     => self::TYPE_PU,
+                'priority' => 1.5,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv-COVID19',
-                'priority' => 1.5
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv-COVID19',
+                'type'     => self::TYPE_PU,
+                'priority' => 1.5,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env-COVID19',
-                'priority' => 1.5
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env-COVID19',
+                'type'     => self::TYPE_PU,
+                'priority' => 1.5,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-COVID19',
-                'priority' => 1.5
+                'id'       => 'Root-RM-PickUp-Usps-PM-COVID19',
+                'type'     => self::TYPE_PU,
+                'priority' => 1.5,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-DS-Ontrack',
+                'id'       => 'Root-RM-DS-Ontrack',
+                'type'     => self::TYPE_DS,
                 'priority' => 2
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Env',
-                'priority' => 3
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-Env',
+                'type'     => self::TYPE_PU,
+                'priority' => 3,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv',
-                'priority' => 5
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv',
+                'type'     => self::TYPE_PU,
+                'priority' => 5,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env',
-                'priority' => 6
+                'id'       => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env',
+                'type'     => self::TYPE_PU,
+                'priority' => 6,
+                'courier'  => self::PICKUP_COURIER
             ],
             [
-                'name'     => 'Root-RM-DS',
+                'id'       => 'Root-RM-DS',
+                'type'     => self::TYPE_DS,
                 'priority' => 7
             ],
         ];
@@ -81,6 +101,14 @@ class RockyMountain extends AbstractSupplier
         $this->inventory = $response[0];
 
         return !empty($this->inventory['qty_ut']) || !empty($this->inventory['qty_ky']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): string
+    {
+        return 'Rocky Mountain';
     }
 
     /**

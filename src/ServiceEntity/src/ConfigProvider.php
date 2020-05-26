@@ -30,7 +30,6 @@ use rollun\Entity\Supplier\Slt;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use service\Entity\Api\DataStore\Shipping\BestShipping;
 use service\Entity\Handler\LoggerHandler;
-use service\Entity\Handler\MegaplanHandler;
 use service\Entity\Handler\Shipping\BestShippingHandler;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
@@ -64,13 +63,14 @@ class ConfigProvider
     {
         return [
             'aliases'            => [
-                RootProvider::class => 'Root',
+                RootProvider::class   => 'Root',
+                'shipping-all-coosts' => 'shipping-all-costs'
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
-                LevelBasedShippingAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class,
+                LevelBasedShippingAbstractFactory::class,
                 UspsPriorityMailCovid19AbstractFactory::class,
             ],
             'invokables'         => [
@@ -93,29 +93,29 @@ class ConfigProvider
     public function getShippingMethods(): array
     {
         return [
-            'Root'             => [
+            'Root'                        => [
                 'class'              => RootProvider::class,
                 'shortName'          => 'Root',
                 'shippingMethodList' => [
                     'RM-PickUp',
-                    'PU-PickUp',
                     'RM-DS',
                     'RM-DS-Ontrack',
+                    'PU-PickUp',
                     'PU-DS',
                     'WPS-DS',
                     'TR-DS',
-                    'AU-DS',
                     'SLT-DS',
+                    'AU-DS',
                     'AU-DS-COVID19' // @todo remove when covid19 finished
                 ]
             ],
-            'RM-DS'            => [
+            'RM-DS'                       => [
                 'class' => RmDropShip::class
             ],
-            'RM-DS-Ontrack'    => [
+            'RM-DS-Ontrack'               => [
                 'class' => RmOntrackDropShip::class
             ],
-            'RM-PickUp'        => [
+            'RM-PickUp'                   => [
                 'class'              => RmPickUp::class,
                 'shortName'          => 'RM-PickUp',
                 'shippingMethodList' => [
@@ -126,29 +126,30 @@ class ConfigProvider
                     'Usps-PM-COVID19', // @todo remove when covid19 finished
                 ]
             ],
-            'PU-DS'            => [
+            'PU-DS'                       => [
                 'class' => PuDropShip::class
             ],
-            'PU-PickUp'        => [
+            'PU-PickUp'                   => [
                 'class'              => PuPickUp::class,
                 'shortName'          => 'PU-PickUp',
                 'shippingMethodList' => [
                     'Usps'
                 ]
             ],
-            'WPS-DS'           => [
+            'WPS-DS'                      => [
                 'class' => WpsDropShip::class
             ],
-            'TR-DS'            => [
+            'TR-DS'                       => [
                 'class' => TrDropShip::class
             ],
-            'SLT-DS'           => [
+            'SLT-DS'                      => [
                 'class' => SltDropShip::class
             ],
-            'AU-DS'            => [
+            'AU-DS'                       => [
                 'class' => AuDropShip::class
             ],
-            'AU-DS-COVID19'    => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'AU-DS-COVID19'               => [
                 'class'              => ShippingMethodProvider::class,
                 'shortName'          => 'AU-DS-COVID19',
                 'shippingMethodList' => [
@@ -157,25 +158,32 @@ class ConfigProvider
                     'MOTORCYCLE-TIRES'
                 ]
             ],
-            'ATV/UTV-TIRES'    => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'ATV/UTV-TIRES'               => [
                 'class' => AuDropShipCovid19AtvUtvTires::class
             ],
-            'ATV/UTV-WHEELS'   => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'ATV/UTV-WHEELS'              => [
                 'class' => AuDropShipCovid19AtvUtvWheels::class
             ],
-            'MOTORCYCLE-TIRES' => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'MOTORCYCLE-TIRES'            => [
                 'class' => AuDropShipCovid19MotorcycleTires::class
             ],
-            'Usps-PM-FR-Env-COVID19' => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'Usps-PM-FR-Env-COVID19'      => [
                 'class' => PriorityMailCovid19::class
             ],
-            'Usps-PM-FR-LegalEnv-COVID19' => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'Usps-PM-FR-LegalEnv-COVID19' => [
                 'class' => PriorityMailCovid19::class
             ],
-            'Usps-PM-FR-Pad-Env-COVID19' => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'Usps-PM-FR-Pad-Env-COVID19'  => [
                 'class' => PriorityMailCovid19::class
             ],
-            'Usps-PM-COVID19' => [ // @todo remove when covid19 finished
+            // @todo remove when covid19 finished
+            'Usps-PM-COVID19'             => [
                 'class' => PriorityMailCovid19::class
             ],
         ];

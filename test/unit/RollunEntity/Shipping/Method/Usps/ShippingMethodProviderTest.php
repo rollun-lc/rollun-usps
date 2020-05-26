@@ -41,19 +41,19 @@ class ShippingMethodProviderTest extends TestCase
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
         $this->assertEquals(
-                13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
+                13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-MdBox1', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['id']
+                'Usps-PM-FR-MdBox1', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['id']
         );
         $this->assertEquals(
-            13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[3]['cost']
+            13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-BgBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['id']
+                'Usps-PM-FR-BgBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[7]['id']
         );
         $this->assertEquals(
-                18.3, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[6]['cost']
+                18.3, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[7]['cost']
         );
 
         $this->assertEquals(
@@ -73,7 +73,8 @@ class ShippingMethodProviderTest extends TestCase
             , 'Girth' => 12
             , 'Volume' => 50
             , 'Click_N_Shipp' => 'First-Class Package Service'
-            , 'Error' => null)
+            , 'Error' => null
+            , 'name' => 'First-Class Package Service')
                 , $provider->getShippingMetods($shippingRequest)->getBestCostResponseRec()
         );
     }

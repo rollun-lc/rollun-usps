@@ -22,18 +22,18 @@ class SupplierTest extends TestCase
     public function getBestShippingMethodDataProvider(): array
     {
         return [
-            [
-                PartsUnlimited::class,
-                (new Product(new Rectangular(9, 8, 2), 3))->setAttributes(['your_dealer_price' => 50, 'nc_availability' => 4, 'isAirAllowed' => true]),
-                '91730',
-                'Root-PU-PickUp-Usps-PM-FR-Env'
-            ],
-            [
-                PartsUnlimited::class,
-                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 89, 'nc_availability' => 4, 'isAirAllowed' => true]),
-                '91730',
-                'Root-PU-PickUp-Usps-FtCls-Package'
-            ],
+//            [
+//                PartsUnlimited::class,
+//                (new Product(new Rectangular(9, 8, 2), 3))->setAttributes(['your_dealer_price' => 50, 'nc_availability' => 4, 'isAirAllowed' => true]),
+//                '91730',
+//                'Root-PU-PickUp-Usps-PM-FR-Env'
+//            ],
+//            [
+//                PartsUnlimited::class,
+//                (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 89, 'nc_availability' => 4, 'isAirAllowed' => true]),
+//                '91730',
+//                'Root-PU-PickUp-Usps-FtCls-Package'
+//            ],
             [
                 PartsUnlimited::class,
                 (new Product(new Rectangular(2, 2, 1), 0.5))->setAttributes(['your_dealer_price' => 101, 'nc_availability' => 4, 'isAirAllowed' => true]),
@@ -48,7 +48,7 @@ class SupplierTest extends TestCase
             ],
             [
                 RockyMountain::class,
-                (new Product(new Rectangular(9, 8, 2), 3))->setAttributes(['rmatv_price' => 50, 'qty_ut' => 2, 'isAirAllowed' => true]),
+                (new Product(new Rectangular(9, 8, 0), 3))->setAttributes(['rmatv_price' => 50, 'qty_ut' => 2, 'isAirAllowed' => true]),
                 '80000',
                 'Root-RM-PickUp-Usps-PM-FR-Env'
             ],
@@ -111,6 +111,6 @@ class SupplierTest extends TestCase
 
         $actual = $container->get($supplierClass)->getBestShippingMethod($item, $zipDestination);
 
-        $this->assertEquals($expected, empty($actual) ? null : $actual['name']);
+        $this->assertEquals($expected, empty($actual) ? null : $actual['id']);
     }
 }

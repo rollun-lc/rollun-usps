@@ -27,7 +27,8 @@ class AutoDist extends AbstractSupplier
     protected $shippingMethods
         = [
             [
-                'name'     => 'Root-AU-DS',
+                'id'       => 'Root-AU-DS',
+                'type'     => self::TYPE_DS,
                 'priority' => 9
             ],
         ];
@@ -45,6 +46,14 @@ class AutoDist extends AbstractSupplier
         $this->inventory = $response[0];
 
         return $this->inventory['avail'] != 'N';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): string
+    {
+        return 'Autodist';
     }
 
     /**

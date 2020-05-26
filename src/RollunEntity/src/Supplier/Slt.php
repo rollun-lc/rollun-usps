@@ -27,7 +27,8 @@ class Slt extends AbstractSupplier
     protected $shippingMethods
         = [
             [
-                'name'     => 'Root-SLT-DS',
+                'id'       => 'Root-SLT-DS',
+                'type'     => self::TYPE_DS,
                 'priority' => 8
             ],
         ];
@@ -45,6 +46,14 @@ class Slt extends AbstractSupplier
         $this->inventory = $response[0];
 
         return !empty($this->inventory['s_quantity']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): string
+    {
+        return 'SLT';
     }
 
     /**

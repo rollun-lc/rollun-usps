@@ -16,6 +16,8 @@ use service\Entity\Api\DataStore\Shipping\BestShipping;
  */
 class PartsUnlimited extends AbstractSupplier
 {
+    const PICKUP_COURIER = 'Martha';
+
     /**
      * Product title (for defining airAllowed)
      *
@@ -33,16 +35,20 @@ class PartsUnlimited extends AbstractSupplier
      */
     protected $shippingMethods
         = [
+//            @todo temporally ignore pickup methods fo current supplier
+//            [
+//                'id'     => 'Root-PU-PickUp-Usps-FtCls-Package',
+//                'priority' => 1,
+//                'courier'  => self::PICKUP_COURIER
+//            ],
+//            [
+//                'id'     => 'Root-PU-PickUp-Usps-PM-FR-Env',
+//                'priority' => 3,
+//                'courier'  => self::PICKUP_COURIER
+//            ],
             [
-                'name'     => 'Root-PU-PickUp-Usps-FtCls-Package',
-                'priority' => 1
-            ],
-            [
-                'name'     => 'Root-PU-PickUp-Usps-PM-FR-Env',
-                'priority' => 3
-            ],
-            [
-                'name'     => 'Root-PU-DS',
+                'id'       => 'Root-PU-DS',
+                'type'     => self::TYPE_DS,
                 'priority' => 4
             ],
         ];
@@ -60,6 +66,14 @@ class PartsUnlimited extends AbstractSupplier
         $this->inventory = $response[0];
 
         return !empty($this->inventory['s_quantity']);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getName(): string
+    {
+        return 'Parts Unlimited';
     }
 
     /**

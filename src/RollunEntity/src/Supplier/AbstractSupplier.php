@@ -25,6 +25,9 @@ use Xiag\Rql\Parser\Query;
  */
 abstract class AbstractSupplier
 {
+    const TYPE_PU = 'PickUp';
+    const TYPE_DS = 'DropShip';
+
     /**
      * Product title (for defining airAllowed)
      *
@@ -88,6 +91,11 @@ abstract class AbstractSupplier
     abstract public function isInStock(string $rollunId): bool;
 
     /**
+     * @return string
+     */
+    abstract public function getName(): string;
+
+    /**
      * @param string $rollunId
      *
      * @return ItemInterface
@@ -120,11 +128,18 @@ abstract class AbstractSupplier
 
         foreach ($this->getShippingMethods() as $supplierShippingMethod) {
             foreach ($shippingMethods as $shippingMethod) {
-                if ($shippingMethod['id'] === $supplierShippingMethod['name']
-                    && $this->isValid($item, $zipDestination, $supplierShippingMethod['name'])
-                    && $this->isUspsValid($item, $zipDestination, $supplierShippingMethod['name'])) {
-                    $supplierShippingMethod['cost'] = $shippingMethod['cost'];
-                    return $supplierShippingMethod;
+                if ($shippingMethod['id'] === $supplierShippingMethod['id']
+                    && $this->isValid($item, $zipDestination, $supplierShippingMethod['id'])
+                    && $this->isUspsValid($item, $zipDestination, $supplierShippingMethod['id'])) {
+                    return [
+                        'id'             => $supplierShippingMethod['id'],
+                        'supplier'       => $this->getName(),
+                        'shippingType'   => empty($supplierShippingMethod['type']) ? null : $supplierShippingMethod['type'],
+                        'shippingMethod' => empty($shippingMethod['name']) ? null : $shippingMethod['name'],
+                        'courier'        => empty($supplierShippingMethod['courier']) ? null : $supplierShippingMethod['courier'],
+                        'priority'       => $supplierShippingMethod['priority'],
+                        'cost'           => $shippingMethod['cost']
+                    ];
                 }
             }
         }
@@ -142,13 +157,7 @@ abstract class AbstractSupplier
 
         if (!empty($stopWords)) {
             foreach ($stopWords as $row) {
-                // prepare stop word
-                $stopWord = trim(strtolower($row['stop_phrase']));
-
-                // prepare product title
-                $title = trim(strtolower($this->productTitle));
-
-                if (strpos($title, $stopWord) !== false) {
+                if (strpos($this->productTitle, $row['stop_phrase']) !== false) {
                     return false;
                 }
             }
