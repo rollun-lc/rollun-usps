@@ -107,6 +107,11 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
         return $shippingResponseSet;
     }
 
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return array
+     */
     public function getAddData(ShippingRequest $shippingRequest): array
     {
         return [];

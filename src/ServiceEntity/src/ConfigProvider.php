@@ -10,6 +10,7 @@ use rollun\Entity\Shipping\Method\DropShip\AuDropShipCovid19\AuDropShipCovid19At
 use rollun\Entity\Shipping\Method\DropShip\AuDropShipCovid19\AuDropShipCovid19MotorcycleTires;
 use rollun\Entity\Shipping\Method\DropShip\PuDropShip;
 use rollun\Entity\Shipping\Method\DropShip\RmDropShip;
+use rollun\Entity\Shipping\Method\DropShip\RmOntrackDropShip;
 use rollun\Entity\Shipping\Method\DropShip\SltDropShip;
 use rollun\Entity\Shipping\Method\DropShip\TrDropShip;
 use rollun\Entity\Shipping\Method\DropShip\WpsDropShip;
@@ -21,9 +22,6 @@ use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
 use rollun\Entity\Shipping\Method\ShippingMethodProvider;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
-use service\Entity\Handler\LoggerHandler;
-use service\Entity\Handler\MegaplanHandler;
-use service\Entity\Handler\Shipping\BestShippingHandler;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
 
@@ -45,7 +43,6 @@ class ConfigProvider
         return [
             'dependencies'   => $this->getDependencies(),
             'ShippingMethod' => $this->getShippingMethods(),
-            'Container'      => $this->getShippingContainers()
         ];
     }
 
@@ -56,19 +53,20 @@ class ConfigProvider
     {
         return [
             'aliases'            => [
-                RootProvider::class => 'Root',
+                RootProvider::class   => 'Root',
+                'Usps'                => UspsProvider::class,
+                'shipping-all-coosts' => AllCosts::class,
+                'shipping-all-costs'  => AllCosts::class,
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
-                LevelBasedShippingAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
-                ProviderAbstractFactory::class
+                ProviderAbstractFactory::class,
+                LevelBasedShippingAbstractFactory::class
             ],
             'invokables'         => [
-                BestShippingHandler::class => BestShippingHandler::class,
-                LoggerHandler::class       => LoggerHandler::class,
-                'Usps'                     => UspsProvider::class,
-                'shipping-all-costs'       => AllCosts::class,
+                UspsProvider::class => UspsProvider::class,
+                AllCosts::class     => AllCosts::class,
             ],
         ];
     }
@@ -79,54 +77,59 @@ class ConfigProvider
     public function getShippingMethods(): array
     {
         return [
-            'Root'                      => [
+            'Root'             => [
                 'class'              => RootProvider::class,
                 'shortName'          => 'Root',
                 'shippingMethodList' => [
-                    'RM-DS',
                     'RM-PickUp',
-                    'PU-DS',
+                    'RM-DS',
+                    'RM-DS-Ontrack',
                     'PU-PickUp',
+                    'PU-DS',
                     'WPS-DS',
                     'TR-DS',
-                    'AU-DS',
                     'SLT-DS',
-                    'AU-DS-COVID19'
+                    'AU-DS',
+                    'AU-DS-COVID19' // @todo remove when covid19 finished
                 ]
             ],
-            'RM-DS'                     => [
-                'class'  => RmDropShip::class
+            'RM-DS'            => [
+                'class' => RmDropShip::class
             ],
-            'RM-PickUp'                 => [
+            'RM-DS-Ontrack'    => [
+                'class' => RmOntrackDropShip::class
+            ],
+            'RM-PickUp'        => [
                 'class'              => RmPickUp::class,
                 'shortName'          => 'RM-PickUp',
                 'shippingMethodList' => [
-                    'Usps'
+                    'Usps',
                 ]
             ],
-            'PU-DS'                     => [
-                'class'  => PuDropShip::class
+            'PU-DS'            => [
+                'class' => PuDropShip::class
             ],
-            'PU-PickUp'                 => [
+            'PU-PickUp'        => [
                 'class'              => PuPickUp::class,
                 'shortName'          => 'PU-PickUp',
                 'shippingMethodList' => [
                     'Usps'
                 ]
             ],
-            'WPS-DS'                    => [
-                'class'  => WpsDropShip::class
+            'WPS-DS'           => [
+                'class' => WpsDropShip::class
             ],
-            'TR-DS'                     => [
-                'class'  => TrDropShip::class
+            'TR-DS'            => [
+                'class' => TrDropShip::class
             ],
-            'SLT-DS'          => [
-                'class'  => SltDropShip::class
+            'SLT-DS'           => [
+                'class' => SltDropShip::class
             ],
-            'AU-DS'                     => [
-                'class'  => AuDropShip::class
+            'AU-DS'            => [
+                'class' => AuDropShip::class
             ],
-            'AU-DS-COVID19' => [
+            // @todo remove when covid19 finished
+            'AU-DS-COVID19'    => [
                 'class'              => ShippingMethodProvider::class,
                 'shortName'          => 'AU-DS-COVID19',
                 'shippingMethodList' => [
@@ -135,23 +138,18 @@ class ConfigProvider
                     'MOTORCYCLE-TIRES'
                 ]
             ],
-            'ATV/UTV-TIRES'             => [
-                'class'  => AuDropShipCovid19AtvUtvTires::class
+            // @todo remove when covid19 finished
+            'ATV/UTV-TIRES'    => [
+                'class' => AuDropShipCovid19AtvUtvTires::class
             ],
-            'ATV/UTV-WHEELS'            => [
-                'class'  => AuDropShipCovid19AtvUtvWheels::class
+            // @todo remove when covid19 finished
+            'ATV/UTV-WHEELS'   => [
+                'class' => AuDropShipCovid19AtvUtvWheels::class
             ],
-            'MOTORCYCLE-TIRES'          => [
-                'class'  => AuDropShipCovid19MotorcycleTires::class
+            // @todo remove when covid19 finished
+            'MOTORCYCLE-TIRES' => [
+                'class' => AuDropShipCovid19MotorcycleTires::class
             ],
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getShippingContainers(): array
-    {
-        return [];
     }
 }

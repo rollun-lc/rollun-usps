@@ -39,6 +39,7 @@ namespace OpenAPI\Client;
  */
 class Configuration
 {
+
     private static $defaultConfiguration;
 
     /**
@@ -117,10 +118,10 @@ class Configuration
     public function __construct()
     {
         $this->tempFolderPath = sys_get_temp_dir();
-        $this->host = getenv('PACKAGE_PACKER_API_URL');
+        $this->host = getenv('PACKAGE_PACKER_URL');
 
         if (empty($this->host)) {
-            throw new \InvalidArgumentException('Empty PACKER_API_URL env variable');
+            throw new \InvalidArgumentException('Empty PACKAGE_PACKER_URL env variable');
         }
     }
 

@@ -65,7 +65,6 @@
     "psr-4": {
       "rollun\\Entity\\": "src/RollunEntity/src/",
       "service\\Entity\\": "src/ServiceEntity/src/",
-      "service\\Shipping\\": "src/ServiceShipping/src/",
       "OpenAPI\\Client\\": "src/OpenAPI/Client/"
     }
   },

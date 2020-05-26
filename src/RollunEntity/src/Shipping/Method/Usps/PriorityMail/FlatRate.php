@@ -22,7 +22,7 @@ class FlatRate extends ShippingsAbstract
      */
     const USPS_BOXES
         = [
-            /*['PM-FR-Env', 'Priority Mail Flat Rate Envelope','PRIORITY COMMERCIAL', '', 'FLAT RATE ENVELOPE', 12, 9.5, 0, 70, 6.95],*/
+            ['PM-FR-Env', 'Priority Mail Flat Rate Envelope','PRIORITY COMMERCIAL', '', 'FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 7.15],
             ['PM-FR-LegalEnv', 'Priority Mail Legal Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'LEGAL FLAT RATE ENVELOPE', 15, 9.5, 0, 70, 7.45],
             ['PM-FR-Pad-Env', 'Priority Mail Flat Rate Padded Envelope', 'PRIORITY COMMERCIAL', '', 'PADDED FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 7.75],
             ['PM-FR-SmBox', 'Priority Mail Small Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'SM FLAT RATE BOX', 8.625, 5.375, 1.625, 70, 7.65],
@@ -54,6 +54,22 @@ class FlatRate extends ShippingsAbstract
                 $this->price = $value[9];
             }
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function canBeShipped(ShippingRequest $shippingRequest): bool
+    {
+        /** @var array $dimensions */
+        $dimensions = $shippingRequest->item->getDimensionsList()[0]['dimensions']->getDimensionsRecord();
+
+        // The maximum size for Priority Mail items is 108 inches in combined length and girth
+        if (($dimensions['Girth'] + $dimensions['Length']) > 108) {
+            return false;
+        }
+
+        return parent::canBeShipped($shippingRequest);
     }
 
     /**
