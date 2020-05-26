@@ -29,8 +29,6 @@ use rollun\Entity\Supplier\RockyMountain;
 use rollun\Entity\Supplier\Slt;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
 use service\Entity\Api\DataStore\Shipping\BestShipping;
-use service\Entity\Handler\LoggerHandler;
-use service\Entity\Handler\Shipping\BestShippingHandler;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
 
@@ -74,8 +72,6 @@ class ConfigProvider
                 UspsPriorityMailCovid19AbstractFactory::class,
             ],
             'invokables'         => [
-                BestShippingHandler::class => BestShippingHandler::class,
-                LoggerHandler::class       => LoggerHandler::class,
                 'Usps'                     => UspsProvider::class,
                 'shipping-all-costs'       => AllCosts::class,
                 'best-shipping'            => BestShipping::class,
