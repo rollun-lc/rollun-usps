@@ -62,7 +62,10 @@ class ConfigProvider
         return [
             'aliases'            => [
                 RootProvider::class   => 'Root',
-                'shipping-all-coosts' => 'shipping-all-costs'
+                'Usps'                => UspsProvider::class,
+                'shipping-all-coosts' => AllCosts::class,
+                'shipping-all-costs'  => AllCosts::class,
+                'best-shipping'       => BestShipping::class,
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
@@ -72,13 +75,13 @@ class ConfigProvider
                 UspsPriorityMailCovid19AbstractFactory::class,
             ],
             'invokables'         => [
-                'Usps'                     => UspsProvider::class,
-                'shipping-all-costs'       => AllCosts::class,
-                'best-shipping'            => BestShipping::class,
-                PartsUnlimited::class      => PartsUnlimited::class,
-                RockyMountain::class       => RockyMountain::class,
-                Slt::class                 => Slt::class,
-                AutoDist::class            => AutoDist::class,
+                UspsProvider::class   => UspsProvider::class,
+                AllCosts::class       => AllCosts::class,
+                BestShipping::class   => BestShipping::class,
+                PartsUnlimited::class => PartsUnlimited::class,
+                RockyMountain::class  => RockyMountain::class,
+                Slt::class            => Slt::class,
+                AutoDist::class       => AutoDist::class,
             ],
         ];
     }
