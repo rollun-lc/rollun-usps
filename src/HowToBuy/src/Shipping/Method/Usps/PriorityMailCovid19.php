@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\Entity\Shipping\Method\Usps;
+namespace rollun\HowToBuy\Shipping\Method\Usps;
 
-use rollun\Entity\Shipping\Method\ShippingMethodAbstract;
+use rollun\Entity\Shipping\Method\Usps\ShippingsAbstract;
 use rollun\Entity\Shipping\ShippingRequest;
-use service\Entity\Api\DataStore\Shipping\BestShipping;
+use rollun\HowToBuy\Api\DataStore\Shipping\BestShipping;
 
 /**
  * Class PriorityMailCovid19

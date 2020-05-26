@@ -1,10 +1,10 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\Entity\Supplier;
+namespace rollun\HowToBuy\Supplier;
 
 use rollun\Entity\Product\Item\ItemInterface;
-use service\Entity\Api\DataStore\Shipping\BestShipping;
+use rollun\HowToBuy\Api\DataStore\Shipping\BestShipping;
 
 /**
  * Class Slt

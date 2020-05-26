@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\Entity\Shipping\Method\Factory;
+namespace rollun\HowToBuy\Shipping\Method\Factory;
 
 use Interop\Container\ContainerInterface;
-use rollun\Entity\Shipping\Method\Usps\PriorityMailAvailable;
-use rollun\Entity\Shipping\Method\Usps\PriorityMailCovid19;
+use rollun\Entity\Shipping\Method\Factory\ShippingMethodAbstractFactory;
+use rollun\HowToBuy\Shipping\Method\Usps\PriorityMailCovid19;
 
 /**
  * Class UspsPriorityMailCovid19AbstractFactory

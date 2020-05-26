@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace service\Entity\Api\DataStore\Shipping;
+namespace rollun\HowToBuy\Api\DataStore\Shipping;
 
 use rollun\datastore\DataStore\DataStoreAbstract;
 use rollun\datastore\DataStore\Traits\NoSupportCountTrait;
@@ -13,11 +13,11 @@ use rollun\datastore\DataStore\Traits\NoSupportIteratorTrait;
 use rollun\datastore\DataStore\Traits\NoSupportReadTrait;
 use rollun\datastore\DataStore\Traits\NoSupportUpdateTrait;
 use rollun\dic\InsideConstruct;
-use rollun\Entity\Supplier\AbstractSupplier;
-use rollun\Entity\Supplier\AutoDist;
-use rollun\Entity\Supplier\PartsUnlimited;
-use rollun\Entity\Supplier\RockyMountain;
-use rollun\Entity\Supplier\Slt;
+use rollun\HowToBuy\Supplier\AbstractSupplier;
+use rollun\HowToBuy\Supplier\AutoDist;
+use rollun\HowToBuy\Supplier\PartsUnlimited;
+use rollun\HowToBuy\Supplier\RockyMountain;
+use rollun\HowToBuy\Supplier\Slt;
 use rollun\utils\Json\Serializer;
 use Xiag\Rql\Parser\Query;
 use Zend\Http\Client;

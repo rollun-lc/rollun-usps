@@ -17,18 +17,11 @@ use rollun\Entity\Shipping\Method\DropShip\WpsDropShip;
 use rollun\Entity\Shipping\Method\Factory\FixedPriceAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\LevelBasedShippingAbstractFactory;
 use rollun\Entity\Shipping\Method\Factory\ProviderAbstractFactory;
-use rollun\Entity\Shipping\Method\Factory\UspsPriorityMailCovid19AbstractFactory;
 use rollun\Entity\Shipping\Method\Provider\PickUp\RmPickUp;
 use rollun\Entity\Shipping\Method\Provider\PickUp\PuPickUp;
 use rollun\Entity\Shipping\Method\ShippingMethodProvider;
-use rollun\Entity\Shipping\Method\Usps\PriorityMailCovid19;
 use rollun\Entity\Shipping\Method\Usps\UspsProvider;
-use rollun\Entity\Supplier\AutoDist;
-use rollun\Entity\Supplier\PartsUnlimited;
-use rollun\Entity\Supplier\RockyMountain;
-use rollun\Entity\Supplier\Slt;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
-use service\Entity\Api\DataStore\Shipping\BestShipping;
 use service\Entity\Rollun\Shipping\Method\Provider\Root as RootProvider;
 
 
@@ -50,7 +43,6 @@ class ConfigProvider
         return [
             'dependencies'   => $this->getDependencies(),
             'ShippingMethod' => $this->getShippingMethods(),
-            'Container'      => $this->getShippingContainers()
         ];
     }
 
@@ -65,23 +57,16 @@ class ConfigProvider
                 'Usps'                => UspsProvider::class,
                 'shipping-all-coosts' => AllCosts::class,
                 'shipping-all-costs'  => AllCosts::class,
-                'best-shipping'       => BestShipping::class,
             ],
             'abstract_factories' => [
                 BoxAbstractFactory::class,
                 FixedPriceAbstractFactory::class,
                 ProviderAbstractFactory::class,
-                LevelBasedShippingAbstractFactory::class,
-                UspsPriorityMailCovid19AbstractFactory::class,
+                LevelBasedShippingAbstractFactory::class
             ],
             'invokables'         => [
-                UspsProvider::class   => UspsProvider::class,
-                AllCosts::class       => AllCosts::class,
-                BestShipping::class   => BestShipping::class,
-                PartsUnlimited::class => PartsUnlimited::class,
-                RockyMountain::class  => RockyMountain::class,
-                Slt::class            => Slt::class,
-                AutoDist::class       => AutoDist::class,
+                UspsProvider::class => UspsProvider::class,
+                AllCosts::class     => AllCosts::class,
             ],
         ];
     }
@@ -92,7 +77,7 @@ class ConfigProvider
     public function getShippingMethods(): array
     {
         return [
-            'Root'                        => [
+            'Root'             => [
                 'class'              => RootProvider::class,
                 'shortName'          => 'Root',
                 'shippingMethodList' => [
@@ -108,47 +93,43 @@ class ConfigProvider
                     'AU-DS-COVID19' // @todo remove when covid19 finished
                 ]
             ],
-            'RM-DS'                       => [
+            'RM-DS'            => [
                 'class' => RmDropShip::class
             ],
-            'RM-DS-Ontrack'               => [
+            'RM-DS-Ontrack'    => [
                 'class' => RmOntrackDropShip::class
             ],
-            'RM-PickUp'                   => [
+            'RM-PickUp'        => [
                 'class'              => RmPickUp::class,
                 'shortName'          => 'RM-PickUp',
                 'shippingMethodList' => [
                     'Usps',
-                    'Usps-PM-FR-Env-COVID19', // @todo remove when covid19 finished
-                    'Usps-PM-FR-LegalEnv-COVID19', // @todo remove when covid19 finished
-                    'Usps-PM-FR-Pad-Env-COVID19', // @todo remove when covid19 finished
-                    'Usps-PM-COVID19', // @todo remove when covid19 finished
                 ]
             ],
-            'PU-DS'                       => [
+            'PU-DS'            => [
                 'class' => PuDropShip::class
             ],
-            'PU-PickUp'                   => [
+            'PU-PickUp'        => [
                 'class'              => PuPickUp::class,
                 'shortName'          => 'PU-PickUp',
                 'shippingMethodList' => [
                     'Usps'
                 ]
             ],
-            'WPS-DS'                      => [
+            'WPS-DS'           => [
                 'class' => WpsDropShip::class
             ],
-            'TR-DS'                       => [
+            'TR-DS'            => [
                 'class' => TrDropShip::class
             ],
-            'SLT-DS'                      => [
+            'SLT-DS'           => [
                 'class' => SltDropShip::class
             ],
-            'AU-DS'                       => [
+            'AU-DS'            => [
                 'class' => AuDropShip::class
             ],
             // @todo remove when covid19 finished
-            'AU-DS-COVID19'               => [
+            'AU-DS-COVID19'    => [
                 'class'              => ShippingMethodProvider::class,
                 'shortName'          => 'AU-DS-COVID19',
                 'shippingMethodList' => [
@@ -158,41 +139,17 @@ class ConfigProvider
                 ]
             ],
             // @todo remove when covid19 finished
-            'ATV/UTV-TIRES'               => [
+            'ATV/UTV-TIRES'    => [
                 'class' => AuDropShipCovid19AtvUtvTires::class
             ],
             // @todo remove when covid19 finished
-            'ATV/UTV-WHEELS'              => [
+            'ATV/UTV-WHEELS'   => [
                 'class' => AuDropShipCovid19AtvUtvWheels::class
             ],
             // @todo remove when covid19 finished
-            'MOTORCYCLE-TIRES'            => [
+            'MOTORCYCLE-TIRES' => [
                 'class' => AuDropShipCovid19MotorcycleTires::class
             ],
-            // @todo remove when covid19 finished
-            'Usps-PM-FR-Env-COVID19'      => [
-                'class' => PriorityMailCovid19::class
-            ],
-            // @todo remove when covid19 finished
-            'Usps-PM-FR-LegalEnv-COVID19' => [
-                'class' => PriorityMailCovid19::class
-            ],
-            // @todo remove when covid19 finished
-            'Usps-PM-FR-Pad-Env-COVID19'  => [
-                'class' => PriorityMailCovid19::class
-            ],
-            // @todo remove when covid19 finished
-            'Usps-PM-COVID19'             => [
-                'class' => PriorityMailCovid19::class
-            ],
         ];
-    }
-
-    /**
-     * @return array
-     */
-    public function getShippingContainers(): array
-    {
-        return [];
     }
 }

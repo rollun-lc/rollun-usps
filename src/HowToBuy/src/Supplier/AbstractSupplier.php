@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\Entity\Supplier;
+namespace rollun\HowToBuy\Supplier;
 
 use rollun\dic\InsideConstruct;
 use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
-use service\Entity\Api\DataStore\Shipping\BestShipping;
+use rollun\HowToBuy\Api\DataStore\Shipping\BestShipping;
 use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
