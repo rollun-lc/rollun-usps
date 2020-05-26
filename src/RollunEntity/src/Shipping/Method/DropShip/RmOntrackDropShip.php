@@ -17,11 +17,6 @@ use rollun\Entity\Shipping\ShippingRequest;
 class RmOntrackDropShip extends LevelBasedShippingMethod
 {
     /**
-     * @var string
-     */
-    protected $name = 'Ontrack';
-
-    /**
      * @var array
      */
     protected $levels

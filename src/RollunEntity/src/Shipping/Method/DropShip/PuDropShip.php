@@ -19,11 +19,6 @@ class PuDropShip extends LevelBasedShippingMethod
     const MAX_WEIGHT = 70;
 
     /**
-     * @var string
-     */
-    protected $name = 'Drop Shipping';
-
-    /**
      * @var array
      */
     protected $levels

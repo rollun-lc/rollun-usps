@@ -20,7 +20,6 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
 
     protected $shortName;
     protected $maxWeight;
-    protected $name = '';
 
     /**
      *
@@ -115,8 +114,6 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
      */
     public function getAddData(ShippingRequest $shippingRequest): array
     {
-        return [
-            'name' => $this->name
-        ];
+        return [];
     }
 }

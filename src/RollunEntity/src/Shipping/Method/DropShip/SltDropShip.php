@@ -26,11 +26,6 @@ class SltDropShip extends LevelBasedShippingMethod
         ];
 
     /**
-     * @var string
-     */
-    protected $name = 'Drop Shipping';
-
-    /**
      * @inheritDoc
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool

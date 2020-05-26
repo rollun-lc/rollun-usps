@@ -73,8 +73,7 @@ class ShippingMethodProviderTest extends TestCase
             , 'Girth' => 12
             , 'Volume' => 50
             , 'Click_N_Shipp' => 'First-Class Package Service'
-            , 'Error' => null
-            , 'name' => 'First-Class Package Service')
+            , 'Error' => null)
                 , $provider->getShippingMetods($shippingRequest)->getBestCostResponseRec()
         );
     }
