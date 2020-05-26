@@ -65,13 +65,11 @@
     "psr-4": {
       "rollun\\Entity\\": "src/RollunEntity/src/",
       "service\\Entity\\": "src/ServiceEntity/src/",
-      "OpenAPI\\Client\\": "src/OpenAPI/Client/",
-      "rollun\\HowToBuy\\": "src/HowToBuy/src/"
+      "OpenAPI\\Client\\": "src/OpenAPI/Client/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "test\\unit\\rollun\\HowToBuy\\": "test/unit/HowToBuy/",
       "rollun\\test\\unit\\Entity\\": "test/unit/RollunEntity/",
       "service\\test\\unit\\Entity\\": "test/unit/ServiceEntity/"
     }
