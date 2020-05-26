@@ -31,59 +31,69 @@ class RockyMountain extends AbstractSupplier
             [
                 'id'       => 'Root-RM-PickUp-Usps-FtCls-Package',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 1,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-Env-COVID19',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 1.5,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv-COVID19',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 1.5,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env-COVID19',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 1.5,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-COVID19',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 1.5,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-DS-Ontrack',
                 'type'     => self::TYPE_DS,
+                'name'     => 'Ontrack',
                 'priority' => 2
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-Env',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 3,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-LegalEnv',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 5,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-PickUp-Usps-PM-FR-Pad-Env',
                 'type'     => self::TYPE_PU,
+                'name'     => null,
                 'priority' => 6,
                 'courier'  => self::PICKUP_COURIER
             ],
             [
                 'id'       => 'Root-RM-DS',
                 'type'     => self::TYPE_DS,
+                'name'     => self::NAME_DS,
                 'priority' => 7
             ],
         ];

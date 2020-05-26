@@ -29,6 +29,7 @@ class AutoDist extends AbstractSupplier
             [
                 'id'       => 'Root-AU-DS',
                 'type'     => self::TYPE_DS,
+                'name'     => self::NAME_DS,
                 'priority' => 9
             ],
         ];

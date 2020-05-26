@@ -29,6 +29,7 @@ class Slt extends AbstractSupplier
             [
                 'id'       => 'Root-SLT-DS',
                 'type'     => self::TYPE_DS,
+                'name'     => self::NAME_DS,
                 'priority' => 8
             ],
         ];

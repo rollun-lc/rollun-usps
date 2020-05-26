@@ -27,6 +27,7 @@ abstract class AbstractSupplier
 {
     const TYPE_PU = 'PickUp';
     const TYPE_DS = 'DropShip';
+    const NAME_DS = 'Drop Shipping';
 
     /**
      * Product title (for defining airAllowed)
@@ -131,11 +132,17 @@ abstract class AbstractSupplier
                 if ($shippingMethod['id'] === $supplierShippingMethod['id']
                     && $this->isValid($item, $zipDestination, $supplierShippingMethod['id'])
                     && $this->isUspsValid($item, $zipDestination, $supplierShippingMethod['id'])) {
+                    // prepare shipping name
+                    $shippingMethodName = empty($supplierShippingMethod['name']) ? null : $supplierShippingMethod['name'];
+                    if (!empty($shippingMethod['Click_N_Shipp'])) {
+                        $shippingMethodName = $shippingMethod['Click_N_Shipp'];
+                    }
+
                     return [
                         'id'             => $supplierShippingMethod['id'],
                         'supplier'       => $this->getName(),
                         'shippingType'   => empty($supplierShippingMethod['type']) ? null : $supplierShippingMethod['type'],
-                        'shippingMethod' => empty($shippingMethod['name']) ? null : $shippingMethod['name'],
+                        'shippingMethod' => $shippingMethodName,
                         'courier'        => empty($supplierShippingMethod['courier']) ? null : $supplierShippingMethod['courier'],
                         'priority'       => $supplierShippingMethod['priority'],
                         'cost'           => $shippingMethod['cost']

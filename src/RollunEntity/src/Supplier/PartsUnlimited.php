@@ -39,16 +39,19 @@ class PartsUnlimited extends AbstractSupplier
 //            [
 //                'id'     => 'Root-PU-PickUp-Usps-FtCls-Package',
 //                'priority' => 1,
+//                'name'     => null,
 //                'courier'  => self::PICKUP_COURIER
 //            ],
 //            [
 //                'id'     => 'Root-PU-PickUp-Usps-PM-FR-Env',
 //                'priority' => 3,
+//                'name'     => null,
 //                'courier'  => self::PICKUP_COURIER
 //            ],
             [
                 'id'       => 'Root-PU-DS',
                 'type'     => self::TYPE_DS,
+                'name'     => self::NAME_DS,
                 'priority' => 4
             ],
         ];
