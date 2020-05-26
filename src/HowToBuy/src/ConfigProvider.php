@@ -61,15 +61,12 @@ class ConfigProvider
     {
         return [
             'RM-PickUp'                   => [
-//                'class'              => PuPickUp::class,
-//                'shortName'          => 'PU-PickUp',
-'shippingMethodList' => [
-//                    'Usps',
-'Usps-PM-FR-Env-COVID19',
-//                    'Usps-PM-FR-LegalEnv-COVID19',
-//                    'Usps-PM-FR-Pad-Env-COVID19',
-//                    'Usps-PM-COVID19',
-]
+                'shippingMethodList' => [
+                    'Usps-PM-FR-Env-COVID19',
+                    'Usps-PM-FR-LegalEnv-COVID19',
+                    'Usps-PM-FR-Pad-Env-COVID19',
+                    'Usps-PM-COVID19',
+                ]
             ],
             'Usps-PM-FR-Env-COVID19'      => [
                 'class' => PriorityMailCovid19::class

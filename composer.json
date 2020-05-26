@@ -71,6 +71,7 @@
   },
   "autoload-dev": {
     "psr-4": {
+      "test\\unit\\rollun\\HowToBuy\\": "test/unit/HowToBuy/",
       "rollun\\test\\unit\\Entity\\": "test/unit/RollunEntity/",
       "service\\test\\unit\\Entity\\": "test/unit/ServiceEntity/"
     }

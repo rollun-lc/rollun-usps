@@ -1,16 +1,16 @@
 <?php
 declare(strict_types=1);
 
-namespace rollun\test\unit\Entity\Supplier;
+namespace test\unit\rollun\HowToBuy\Supplier;
 
 use PHPUnit\Framework\TestCase;
 use rollun\Entity\Product\Dimensions\Rectangular;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Item\Product;
-use rollun\Entity\Supplier\AutoDist;
-use rollun\Entity\Supplier\PartsUnlimited;
-use rollun\Entity\Supplier\RockyMountain;
-use rollun\Entity\Supplier\Slt;
+use rollun\HowToBuy\Supplier\AutoDist;
+use rollun\HowToBuy\Supplier\PartsUnlimited;
+use rollun\HowToBuy\Supplier\RockyMountain;
+use rollun\HowToBuy\Supplier\Slt;
 
 /**
  * Class SupplierTest
