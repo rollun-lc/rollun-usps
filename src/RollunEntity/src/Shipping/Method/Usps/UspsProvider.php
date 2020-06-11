@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method\Usps;
 
+use rollun\Entity\Shipping\Method\Usps\ParcelSelect\Ground;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\FlatRate;
 use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\RegionalRate;
@@ -32,7 +33,7 @@ class UspsProvider extends ShippingMethodProvider
     {
         if ($shippingMethods === null) {
             $shippingMethods = [];
-            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
+            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class, Ground::class];
             foreach ($classes as $oneClass) {
                 $shortNames = $oneClass::getAllShortNames();
                 foreach ($shortNames as $shortName) {
@@ -78,6 +79,18 @@ class UspsProvider extends ShippingMethodProvider
         }
 
         if (!empty($shippingDataArray)) {
+//            $data = [
+//                'Service' => 'PARCEL SELECT GROUND',
+//                'Container' => 'VARIABLE',
+//                'ZipOrigination' => '10002',
+//                'ZipDestination' => '48204',
+//                'Pounds' => 3,
+//                'Length' => 2,
+//                'Width' => 1,
+//                'Height' => 1,
+//            ];
+//            $shippingDataArray = [new ShippingData($data)];
+
             $shippingPriceCommercial = new ShippingPriceCommercial();
             $shippingPriceArray = $shippingPriceCommercial->getShippingPrice($shippingDataArray);
             foreach ($shippingPriceArray as $key => $responseRec) {

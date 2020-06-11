@@ -94,7 +94,7 @@ abstract class ShippingsAbstract extends ShippingMethodAbstract
         if (false !== strpos($shortName, 'Env')) {
             return Envelope::class;
         }
-        if (false !== strpos($shortName, 'Large')) {
+        if (false !== strpos($shortName, 'Large') || false !== strpos($shortName, 'PS-Ground')) {
             return Tube::class;
         }
         if (false !== strpos($shortName, 'FtCls')) {
