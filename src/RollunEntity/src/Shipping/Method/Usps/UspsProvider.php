@@ -79,18 +79,6 @@ class UspsProvider extends ShippingMethodProvider
         }
 
         if (!empty($shippingDataArray)) {
-//            $data = [
-//                'Service' => 'PARCEL SELECT GROUND',
-//                'Container' => 'VARIABLE',
-//                'ZipOrigination' => '10002',
-//                'ZipDestination' => '48204',
-//                'Pounds' => 3,
-//                'Length' => 2,
-//                'Width' => 1,
-//                'Height' => 1,
-//            ];
-//            $shippingDataArray = [new ShippingData($data)];
-
             $shippingPriceCommercial = new ShippingPriceCommercial();
             $shippingPriceArray = $shippingPriceCommercial->getShippingPrice($shippingDataArray);
             foreach ($shippingPriceArray as $key => $responseRec) {
