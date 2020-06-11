@@ -31,6 +31,13 @@ class GroundTest extends UspsShippingAbstract
             [$this->createShippingRequest(15, 10, 8, 62, '10002', '98204'), 122.53],
             [$this->createShippingRequest(2, 1, 1, 1, '10002', '98204'), 8.12],
             [$this->createShippingRequest(32, 25, 25, 11, '10002', '98204'), 0],
+            [$this->createShippingRequest(25, 1, 13.5, 2.835, '84663', '83201'), 7.74],
+            [$this->createShippingRequest(11.25, 4.25, 4.5, 2.98, '84663', '97850'), 9.34],
+            [$this->createShippingRequest(2.5, 9.25, 4.25, 2.25, '84663', '95382'), 8.49],
+            [$this->createShippingRequest(10.5, 6.25, 10.5, 3.55, '84663', '97850'), 10.13],
+            [$this->createShippingRequest(20, 1.5, 16, 3, '84663', '83201'), 7.74],
+            [$this->createShippingRequest(13.25, 9.75, 6.5, 6.67, '84663', '83201'), 8.29],
+            [$this->createShippingRequest(20.5, 3, 15, 4.76, '84663', '83201'), 7.94],
         ];
     }
 
