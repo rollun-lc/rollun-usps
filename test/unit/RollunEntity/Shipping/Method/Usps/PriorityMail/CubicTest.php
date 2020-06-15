@@ -38,7 +38,7 @@ class CubicTest extends UspsShippingAbstract
             [$this->createShippingRequest(14, 1, 11, 2.12, '65050', '84663', ['expected' => 7.8])],
             [$this->createShippingRequest(15, 1, 5, 1.526, '85256', '84663', ['expected' => 7.56])],
             [$this->createShippingRequest(15, 18.1, 5, 1.526, '85256', '84663', ['expected' => 0])],
-            [$this->createShippingRequest(5, 1, 5, 70.2, '24551', '84663', ['expected' => 0])],
+            [$this->createShippingRequest(5, 1, 5, 20.2, '24551', '84663', ['expected' => 0])],
         ];
     }
 
