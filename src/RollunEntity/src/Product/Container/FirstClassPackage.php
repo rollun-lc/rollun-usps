@@ -18,7 +18,7 @@ class FirstClassPackage extends ContainerAbstract
      */
     private $weight;
 
-    public function __construct($max, $mid, $min, $weight = 0.199)
+    public function __construct($max, $mid, $min, $weight = 0.099)
     {
         $dim = compact('max', 'mid', 'min');
         rsort($dim, SORT_NUMERIC);
