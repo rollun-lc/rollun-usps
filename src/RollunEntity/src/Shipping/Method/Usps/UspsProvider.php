@@ -8,6 +8,7 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method\Usps;
 
+use rollun\Entity\Shipping\Method\Usps\PriorityMail\Cubic;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\FlatRate;
 use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\RegionalRate;
@@ -32,7 +33,7 @@ class UspsProvider extends ShippingMethodProvider
     {
         if ($shippingMethods === null) {
             $shippingMethods = [];
-            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class];
+            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class, Cubic::class];
             foreach ($classes as $oneClass) {
                 $shortNames = $oneClass::getAllShortNames();
                 foreach ($shortNames as $shortName) {
