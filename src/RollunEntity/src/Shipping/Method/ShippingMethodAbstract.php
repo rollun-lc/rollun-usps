@@ -102,7 +102,7 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
         $row = [
             ShippingResponseSet::KEY_SHIPPING_METHOD_NAME         => $this->shortName,
             ShippingResponseSet::KEY_SHIPPING_METHOD_COST         => $cost,
-            ShippingResponseSet::KEY_SHIPPING_METHOD_TRACK_NUMBER => $this->getTrackNumber($shippingRequest),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_TRACK_NUMBER_DATE => self::prepareDate($this->getTrackNumberDate($shippingRequest)),
             ShippingResponseSet::KEY_SHIPPING_METHOD_SEND_DATE    => self::prepareDate($this->getShippingSendDate($shippingRequest)),
             ShippingResponseSet::KEY_SHIPPING_METHOD_ARRIVE_DATE  => self::prepareDate($this->getShippingArriveDate($shippingRequest)),
             ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR        => null,
@@ -148,19 +148,15 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     }
 
     /**
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return string|null
+     * @inheritDoc
      */
-    public function getTrackNumber(ShippingRequest $shippingRequest): ?string
+    public function getTrackNumberDate(ShippingRequest $shippingRequest): ?\DateTime
     {
         return null;
     }
 
     /**
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return \DateTime|null
+     * @inheritDoc
      */
     public function getShippingSendDate(ShippingRequest $shippingRequest): ?\DateTime
     {
@@ -168,9 +164,7 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     }
 
     /**
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return \DateTime|null
+     * @inheritDoc
      */
     public function getShippingArriveDate(ShippingRequest $shippingRequest): ?\DateTime
     {

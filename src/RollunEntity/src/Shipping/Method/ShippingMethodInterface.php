@@ -26,9 +26,9 @@ interface ShippingMethodInterface
     /**
      * @param ShippingRequest $shippingRequest
      *
-     * @return string|null
+     * @return \DateTime|null
      */
-    public function getTrackNumber(ShippingRequest $shippingRequest): ?string;
+    public function getTrackNumberDate(ShippingRequest $shippingRequest): ?\DateTime;
 
     /**
      * Date when package will send
