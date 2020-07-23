@@ -60,7 +60,7 @@ abstract class UspsShippingAbstract extends TestCase
             $shippingMethods[] = (new $class($shortName))->setDefinedCost($definedCost);
         }
 
-        $data = (new UspsProvider($shippingMethods))->getShippingMetods($shippingRequest)->toArray();
+        $data = (new UspsProvider($shippingMethods))->getShippingMethods($shippingRequest)->toArray();
 
         $result = array_column($data, 'cost', 'id');
         ksort($result);

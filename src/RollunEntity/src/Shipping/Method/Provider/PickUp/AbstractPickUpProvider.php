@@ -21,13 +21,13 @@ abstract class AbstractPickUpProvider extends ShippingMethodProvider
     /**
      * @inheritDoc
      */
-    public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
+    public function getShippingMethods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
         if (!in_array((string)$shippingRequest->getOriginationZipCode(), $this->getAllowedOriginationZips())) {
             return new ShippingResponseSet();
         }
 
-        return parent::getShippingMetods($shippingRequest);
+        return parent::getShippingMethods($shippingRequest);
     }
 
     /**

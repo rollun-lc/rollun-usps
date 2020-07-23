@@ -6,6 +6,7 @@
  * Time: 17:30
  */
 
+use Interop\Container\ContainerInterface;
 use rollun\dic\InsideConstruct;
 use rollun\logger\LifeCycleToken;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
@@ -15,20 +16,20 @@ error_reporting(E_ALL ^ E_USER_DEPRECATED ^ E_DEPRECATED); //E_ALL ^ E_USER_DEPR
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
-/** @var \Interop\Container\ContainerInterface $container */
+/** @var ContainerInterface $container */
 $container = require 'config/container.php';
+
 InsideConstruct::setContainer($container);
 
-$lifeCycleToken = LifeCycleToken::generateToken();
-$container->setService(LifeCycleToken::class, $lifeCycleToken);
+$container->setService(LifeCycleToken::class, LifeCycleToken::generateToken());
 
 /** @var AllCosts $allCosts */
 $allCosts = $container->get(AllCosts::class);
 
 //$zipOrigination, $zipDestination, $pounds, $width, $length, $height, $quantity = null
-//$query = $allCosts->buildUspShippingQuery('10001', '00601', 0.6, 10, 8, 1, 1);
-//$result = $allCosts->query($query);
-//
-//echo '<pre>';
-//print_r($result);
-//die();
+$query = $allCosts->buildUspShippingQuery('84663', '78228', 0.2, 1, 2, 1);
+$result = $allCosts->query($query);
+
+echo '<pre>';
+print_r($result);
+die();

@@ -146,7 +146,7 @@ class AllCosts extends DataStoreAbstract
         }
 
         $shippingRequest = $this->makeShippingRequest($queryParams);
-        $responseSet = $this->root->getShippingMetods($shippingRequest);
+        $responseSet = $this->root->getShippingMethods($shippingRequest);
 
         $span->addTag(new StringTag('responseSet', json_encode($responseSet)));
 

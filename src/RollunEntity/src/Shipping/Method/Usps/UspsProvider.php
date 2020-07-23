@@ -49,14 +49,14 @@ class UspsProvider extends ShippingMethodProvider
      * @param ShippingRequest $shippingRequest
      * @return ShippingResponseSet [['id'  => 'RMATV-USPS-FRLG1','cost' =>17.89],[['id'  =>...]]
      */
-    public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
+    public function getShippingMethods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
         $shippingResponseSet = new ShippingResponseSet();
         $requestedShippingMetods = [];
         $shippingDataArray = [];
         foreach ($this->data as $shippingMethod) {
             if ($shippingMethod->hasDefinedCost()) {
-                $calculatedhippingResponseSet = $shippingMethod->getShippingMetods($shippingRequest);
+                $calculatedhippingResponseSet = $shippingMethod->getShippingMethods($shippingRequest);
                 $calculatedhippingResponseSet = $this->addCost($calculatedhippingResponseSet);
                 $shippingResponseSet->mergeResponseSet($calculatedhippingResponseSet, $this->getShortName());
             } elseif ($shippingMethod->canBeShipped($shippingRequest)) {

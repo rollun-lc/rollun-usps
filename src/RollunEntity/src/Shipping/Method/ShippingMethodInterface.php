@@ -1,29 +1,50 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method;
 
 use rollun\Entity\Shipping\ShippingRequest;
-use rollun\Entity\Shipping\ShippingResponseSet;
 
+/**
+ * Interface ShippingMethodInterface
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
 interface ShippingMethodInterface
 {
+    /**
+     * @param ShippingRequest $shippingRequest
+     * @param bool            $shippingDataOnly
+     *
+     * @return float|null
+     */
+    public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false);
 
     /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return string|null
+     */
+    public function getTrackNumber(ShippingRequest $shippingRequest): ?string;
+
+    /**
+     * Date when package will send
      *
      * @param ShippingRequest $shippingRequest
-     * @return ShippingResponseSet [['id'  => 'RMATV-USPS-FRLG1','cost' =>17.89],[['id'  =>...]]
+     *
+     * @return \DateTime|null
      */
-    public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet;
+    public function getShippingSendDate(ShippingRequest $shippingRequest): ?\DateTime;
 
     /**
+     * Date when package will arrive
      *
-     * @return string 'USPS_FR_Md1' for USPS FlatRate Middle Box 1
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return \DateTime|null
      */
-    public function getShortName(): string;
+    public function getShippingArriveDate(ShippingRequest $shippingRequest): ?\DateTime;
 }
