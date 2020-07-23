@@ -29,10 +29,14 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     protected $maxWeight;
 
     /**
-     *
      * @var ProductContainerInterface
      */
     protected $container;
+
+    /**
+     * @var bool
+     */
+    protected $canShipDangerous = true;
 
     /**
      * ShippingMethodAbstract constructor.
@@ -85,7 +89,9 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool
     {
-        return $this->passesByWeight($shippingRequest->item) && $this->container->canFit($shippingRequest->item);
+        return $this->passesByWeight($shippingRequest->item)
+            && $this->container->canFit($shippingRequest->item)
+            && $this->canShipDangerousMaterials($shippingRequest);
     }
 
     /**
@@ -100,12 +106,12 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
         $cost = $this->getCost($shippingRequest);
 
         $row = [
-            ShippingResponseSet::KEY_SHIPPING_METHOD_NAME         => $this->shortName,
-            ShippingResponseSet::KEY_SHIPPING_METHOD_COST         => $cost,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_NAME              => $this->shortName,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_COST              => $cost,
             ShippingResponseSet::KEY_SHIPPING_METHOD_TRACK_NUMBER_DATE => self::prepareDate($this->getTrackNumberDate($shippingRequest)),
-            ShippingResponseSet::KEY_SHIPPING_METHOD_SEND_DATE    => self::prepareDate($this->getShippingSendDate($shippingRequest)),
-            ShippingResponseSet::KEY_SHIPPING_METHOD_ARRIVE_DATE  => self::prepareDate($this->getShippingArriveDate($shippingRequest)),
-            ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR        => null,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_SEND_DATE         => self::prepareDate($this->getShippingSendDate($shippingRequest)),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_ARRIVE_DATE       => self::prepareDate($this->getShippingArriveDate($shippingRequest)),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR             => null,
         ];
 
         // @todo fix it. errors should get by another way
@@ -179,5 +185,21 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     protected static function prepareDate(?\DateTime $dateTime): ?string
     {
         return !is_null($dateTime) ? $dateTime->format('d.m.Y') : null;
+    }
+
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return bool
+     */
+    protected function canShipDangerousMaterials(ShippingRequest $shippingRequest): bool
+    {
+        // get dangerous attribute
+        $dangerous = $shippingRequest->getAttribute('dangerous');
+
+        // is product dangerous ? false by default
+        $isDangerous = ($dangerous === 'true' || $dangerous === 1 || $dangerous === true);
+
+        return !(!$this->canShipDangerous && $isDangerous);
     }
 }
