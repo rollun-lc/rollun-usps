@@ -83,9 +83,7 @@ class FixedPriceTest extends TestCase
         $product = new Product($rectangular, 0.5);
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
-        $this->assertEquals(
-                ['id' => 'Md1', 'cost' => null, 'Error' => null], $fixedPrice->getShippingMethods($shippingRequest)->getArrayCopy()[0]
-        );
+        $this->assertEquals(null, $fixedPrice->getShippingMethods($shippingRequest)->getArrayCopy()[0]['cost']);
     }
 
     public function test_getShippingMetods_99()
@@ -103,8 +101,6 @@ class FixedPriceTest extends TestCase
         $product = new Product($rectangular, 0.5);
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
-        $this->assertEquals(
-                ['id' => 'Md1', 'cost' => 20, 'Error' => null], $fixedPrice->getShippingMethods($shippingRequest)->getArrayCopy()[0]
-        );
+        $this->assertEquals(20, $fixedPrice->getShippingMethods($shippingRequest)->getArrayCopy()[0]['cost']);
     }
 }
