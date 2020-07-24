@@ -38,12 +38,8 @@ class FixedPriceAbstractFactoryTest extends TestCase
         $product = new Product($rectangular, 0.5);
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
-        $this->assertEquals(
-                ['id' => 'UspsTest-Md1', 'cost' => 10, 'Error' => null], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[0]
-        );
+        $this->assertEquals(10, $providerUsps->getShippingMethods($shippingRequest)->getArrayCopy()[0]['cost']);
 
-        $this->assertEquals(
-                ['id' => 'UspsTest-Md2', 'cost' => null, 'Error' => null], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[1]
-        );
+        $this->assertEquals(null, $providerUsps->getShippingMethods($shippingRequest)->getArrayCopy()[1]['cost']);
     }
 }

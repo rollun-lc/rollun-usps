@@ -20,6 +20,11 @@ use rollun\Entity\Shipping\ShippingRequest;
 class Package extends ShippingsAbstract
 {
     /**
+     * @var bool
+     */
+    protected $canShipDangerous = false;
+
+    /**
      * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      */
     const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.999]];

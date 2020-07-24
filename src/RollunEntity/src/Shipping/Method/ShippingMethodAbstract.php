@@ -1,40 +1,56 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method;
 
 use rollun\Entity\Product\Item\ItemInterface;
-use rollun\Entity\Shipping\Method\ShippingMethodInterface;
-use rollun\Entity\Product\Dimensions\DimensionsInterface;
 use rollun\Entity\Product\Container\ContainerInterface as ProductContainerInterface;
 use rollun\Entity\Shipping\ShippingRequest;
 use rollun\Entity\Shipping\ShippingResponseSet;
 
-abstract class ShippingMethodAbstract implements ShippingMethodInterface
+/**
+ * Class ShippingMethodAbstract
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
+abstract class ShippingMethodAbstract implements ShippingMethodInterface, ShippingMethodProviderInterface
 {
-
+    /**
+     * @var string
+     */
     protected $shortName;
+
+    /**
+     * @var float
+     */
     protected $maxWeight;
 
     /**
-     *
-     * @var ContainerInterface
+     * @var ProductContainerInterface
      */
     protected $container;
 
+    /**
+     * @var bool
+     */
+    protected $canShipDangerous = true;
+
+    /**
+     * ShippingMethodAbstract constructor.
+     *
+     * @param ProductContainerInterface $container
+     * @param string                    $shortName
+     * @param                           $maxWeight
+     */
     public function __construct(ProductContainerInterface $container, string $shortName, $maxWeight)
     {
         $this->shortName = $shortName;
         $this->maxWeight = $maxWeight;
         $this->container = $container;
     }
-
-    abstract public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false);
 
     /**
      *
@@ -45,11 +61,19 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
         return $this->shortName;
     }
 
-    public function getContainer(): ContainerInterface
+    /**
+     * @return ProductContainerInterface
+     */
+    public function getContainer(): ProductContainerInterface
     {
         return $this->container;
     }
 
+    /**
+     * @param ItemInterface $item
+     *
+     * @return bool
+     */
     public function passesByWeight(ItemInterface $item): bool
     {
         $diff = $this->maxWeight - ($item->getWeight() + $this->container->getContainerWeight());
@@ -65,33 +89,38 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool
     {
-        return $this->passesByWeight($shippingRequest->item) &&
-            $this->container->canFit($shippingRequest->item);
+        return $this->passesByWeight($shippingRequest->item)
+            && $this->container->canFit($shippingRequest->item)
+            && $this->canShipDangerousMaterials($shippingRequest);
     }
 
     /**
      *
      * @param ShippingRequest $shippingRequest
+     *
      * @return ShippingResponseSet [['id'  => 'RMATV-USPS-FRLG1','cost' =>17.89]]
      */
-    public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
+    public function getShippingMethods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
+        // get cost
         $cost = $this->getCost($shippingRequest);
-        if (is_null($cost) || is_numeric($cost)) {
-            $shippingSet[] = [
-                ShippingResponseSet::KEY_SHIPPING_METHOD_NAME => $this->shortName,
-                ShippingResponseSet::KEY_SHIPPING_METHOD_COST => $cost,
-                ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR => null
-            ];
-        } else {
-            $shippingSet[] = [
-                ShippingResponseSet::KEY_SHIPPING_METHOD_NAME => $this->shortName,
-                ShippingResponseSet::KEY_SHIPPING_METHOD_COST => null,
-                ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR => $cost
-            ];
+
+        $row = [
+            ShippingResponseSet::KEY_SHIPPING_METHOD_NAME              => $this->shortName,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_COST              => $cost,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_TRACK_NUMBER_DATE => self::prepareDate($this->getTrackNumberDate($shippingRequest)),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_SEND_DATE         => self::prepareDate($this->getShippingSendDate($shippingRequest)),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_ARRIVE_DATE       => self::prepareDate($this->getShippingArriveDate($shippingRequest)),
+            ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR             => null,
+        ];
+
+        // @todo fix it. errors should get by another way
+        if (!is_null($cost) && !is_numeric($cost)) {
+            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_COST] = $cost;
+            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR] = null;
         }
 
-        $shippingResponseSet = new ShippingResponseSet($shippingSet);
+        $shippingResponseSet = new ShippingResponseSet([$row]);
 
         $addData = $this->getAddData($shippingRequest);
         $shippingResponseSet->addFildsWithData($addData);
@@ -99,11 +128,18 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
         return $shippingResponseSet;
     }
 
+    /**
+     * @param ShippingResponseSet $shippingResponseSet
+     * @param array               $addData
+     *
+     * @return ShippingResponseSet
+     */
     public function addData($shippingResponseSet, array $addData): ShippingResponseSet
     {
         foreach ($shippingResponseSet as $key => $shippingResponse) {
             $shippingResponseSet[$key] = array_merge($shippingResponse, $addData);
         }
+
         return $shippingResponseSet;
     }
 
@@ -115,5 +151,55 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface
     public function getAddData(ShippingRequest $shippingRequest): array
     {
         return [];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTrackNumberDate(ShippingRequest $shippingRequest): ?\DateTime
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingSendDate(ShippingRequest $shippingRequest): ?\DateTime
+    {
+        return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getShippingArriveDate(ShippingRequest $shippingRequest): ?\DateTime
+    {
+        return null;
+    }
+
+    /**
+     * @param \DateTime|null $dateTime
+     *
+     * @return string|null
+     */
+    protected static function prepareDate(?\DateTime $dateTime): ?string
+    {
+        return !is_null($dateTime) ? $dateTime->format('d.m.Y') : null;
+    }
+
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return bool
+     */
+    protected function canShipDangerousMaterials(ShippingRequest $shippingRequest): bool
+    {
+        // get dangerous attribute
+        $dangerous = $shippingRequest->getAttribute('dangerous');
+
+        // is product dangerous ? false by default
+        $isDangerous = ($dangerous === 'true' || $dangerous === 1 || $dangerous === true);
+
+        return !(!$this->canShipDangerous && $isDangerous);
     }
 }

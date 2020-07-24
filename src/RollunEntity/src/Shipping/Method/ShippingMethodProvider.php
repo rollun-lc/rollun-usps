@@ -1,27 +1,38 @@
 <?php
-
-/**
- * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
- * @license LICENSE.md New BSD License
- */
 declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method;
 
-use rollun\Entity\Shipping\Method\ShippingMethodInterface;
 use rollun\Entity\Shipping\ShippingRequest;
 use rollun\Entity\Shipping\ShippingResponseSet;
 
-class ShippingMethodProvider implements ShippingMethodInterface, \IteratorAggregate
+/**
+ * Class ShippingMethodProvider
+ *
+ * @author    r.ratsun <r.ratsun.rollun@gmail.com>
+ *
+ * @copyright Copyright © 2014 Rollun LC (http://rollun.com/)
+ * @license   LICENSE.md New BSD License
+ */
+class ShippingMethodProvider implements ShippingMethodProviderInterface, \IteratorAggregate
 {
-
     /**
      *
      * @var array shippingMethods
      */
     protected $data = [];
+
+    /**
+     * @var string
+     */
     protected $shortName;
 
+    /**
+     * ShippingMethodProvider constructor.
+     *
+     * @param string $shortName
+     * @param array  $data
+     */
     public function __construct($shortName, array $data = [])
     {
         $this->shortName = $shortName;
@@ -32,33 +43,41 @@ class ShippingMethodProvider implements ShippingMethodInterface, \IteratorAggreg
     }
 
     /**
-     *
      * @param ShippingRequest $shippingRequest
+     *
      * @return ShippingResponseSet [['id'  => 'RMATV-USPS-FRLG1','cost' =>17.89],[['id'  =>...]]
      */
-    public function getShippingMetods(ShippingRequest $shippingRequest): ShippingResponseSet
+    public function getShippingMethods(ShippingRequest $shippingRequest): ShippingResponseSet
     {
         $shippingResponseSet = new ShippingResponseSet();
 
         foreach ($this->data as $shippingMethod) {
             /* @var $shippingMethod ShippingMethodInterface */
-            $childShippingResponseSet = $shippingMethod->getShippingMetods($shippingRequest);
+            $childShippingResponseSet = $shippingMethod->getShippingMethods($shippingRequest);
             $childShippingResponseSet = $this->addCost($childShippingResponseSet);
             $shippingResponseSet->mergeResponseSet($childShippingResponseSet, $this->getShortName());
         }
         $addData = $this->getAddData($shippingRequest);
         $shippingResponseSet->addFildsWithData($addData);
+
         return $shippingResponseSet;
     }
 
+    /**
+     * @param ShippingResponseSet $shippingResponseSet
+     *
+     * @return ShippingResponseSet
+     */
     public function addCost($shippingResponseSet): ShippingResponseSet
     {
-//        foreach ($shippingResponseSet as $key => $shippingResponse) {
-//            $shippingResponseSet[$key]['cost'] = $shippingResponse['cost'] + 0;
-//        }
         return $shippingResponseSet;
     }
 
+    /**
+     * @param ShippingRequest $shippingRequest
+     *
+     * @return array
+     */
     public function getAddData(ShippingRequest $shippingRequest): array
     {
         return [];
@@ -73,6 +92,9 @@ class ShippingMethodProvider implements ShippingMethodInterface, \IteratorAggreg
         return $this->shortName;
     }
 
+    /**
+     * @return \ArrayIterator
+     */
     public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->data);

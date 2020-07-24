@@ -29,7 +29,7 @@ class ShippingMethodProviderTest extends TestCase
         );
     }
 
-    public function test_getShippingMetods()
+    public function test_getShippingMethods()
     {
         $provider = new UspsProvider();
 
@@ -41,19 +41,19 @@ class ShippingMethodProviderTest extends TestCase
         $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 
         $this->assertEquals(
-                13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['cost']
+                13.2, $provider->getShippingMethods($shippingRequest)->getArrayCopy()[4]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-MdBox1', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['id']
+                'Usps-PM-FR-MdBox1', $provider->getShippingMethods($shippingRequest)->getArrayCopy()[4]['id']
         );
         $this->assertEquals(
-            13.2, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[4]['cost']
+            13.2, $provider->getShippingMethods($shippingRequest)->getArrayCopy()[4]['cost']
         );
         $this->assertEquals(
-                'Usps-PM-FR-BgBox', $provider->getShippingMetods($shippingRequest)->getArrayCopy()[7]['id']
+                'Usps-PM-FR-BgBox', $provider->getShippingMethods($shippingRequest)->getArrayCopy()[7]['id']
         );
         $this->assertEquals(
-                18.3, $provider->getShippingMetods($shippingRequest)->getArrayCopy()[7]['cost']
+                18.3, $provider->getShippingMethods($shippingRequest)->getArrayCopy()[7]['cost']
         );
 
         $this->assertEquals(
@@ -74,7 +74,7 @@ class ShippingMethodProviderTest extends TestCase
             , 'Volume' => 50
             , 'Click_N_Shipp' => 'First-Class Package Service'
             , 'Error' => null)
-                , $provider->getShippingMetods($shippingRequest)->getBestCostResponseRec()
+                , $provider->getShippingMethods($shippingRequest)->getBestCostResponseRec()
         );
     }
 //
@@ -97,11 +97,11 @@ class ShippingMethodProviderTest extends TestCase
 //        $shippingRequest = new ShippingRequest($product, $addressOrigination, $addressDestination);
 //
 //        $this->assertEquals(
-//                ['id' => 'Usps-Fr-Md1', 'cost' => 20], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[0]
+//                ['id' => 'Usps-Fr-Md1', 'cost' => 20], $providerUsps->getShippingMethods($shippingRequest)->getArrayCopy()[0]
 //        );
 //
 //        $this->assertEquals(
-//                ['id' => 'Usps-Fr-Md2', 'cost' => null], $providerUsps->getShippingMetods($shippingRequest)->getArrayCopy()[1]
+//                ['id' => 'Usps-Fr-Md2', 'cost' => null], $providerUsps->getShippingMethods($shippingRequest)->getArrayCopy()[1]
 //        );
 //    }
 }

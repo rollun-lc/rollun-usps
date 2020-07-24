@@ -146,7 +146,7 @@ class AllCosts extends DataStoreAbstract
         }
 
         $shippingRequest = $this->makeShippingRequest($queryParams);
-        $responseSet = $this->root->getShippingMetods($shippingRequest);
+        $responseSet = $this->root->getShippingMethods($shippingRequest);
 
         $span->addTag(new StringTag('responseSet', json_encode($responseSet)));
 
@@ -236,6 +236,7 @@ class AllCosts extends DataStoreAbstract
             new EqNode('Height', $height),
             new EqNode('Error', null),
             new NeNode('cost', null),
+//            new EqNode('attr_dangerous', 'true'), // указывает на то опасный ли товар, если да то нельзя отправлять самолетом
         ]);
         if ($quantity) {
             $andNode->addQuery(new EqNode('Quantity', $quantity));
