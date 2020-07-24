@@ -116,8 +116,8 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
 
         // @todo fix it. errors should get by another way
         if (!is_null($cost) && !is_numeric($cost)) {
-            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_COST] = $cost;
-            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR] = null;
+            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_COST] = null;
+            $row[ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR] = $cost;
         }
 
         $shippingResponseSet = new ShippingResponseSet([$row]);
