@@ -10,6 +10,11 @@ use Interop\Container\ContainerInterface;
 use rollun\dic\InsideConstruct;
 use rollun\logger\LifeCycleToken;
 use service\Entity\Api\DataStore\Shipping\AllCosts;
+use Xiag\Rql\Parser\Node\Query\LogicOperator\AndNode;
+use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
+use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
+use Xiag\Rql\Parser\Node\SortNode;
+use Xiag\Rql\Parser\Query;
 
 error_reporting(E_ALL ^ E_USER_DEPRECATED ^ E_DEPRECATED); //E_ALL ^ E_USER_DEPRECATED
 
@@ -26,8 +31,26 @@ $container->setService(LifeCycleToken::class, LifeCycleToken::generateToken());
 /** @var AllCosts $allCosts */
 $allCosts = $container->get(AllCosts::class);
 
-//$zipOrigination, $zipDestination, $pounds, $width, $length, $height, $quantity = null
-$query = $allCosts->buildUspShippingQuery('84663', '78228', 0.2, 1, 2, 1);
+$query = new Query();
+$andNode = new AndNode(
+    [
+        new EqNode('ZipOrigination', '84663'),
+        new EqNode('ZipDestination', '78228'),
+        new EqNode('Pounds', 0.4),
+        new EqNode('Width', 1),
+        new EqNode('Length', 2),
+        new EqNode('Height', 1),
+        new EqNode('Error', null),
+        new NeNode('cost', null),
+        new EqNode('Quantity', 1),
+        new EqNode('attr_dangerous', true),
+        new EqNode('attr_tire', true),
+    ]
+);
+
+$query->setQuery($andNode);
+$query->setSort(new SortNode(['cost' => SortNode::SORT_ASC]));
+
 $result = $allCosts->query($query);
 
 echo '<pre>';
