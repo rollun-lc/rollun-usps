@@ -17,11 +17,21 @@ use rollun\Entity\Shipping\ShippingRequest;
 class TrDropShip extends LevelBasedShippingMethod
 {
     /**
+     * @var array
+     */
+    protected $levels
+        = [
+            // weight, price
+            [40, 16], // $16 DS - до 40 lbs
+            [999, 25] // $25 DS больше 40 lbs
+        ];
+
+    /**
      * @inheritDoc
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -29,7 +39,7 @@ class TrDropShip extends LevelBasedShippingMethod
      */
     protected function isLevelValid(ShippingRequest $shippingRequest, array $level): bool
     {
-        return false;
+        return $shippingRequest->item->getWeight() < $level[0];
     }
 
     /**
@@ -37,6 +47,6 @@ class TrDropShip extends LevelBasedShippingMethod
      */
     protected function getLevelCost(array $level): ?float
     {
-        return null;
+        return $level[1];
     }
 }

@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace rollun\Entity\Shipping\Method\DropShip;
 
 use rollun\Entity\Shipping\Method\LevelBasedShippingMethod;
+use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
 use rollun\Entity\Shipping\ShippingRequest;
+use rollun\Entity\Subject\Address;
 
 /**
  * Class AuDropShip
@@ -16,7 +18,7 @@ use rollun\Entity\Shipping\ShippingRequest;
  */
 class AuDropShip extends LevelBasedShippingMethod
 {
-    const MAX_WEIGHT = 70;
+    const ZIP_FROM = '46268';
 
     /**
      * @var array
@@ -24,9 +26,8 @@ class AuDropShip extends LevelBasedShippingMethod
     protected $levels
         = [
             // weight, price
-            [12 / 16, 5], // 1-12 oz $5
-            [15.99 / 16, 6], // 12.01 – 15.99 oz $6
-            [70, 10.50] // 1 – 69 lbs $10.50
+            [7, 8.5], // до 7 lbs - $8.50
+            [70, 10] // после 7 lbs - $10
         ];
 
     /**
@@ -34,7 +35,24 @@ class AuDropShip extends LevelBasedShippingMethod
      */
     public function canBeShipped(ShippingRequest $shippingRequest): bool
     {
-        return $shippingRequest->item->getWeight() < self::MAX_WEIGHT;
+        return true;
+    }
+
+
+    /**
+     * @inheritDoc
+     */
+    public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
+    {
+        // Если вмещается в First-class- цена будет First-class
+        $request = clone $shippingRequest;
+        $request->addressOrigination = new Address(null, self::ZIP_FROM);
+        $firstClass = new Package('FtCls-Package');
+        if ($firstClass->canBeShipped($request)) {
+            return $firstClass->getCost($request, $shippingDataOnly);
+        }
+
+        return parent::getCost($shippingRequest, $shippingDataOnly);
     }
 
     /**
