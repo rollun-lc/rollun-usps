@@ -26,8 +26,8 @@ class AuDropShipTest extends TestCase
     public function shippingRequestsDataProvider(): array
     {
         return [
-            [$this->createShippingRequest(20, 12, 5, 0.2, '10002', '48204'), 5],
-            [$this->createShippingRequest(20, 12, 5, 0.8, '10002', '48204'), 6],
+            [$this->createShippingRequest(20, 12, 5, 0.2, '10002', '48204'), 2.76],
+            [$this->createShippingRequest(20, 12, 5, 0.8, '10002', '48204'), 5.08],
             [$this->createShippingRequest(20, 12, 5, 22, '10002', '48204'), 10.5],
             [$this->createShippingRequest(20, 12, 5, 75, '10002', '48204'), null],
         ];

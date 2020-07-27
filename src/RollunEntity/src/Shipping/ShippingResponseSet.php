@@ -15,9 +15,6 @@ class ShippingResponseSet extends \ArrayObject
 {
     const KEY_SHIPPING_METHOD_NAME = 'id';
     const KEY_SHIPPING_METHOD_COST = 'cost';
-    const KEY_SHIPPING_METHOD_TRACK_NUMBER_DATE = 'trackNumberDate';
-    const KEY_SHIPPING_METHOD_SEND_DATE = 'shippingSendDate';
-    const KEY_SHIPPING_METHOD_ARRIVE_DATE = 'shippingArriveDate';
     const KEY_SHIPPING_METHOD_ERROR = 'Error';
 
     const SHIPPING_METHOD_NAME_SEPARATOR = '-';
