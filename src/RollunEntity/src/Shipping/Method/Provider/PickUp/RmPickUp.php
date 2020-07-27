@@ -26,6 +26,6 @@ class RmPickUp extends AbstractPickUpProvider
      */
     protected function getAllowedOriginationZips(): array
     {
-        return ['84663'];
+        return ['84663', '84660'];
     }
 }
