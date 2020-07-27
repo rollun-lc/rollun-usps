@@ -19,6 +19,16 @@ use rollun\Entity\Shipping\ShippingResponseSet;
 abstract class ShippingMethodAbstract implements ShippingMethodInterface, ShippingMethodProviderInterface
 {
     /**
+     * Domestic Zone API URL
+     */
+    const DOMESTIC_ZONE_API = 'https://postcalc.usps.com/DomesticZoneChart/GetZoneChart?zipCode3Digit=%s&shippingDate=%s';
+
+    /**
+     * Domestic Zone file path
+     */
+    const DOMESTIC_ZONE_FILE = 'data/usps-domestic-zone-%s.json';
+
+    /**
      * @var string
      */
     protected $shortName;
@@ -109,6 +119,7 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
             ShippingResponseSet::KEY_SHIPPING_METHOD_NAME  => $this->shortName,
             ShippingResponseSet::KEY_SHIPPING_METHOD_COST  => $cost,
             ShippingResponseSet::KEY_SHIPPING_METHOD_ERROR => null,
+            ShippingResponseSet::KEY_SHIPPING_METHOD_ZONE  => $this->getZone($shippingRequest->getOriginationZipCode(false), $shippingRequest->getDestinationZipCode(false))
         ];
 
         // @todo fix it. errors should get by another way
@@ -151,27 +162,111 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     }
 
     /**
-     * @inheritDoc
+     * @param string $zipFrom
+     * @param string $zipTo
+     *
+     * @return int
+     * @throws \Exception
      */
-    public function getTrackNumberDate(ShippingRequest $shippingRequest): ?\DateTime
+    public function getZone(string $zipFrom, string $zipTo): int
     {
-        return null;
+        // get zones
+        $data = $this->getDomesticZones($zipFrom);
+
+        // prepare destinationZip
+        $destinationZip = (int)$this->getTreeDigitsZip($zipTo);
+
+        if (!isset($data['zipCodes'][$destinationZip])) {
+            throw new \Exception('No such zip zone');
+        }
+
+        return $data['zipCodes'][$destinationZip];
     }
 
     /**
-     * @inheritDoc
+     * @param string $zipFrom
+     *
+     * @return array
+     * @throws \Exception
      */
-    public function getShippingSendDate(ShippingRequest $shippingRequest): ?\DateTime
+    protected function getDomesticZones(string $zipFrom): array
     {
-        return null;
+        // prepare 3-digits ZIP Code
+        $treeDigitsZip = $this->getTreeDigitsZip($zipFrom);
+
+        // prepare file name
+        $fileName = sprintf(self::DOMESTIC_ZONE_FILE, $treeDigitsZip);
+
+        // create file if not exists
+        if (!file_exists($fileName)) {
+            $data = $this->createDomesticZoneFile($treeDigitsZip, $fileName);
+        } else {
+            $data = json_decode(file_get_contents($fileName), true);
+        }
+
+        return $data;
     }
 
     /**
-     * @inheritDoc
+     * @param string $treeDigitsZip
+     * @param string $fileName
+     *
+     * @return array
+     * @throws \Exception
      */
-    public function getShippingArriveDate(ShippingRequest $shippingRequest): ?\DateTime
+    protected function createDomesticZoneFile(string $treeDigitsZip, string $fileName): array
     {
-        return null;
+        $content = @file_get_contents(sprintf(self::DOMESTIC_ZONE_API, $treeDigitsZip, str_replace('_', '%2F', (new \DateTime())->format('m_d_Y'))));
+        if (!empty($content)) {
+            // parse content
+            $content = json_decode($content, true);
+
+            $i = 0;
+            while (isset($content["Column$i"])) {
+                foreach ($content["Column$i"] as $row) {
+                    $parts = explode('---', $row['ZipCodes']);
+                    if (isset($parts[1])) {
+                        $from = (int)$parts[0];
+                        $to = (int)$parts[1];
+                        while ($from <= $to) {
+                            $data['zipCodes'][$from] = (int)$row['Zone'];
+                            $from++;
+                        }
+                    } else {
+                        $data['zipCodes'][(int)$row['ZipCodes']] = (int)$row['Zone'];
+                    }
+                }
+                $i++;
+            }
+
+            // create dir if not exist
+            if (!file_exists('data')) {
+                mkdir('data', 0777, true);
+            }
+
+            if (empty($data)) {
+                throw new \Exception('API response parsing failed');
+            } else {
+                $data['createdAt'] = (new \DateTime())->format('Y-m-d H:i:s');
+            }
+
+            // create file
+            file_put_contents($fileName, json_encode($data));
+        } else {
+            throw new \Exception('Domestic zone API unavailable');
+        }
+
+        return $data;
+    }
+
+    /**
+     * @param string $zipCode
+     *
+     * @return string
+     */
+    protected function getTreeDigitsZip(string $zipCode): string
+    {
+        return mb_substr($zipCode, 0, 3);
     }
 
     /**

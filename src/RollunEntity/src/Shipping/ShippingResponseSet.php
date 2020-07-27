@@ -16,6 +16,7 @@ class ShippingResponseSet extends \ArrayObject
     const KEY_SHIPPING_METHOD_NAME = 'id';
     const KEY_SHIPPING_METHOD_COST = 'cost';
     const KEY_SHIPPING_METHOD_ERROR = 'Error';
+    const KEY_SHIPPING_METHOD_ZONE = 'Zone';
 
     const SHIPPING_METHOD_NAME_SEPARATOR = '-';
 

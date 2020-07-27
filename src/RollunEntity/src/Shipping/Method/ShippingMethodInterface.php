@@ -22,29 +22,4 @@ interface ShippingMethodInterface
      * @return float|null
      */
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false);
-
-    /**
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return \DateTime|null
-     */
-    public function getTrackNumberDate(ShippingRequest $shippingRequest): ?\DateTime;
-
-    /**
-     * Date when package will send
-     *
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return \DateTime|null
-     */
-    public function getShippingSendDate(ShippingRequest $shippingRequest): ?\DateTime;
-
-    /**
-     * Date when package will arrive
-     *
-     * @param ShippingRequest $shippingRequest
-     *
-     * @return \DateTime|null
-     */
-    public function getShippingArriveDate(ShippingRequest $shippingRequest): ?\DateTime;
 }
