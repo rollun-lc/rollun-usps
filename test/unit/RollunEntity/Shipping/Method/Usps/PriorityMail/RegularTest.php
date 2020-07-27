@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace rollun\test\unit\Entity\Shipping\Method\Usps\PriorityMail;
 
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\Regular;
+use rollun\Entity\Shipping\ShippingRequest;
 use rollun\test\unit\Entity\Shipping\Method\Usps\UspsShippingAbstract;
 
 /**
@@ -37,5 +38,17 @@ class RegularTest extends UspsShippingAbstract
             [$this->createShippingRequest(1, 105, 1, 0.2, '90001', '90211')],
             [$this->createShippingRequest(2, 2, 2, 71, '90001', '90211')],
         ];
+    }
+
+    /**
+     * Is locally calculated cost is the same as api cost
+     *
+     * @param ShippingRequest $shippingRequest
+     *
+     * @dataProvider shippingRequestsDataProvider
+     */
+    public function testIsCostMatch(ShippingRequest $shippingRequest)
+    {
+        $this->assertEquals($this->getCost($shippingRequest, false), $this->getCost($shippingRequest));
     }
 }
