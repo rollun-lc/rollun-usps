@@ -25,7 +25,7 @@ class Cubic extends ShippingsAbstract
      */
     const USPS_BOXES
         = [
-            ['PM-Cubic', 'Priority Mail', 'Cubic', '', 'VARIABLE', 18, 18, 18, 20],
+            ['PM-Cubic', 'Priority Mail Cubic', 'Cubic', '', 'VARIABLE', 18, 18, 18, 20],
         ];
 
     /**
