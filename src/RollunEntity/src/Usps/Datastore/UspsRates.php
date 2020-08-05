@@ -103,6 +103,8 @@ class UspsRates extends DataStoreAbstract
             throw new \InvalidArgumentException('Wrong Service type: ' . $record['Service']);
         }
         switch ($record['Container']) {
+            case 'CUBIC PARCELS':
+                return 'Priority Mail Cubic';
             case 'VARIABLE':
                 return 'Priority Mail';
             case 'FLAT RATE ENVELOPE':
