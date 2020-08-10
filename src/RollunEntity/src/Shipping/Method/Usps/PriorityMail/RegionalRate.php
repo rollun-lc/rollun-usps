@@ -17,6 +17,11 @@ use rollun\Entity\Shipping\ShippingRequest;
 class RegionalRate extends ShippingsAbstract
 {
     /**
+     * @var bool
+     */
+    protected $canShipDangerous = false;
+
+    /**
      * Click_N_Shipp => ['ShortName', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      */
     const USPS_BOXES

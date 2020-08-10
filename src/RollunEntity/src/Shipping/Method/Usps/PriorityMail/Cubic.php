@@ -18,6 +18,11 @@ use rollun\Entity\Shipping\ShippingRequest;
 class Cubic extends ShippingsAbstract
 {
     /**
+     * @var bool
+     */
+    protected $canShipDangerous = false;
+
+    /**
      * Click_N_Shipp => ['id', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      *
      * 1) The cubic pricing for your USPS package is measured by calculating: Length x Width x Height / 1728 = Cubic Feet.

@@ -18,6 +18,11 @@ use rollun\Entity\Shipping\ShippingRequest;
 class Regular extends ShippingsAbstract
 {
     /**
+     * @var bool
+     */
+    protected $canShipDangerous = false;
+
+    /**
      * Click_N_Shipp => ['id', 'Click_N_Shipp', 'USPS_API_Service', 'USPS_API_FirstClassMailType', 'USPS_API_Container', 'Width', 'Length', 'Height', 'Weight']
      *
      * 1) The weight limit for Priority Mail items is 70 lbs.
