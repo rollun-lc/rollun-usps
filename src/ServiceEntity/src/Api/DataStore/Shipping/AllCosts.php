@@ -16,7 +16,6 @@ use rollun\datastore\DataStore\Traits\NoSupportUpdateTrait;
 use rollun\datastore\DataStore\Memory;
 use rollun\datastore\DataStore\DataStoreAbstract;
 use rollun\utils\Json\Serializer;
-use Xiag\Rql\Parser\Node\LimitNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\EqNode;
 use Xiag\Rql\Parser\Node\Query\ScalarOperator\NeNode;
 use Xiag\Rql\Parser\Node\SortNode;
