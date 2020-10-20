@@ -18,7 +18,7 @@ use rollun\Entity\Subject\Address;
  */
 class AuDropShip extends LevelBasedShippingMethod
 {
-    const ZIP_FROM = '46268';
+    const ZIP_FROM = '04401';
 
     /**
      * @var array
@@ -27,7 +27,7 @@ class AuDropShip extends LevelBasedShippingMethod
         = [
             // weight, price
             [10, 8.5], // до 10 lbs - $8.50
-            [70, 10.5] // после 10 lbs - $10.5
+            [70, 8.5] // после 10 lbs - $10.5
         ];
 
     /**
