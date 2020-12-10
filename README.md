@@ -86,3 +86,61 @@ return [
 PackagePacker это микросервис которые предоставляет API для https://github.com/betterwaysystems/packer.
 
 Укажите `PACKAGE_PACKER_API_URL` в env для того чтобы библиотека могла получать данные по API.
+
+### Получение названия зоны доставки с помощью USPS API
+
+Метод взят с страницы https://postcalc.usps.com/DomesticZoneChart (вторая вкладка). Метод позволяет получить зону в которой находится zip получателя относительно zip отправителя.
+
+#### Пример curl запроса
+
+```sh
+curl 'https://postcalc.usps.com/DomesticZoneChart/GetZone?origin=10001&destination=10001&shippingDate=12%2F10%2F2020&_=1607610825151' \
+-X 'GET' \
+-H 'Accept: application/json, text/javascript, */*; q=0.01' \
+-H 'Accept-Language: en-gb' \
+-H 'Host: postcalc.usps.com' \
+-H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.3 Safari/605.1.15' \
+-H 'Referer: https://postcalc.usps.com/DomesticZoneChart' \
+-H 'Accept-Encoding: gzip, deflate, br' \
+-H 'Connection: keep-alive' \
+-H 'X-Requested-With: XMLHttpRequest'
+```
+
+Обязательные параметры
+* origin - zip отправителя
+* destination - zip получателя
+* shippingDate - дата отправки
+* _ - текущий timestamp с миллисекундами (пример - 1607610825151). Без этого параметра запрос работает, но сайт USPS его шлет.
+
+Код ответа всегда ожидается 200, даже при неправильных параметрах.
+
+Пример ответа - 
+
+```json5
+{
+  "OriginError":"",
+  "DestinationError":"",
+  "ShippingDateError":"",
+  "PageError":"",
+  "EffectiveDate":"December 1, 2020",
+  "ZoneInformation":"The Zone is 1. This is a Local zone. The destination ZIP Code is within the same NDC as the origin ZIP Code."
+}
+```
+ZoneInformation - Название зоны всегда будет первым предложением и будет в формате (по крайней мере судя по тестам).
+```
+The Zone is <zone_number>
+```
+
+Пример ответа с ошибкой, при не указаной дате - 
+
+```json5
+{
+  "OriginError":"",
+  "DestinationError":"",
+  "ShippingDateError":"Mailing date is invalid.",
+  "PageError":"",
+  "EffectiveDate":"",
+  "ZoneInformation":""
+}
+```
+
