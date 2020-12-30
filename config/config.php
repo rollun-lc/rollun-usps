@@ -29,7 +29,6 @@ $aggregator = new ConfigAggregator([
     \Zend\Cache\ConfigProvider::class,
     \Zend\Mail\ConfigProvider::class,
     \Zend\Db\ConfigProvider::class,
-    \Zend\Log\ConfigProvider::class,
     \Zend\Validator\ConfigProvider::class,
     \Zend\HttpHandlerRunner\ConfigProvider::class,
     \Zend\Expressive\ConfigProvider::class,
