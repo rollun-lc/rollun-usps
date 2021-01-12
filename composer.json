@@ -44,7 +44,7 @@
     "ext-mbstring": "*",
     "code-tool/jaeger-client-php": "^2.16",
     "guzzlehttp/guzzle": "^6.5",
-    "rollun-com/rollun-callback": "^5.2",
+    "rollun-com/rollun-callback": "^5.2||^6",
     "rollun-com/rollun-datastore": "^6",
     "symfony/dotenv": "^4.2",
     "vinceg/usps-php-api": "^1.0",
