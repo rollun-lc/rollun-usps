@@ -5,7 +5,7 @@
  * PHP version 7.1
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -27,16 +27,16 @@
  * Do not edit the class manually.
  */
 
-namespace OpenAPI\Client\Model;
+namespace rollun\Usps\OpenAPI\Client\Model;
 
 use \ArrayAccess;
-use \OpenAPI\Client\ObjectSerializer;
+use \rollun\Usps\OpenAPI\Client\ObjectSerializer;
 
 /**
  * Result Class Doc Comment
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -59,8 +59,8 @@ class Result implements ModelInterface, ArrayAccess
     protected static $openAPITypes = [
         'cost' => 'float',
         'space_utilization' => 'float',
-        'containers' => '\OpenAPI\Client\Model\ResponseContainer[]',
-        'items' => '\OpenAPI\Client\Model\ResponseItem[]'
+        'containers' => '\rollun\Usps\OpenAPI\Client\Model\ResponseContainer[]',
+        'items' => '\rollun\Usps\OpenAPI\Client\Model\ResponseItem[]'
     ];
 
     /**
@@ -273,7 +273,7 @@ class Result implements ModelInterface, ArrayAccess
     /**
      * Gets containers
      *
-     * @return \OpenAPI\Client\Model\ResponseContainer[]|null
+     * @return \rollun\Usps\OpenAPI\Client\Model\ResponseContainer[]|null
      */
     public function getContainers()
     {
@@ -283,7 +283,7 @@ class Result implements ModelInterface, ArrayAccess
     /**
      * Sets containers
      *
-     * @param \OpenAPI\Client\Model\ResponseContainer[]|null $containers containers
+     * @param \rollun\Usps\OpenAPI\Client\Model\ResponseContainer[]|null $containers containers
      *
      * @return $this
      */
@@ -297,7 +297,7 @@ class Result implements ModelInterface, ArrayAccess
     /**
      * Gets items
      *
-     * @return \OpenAPI\Client\Model\ResponseItem[]|null
+     * @return \rollun\Usps\OpenAPI\Client\Model\ResponseItem[]|null
      */
     public function getItems()
     {
@@ -307,7 +307,7 @@ class Result implements ModelInterface, ArrayAccess
     /**
      * Sets items
      *
-     * @param \OpenAPI\Client\Model\ResponseItem[]|null $items items
+     * @param \rollun\Usps\OpenAPI\Client\Model\ResponseItem[]|null $items items
      *
      * @return $this
      */
