@@ -4,7 +4,7 @@
  * PHP version 7.1
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -26,15 +26,13 @@
  * Do not edit the class manually.
  */
 
-namespace OpenAPI\Client;
-
-use \Exception;
+namespace rollun\Usps\OpenAPI\Client;
 
 /**
  * ApiException Class Doc Comment
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */

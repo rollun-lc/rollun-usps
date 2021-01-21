@@ -4,7 +4,7 @@
  * PHP version 7.1
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -26,7 +26,7 @@
  * Do not edit the class manually.
  */
 
-namespace OpenAPI\Client\Api;
+namespace rollun\Usps\OpenAPI\Client\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
@@ -34,16 +34,16 @@ use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Psr7\MultipartStream;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\RequestOptions;
-use OpenAPI\Client\ApiException;
-use OpenAPI\Client\Configuration;
-use OpenAPI\Client\HeaderSelector;
-use OpenAPI\Client\ObjectSerializer;
+use rollun\Usps\OpenAPI\Client\ApiException;
+use rollun\Usps\OpenAPI\Client\Configuration;
+use rollun\Usps\OpenAPI\Client\HeaderSelector;
+use rollun\Usps\OpenAPI\Client\ObjectSerializer;
 
 /**
  * PackerApi Class Doc Comment
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -120,11 +120,11 @@ class PackerApi
      *
      * Pack collection of items into collection of containers
      *
-     * @param  \OpenAPI\Client\Model\Body $body body (required)
+     * @param  \rollun\Usps\OpenAPI\Client\Model\Body $body body (required)
      *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response
+     * @throws \rollun\Usps\OpenAPI\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return \OpenAPI\Client\Model\Result
+     * @return \rollun\Usps\OpenAPI\Client\Model\Result
      */
     public function pack($body)
     {
@@ -137,11 +137,11 @@ class PackerApi
      *
      * Pack collection of items into collection of containers
      *
-     * @param  \OpenAPI\Client\Model\Body $body (required)
+     * @param  \rollun\Usps\OpenAPI\Client\Model\Body $body (required)
      *
-     * @throws \OpenAPI\Client\ApiException on non-2xx response
+     * @throws \rollun\Usps\OpenAPI\Client\ApiException on non-2xx response
      * @throws \InvalidArgumentException
-     * @return array of \OpenAPI\Client\Model\Result, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \rollun\Usps\OpenAPI\Client\Model\Result, HTTP status code, HTTP response headers (array of strings)
      */
     public function packWithHttpInfo($body)
     {
@@ -178,20 +178,20 @@ class PackerApi
             $responseBody = $response->getBody();
             switch($statusCode) {
                 case 200:
-                    if ('\OpenAPI\Client\Model\Result' === '\SplFileObject') {
+                    if ('\rollun\Usps\OpenAPI\Client\Model\Result' === '\SplFileObject') {
                         $content = $responseBody; //stream goes to serializer
                     } else {
                         $content = (string) $responseBody;
                     }
 
                     return [
-                        ObjectSerializer::deserialize($content, '\OpenAPI\Client\Model\Result', []),
+                        ObjectSerializer::deserialize($content, '\rollun\Usps\OpenAPI\Client\Model\Result', []),
                         $response->getStatusCode(),
                         $response->getHeaders()
                     ];
             }
 
-            $returnType = '\OpenAPI\Client\Model\Result';
+            $returnType = '\rollun\Usps\OpenAPI\Client\Model\Result';
             $responseBody = $response->getBody();
             if ($returnType === '\SplFileObject') {
                 $content = $responseBody; //stream goes to serializer
@@ -210,7 +210,7 @@ class PackerApi
                 case 200:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\OpenAPI\Client\Model\Result',
+                        '\rollun\Usps\OpenAPI\Client\Model\Result',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -225,7 +225,7 @@ class PackerApi
      *
      * Pack collection of items into collection of containers
      *
-     * @param  \OpenAPI\Client\Model\Body $body (required)
+     * @param  \rollun\Usps\OpenAPI\Client\Model\Body $body (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -245,14 +245,14 @@ class PackerApi
      *
      * Pack collection of items into collection of containers
      *
-     * @param  \OpenAPI\Client\Model\Body $body (required)
+     * @param  \rollun\Usps\OpenAPI\Client\Model\Body $body (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
     public function packAsyncWithHttpInfo($body)
     {
-        $returnType = '\OpenAPI\Client\Model\Result';
+        $returnType = '\rollun\Usps\OpenAPI\Client\Model\Result';
         $request = $this->packRequest($body);
 
         return $this->client
@@ -292,7 +292,7 @@ class PackerApi
     /**
      * Create request for operation 'pack'
      *
-     * @param  \OpenAPI\Client\Model\Body $body (required)
+     * @param  \rollun\Usps\OpenAPI\Client\Model\Body $body (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request

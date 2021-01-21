@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Product\Container;
 
-use OpenAPI\Client\Model\Item as ApiItem;
-use OpenAPI\Client\Api\PackerApi;
-use OpenAPI\Client\Model\Result;
+use rollun\Usps\OpenAPI\Client\Model\Item as ApiItem;
+use rollun\Usps\OpenAPI\Client\Api\PackerApi;
+use rollun\Usps\OpenAPI\Client\Model\Result;
 use rollun\Entity\Product\Item\ItemInterface;
 
 /**
@@ -142,13 +142,13 @@ class Box extends ContainerAbstract
         ];
 
         // prepare request body
-        $body = (new \OpenAPI\Client\Model\Body())
-            ->setContainer([new \OpenAPI\Client\Model\Container($containerData)])
+        $body = (new \rollun\Usps\OpenAPI\Client\Model\Body())
+            ->setContainer([new \rollun\Usps\OpenAPI\Client\Model\Container($containerData)])
             ->setItems($items);
 
         try {
             $result = (new PackerApi(new \GuzzleHttp\Client()))->pack($body);
-        } catch (\OpenAPI\Client\ApiException $e) {
+        } catch (\rollun\Usps\OpenAPI\Client\ApiException $e) {
             $result = null;
         }
 

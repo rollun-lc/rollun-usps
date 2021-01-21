@@ -5,7 +5,7 @@
  * PHP version 7.1
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -27,16 +27,16 @@
  * Do not edit the class manually.
  */
 
-namespace OpenAPI\Client\Model;
+namespace rollun\Usps\OpenAPI\Client\Model;
 
 use \ArrayAccess;
-use \OpenAPI\Client\ObjectSerializer;
+use \rollun\Usps\OpenAPI\Client\ObjectSerializer;
 
 /**
  * Body Class Doc Comment
  *
  * @category Class
- * @package  OpenAPI\Client
+ * @package  rollun\Usps\OpenAPI\Client
  * @author   OpenAPI Generator team
  * @link     https://openapi-generator.tech
  */
@@ -57,8 +57,8 @@ class Body implements ModelInterface, ArrayAccess
       * @var string[]
       */
     protected static $openAPITypes = [
-        'container' => '\OpenAPI\Client\Model\Container[]',
-        'items' => '\OpenAPI\Client\Model\Item[]'
+        'container' => '\rollun\Usps\OpenAPI\Client\Model\Container[]',
+        'items' => '\rollun\Usps\OpenAPI\Client\Model\Item[]'
     ];
 
     /**
@@ -216,7 +216,7 @@ class Body implements ModelInterface, ArrayAccess
     /**
      * Gets container
      *
-     * @return \OpenAPI\Client\Model\Container[]|null
+     * @return \rollun\Usps\OpenAPI\Client\Model\Container[]|null
      */
     public function getContainer()
     {
@@ -226,7 +226,7 @@ class Body implements ModelInterface, ArrayAccess
     /**
      * Sets container
      *
-     * @param \OpenAPI\Client\Model\Container[]|null $container container
+     * @param \rollun\Usps\OpenAPI\Client\Model\Container[]|null $container container
      *
      * @return $this
      */
@@ -240,7 +240,7 @@ class Body implements ModelInterface, ArrayAccess
     /**
      * Gets items
      *
-     * @return \OpenAPI\Client\Model\Item[]
+     * @return \rollun\Usps\OpenAPI\Client\Model\Item[]
      */
     public function getItems()
     {
@@ -250,7 +250,7 @@ class Body implements ModelInterface, ArrayAccess
     /**
      * Sets items
      *
-     * @param \OpenAPI\Client\Model\Item[] $items items
+     * @param \rollun\Usps\OpenAPI\Client\Model\Item[] $items items
      *
      * @return $this
      */
