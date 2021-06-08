@@ -67,6 +67,6 @@ class RmDropShip extends LevelBasedShippingMethod
      */
     protected function getLevelCost(array $level): ?float
     {
-        return round($level[1] * 1.06, 2); // 6% add for cost
+        return round($level[1] * 1.03, 2); // 6% add for cost
     }
 }
