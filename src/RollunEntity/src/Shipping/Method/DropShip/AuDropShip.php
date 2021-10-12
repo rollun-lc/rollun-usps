@@ -47,7 +47,10 @@ class AuDropShip extends LevelBasedShippingMethod
         // Если вмещается в First-class- цена будет First-class
         $request = clone $shippingRequest;
         $request->addressOrigination = new Address(null, self::ZIP_FROM);
-        $firstClass = new Package('FtCls-Package');
+        $firstClass = new class('FtCls-Package') extends Package {
+            //https://trello.com/c/sx3qdqjY
+            const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.899]];
+        };
         if ($firstClass->canBeShipped($request)) {
             return $firstClass->getCost($request, $shippingDataOnly);
         }
