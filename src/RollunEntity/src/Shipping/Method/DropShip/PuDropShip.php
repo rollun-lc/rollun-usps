@@ -52,6 +52,10 @@ class PuDropShip extends LevelBasedShippingMethod
                     }
                 }
             }
+            //from howtobuy we send the isTire flag
+            if (!empty($shippingRequest->getAttribute('tire'))) {
+                return true;
+            }
         }
 
         return $this->isOversize($shippingRequest) === $level[0];

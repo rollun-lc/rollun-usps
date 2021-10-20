@@ -62,7 +62,6 @@ class Cubic extends ShippingsAbstract
                 if ($row[0] >= $cubicFeet) {
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
-
                     return $row[$zone];
                 }
             }
