@@ -45,7 +45,7 @@
     "code-tool/jaeger-client-php": "^2.16",
     "guzzlehttp/guzzle": "^6.5",
     "rollun-com/rollun-callback": "^5.2||^6",
-    "rollun-com/rollun-datastore": "^6",
+    "rollun-com/rollun-datastore": "^7",
     "symfony/dotenv": "^4.2",
     "vinceg/usps-php-api": "^1.0",
     "zendframework/zend-component-installer": "^2.1.1",
