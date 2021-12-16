@@ -26,8 +26,7 @@ class AuDropShip extends LevelBasedShippingMethod
     protected $levels
         = [
             // weight, price
-            [10, 8.5], // до 10 lbs - $8.50
-            [70, 8.5] // после 10 lbs - $10.5
+            [70, 8.5] // после 70 lbs - $8.5
         ];
 
     /**
@@ -44,15 +43,17 @@ class AuDropShip extends LevelBasedShippingMethod
      */
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
-        // Если вмещается в First-class- цена будет First-class
-        $request = clone $shippingRequest;
-        $request->addressOrigination = new Address(null, self::ZIP_FROM);
-        $firstClass = new class('FtCls-Package') extends Package {
-            //https://trello.com/c/sx3qdqjY
-            const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.899]];
-        };
-        if ($firstClass->canBeShipped($request)) {
-            return $firstClass->getCost($request, $shippingDataOnly);
+        if($shippingRequest->item->getWeight() < 0.8) {
+            // Если вес менье 0.8 и вмещается в First-class- цена будет First-class
+            $request = clone $shippingRequest;
+            $request->addressOrigination = new Address(null, self::ZIP_FROM);
+            $firstClass = new class('FtCls-Package') extends Package {
+                //https://trello.com/c/sx3qdqjY
+                const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.899]];
+            };
+            if ($firstClass->canBeShipped($request)) {
+                return $firstClass->getCost($request, $shippingDataOnly);
+            }
         }
 
         return parent::getCost($shippingRequest, $shippingDataOnly);
