@@ -28,7 +28,7 @@ class FlatRate extends ShippingsAbstract
      */
     const USPS_BOXES = [
         ['PM-FR-Env', 'Priority Mail Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 8.95],
-        ['PM-FR-LegalEnv', 'Priority Mail Legal Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'LEGAL FLAT RATE ENVELOPE', 15, 9.5, 0, 70, 8.25],
+        ['PM-FR-LegalEnv', 'Priority Mail Legal Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'LEGAL FLAT RATE ENVELOPE', 15, 9.5, 0, 70, 9.25],
         ['PM-FR-Pad-Env', 'Priority Mail Flat Rate Padded Envelope', 'PRIORITY COMMERCIAL', '', 'PADDED FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 9.65],
         ['PM-FR-SmBox', 'Priority Mail Small Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'SM FLAT RATE BOX', 8.625, 5.375, 1.625, 70, 9.45],
         ['PM-FR-MdBox1', 'Priority Mail Medium Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'MD FLAT RATE BOX', 11, 8.5, 5.5, 70, 16.10],
