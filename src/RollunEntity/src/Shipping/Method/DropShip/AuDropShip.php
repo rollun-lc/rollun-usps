@@ -26,7 +26,7 @@ class AuDropShip extends LevelBasedShippingMethod
     protected $levels
         = [
             // weight, price
-            [70, 8.5] // после 70 lbs - $8.5
+            [70, 9.5] // после 70 lbs - $9.5
         ];
 
     /**
