@@ -147,7 +147,7 @@ class Regular extends ShippingsAbstract
                 return false;
             }
 
-            return true;
+            return parent::canShipDangerousMaterials($shippingRequest);
         }
 
         return parent::canBeShipped($shippingRequest);
