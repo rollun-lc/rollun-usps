@@ -43,11 +43,13 @@ class AuDropShip extends LevelBasedShippingMethod
      */
     public function getCost(ShippingRequest $shippingRequest, $shippingDataOnly = false)
     {
-        if($shippingRequest->item->getWeight() < 0.8) {
-            // Если вес менье 0.8 и вмещается в First-class- цена будет First-class
+        $isFirstClass = $shippingRequest->getAttribute('isFirstClass');
+
+        if ($isFirstClass || (is_null($isFirstClass) && $shippingRequest->item->getWeight() < 0.8)) {
+            // Если вес меньше 0.8 и вмещается в First-class - цена будет First-class
             $request = clone $shippingRequest;
             $request->addressOrigination = new Address(null, self::ZIP_FROM);
-            $firstClass = new class('FtCls-Package') extends Package {
+            $firstClass = new class ('FtCls-Package') extends Package {
                 //https://trello.com/c/sx3qdqjY
                 const USPS_BOXES = [['FtCls-Package', 'First-Class Package Service', 'FIRST CLASS COMMERCIAL', 'PACKAGE SERVICE', '', 22, 18, 15, 0.899]];
             };
