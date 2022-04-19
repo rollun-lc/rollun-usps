@@ -34,11 +34,11 @@ class ShippingDataManager
         'FLAT RATE ENVELOPE',
         'LEGAL FLAT RATE ENVELOPE',
         'PADDED FLAT RATE ENVELOPE',
-        'SM FLAT RATE BOX',
-        'MD FLAT RATE BOX',
-        'LG FLAT RATE BOX',
-        'REGIONAL RATE BOX A',
-        'REGIONAL RATE BOX B',
+//        'SM FLAT RATE BOX',
+//        'MD FLAT RATE BOX',
+//        'LG FLAT RATE BOX',
+//        'REGIONAL RATE BOX A',
+//        'REGIONAL RATE BOX B',
         'VARIABLE',
     ];
 
