@@ -12,7 +12,6 @@ use rollun\Entity\Shipping\Method\Usps\PriorityMail\Cubic;
 use rollun\Entity\Shipping\Method\Usps\ParcelSelect\Ground;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\FlatRate;
 use rollun\Entity\Shipping\Method\Usps\FirstClass\Package;
-use rollun\Entity\Shipping\Method\Usps\PriorityMail\RegionalRate;
 use rollun\Entity\Shipping\Method\Usps\PriorityMail\Regular;
 use rollun\Entity\Shipping\Method\ShippingMethodProvider;
 use rollun\Entity\Usps\ShippingData;
@@ -34,7 +33,7 @@ class UspsProvider extends ShippingMethodProvider
     {
         if ($shippingMethods === null) {
             $shippingMethods = [];
-            $classes = [FlatRate::class, Package::class, RegionalRate::class, Regular::class, Ground::class, Cubic::class];
+            $classes = [FlatRate::class, Package::class, Regular::class, Ground::class, Cubic::class];
             foreach ($classes as $oneClass) {
                 $shortNames = $oneClass::getAllShortNames();
                 foreach ($shortNames as $shortName) {

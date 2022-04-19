@@ -30,11 +30,11 @@ class FlatRate extends ShippingsAbstract
         ['PM-FR-Env', 'Priority Mail Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 8.95],
         ['PM-FR-LegalEnv', 'Priority Mail Legal Flat Rate Envelope', 'PRIORITY COMMERCIAL', '', 'LEGAL FLAT RATE ENVELOPE', 15, 9.5, 0, 70, 9.25],
         ['PM-FR-Pad-Env', 'Priority Mail Flat Rate Padded Envelope', 'PRIORITY COMMERCIAL', '', 'PADDED FLAT RATE ENVELOPE', 12.5, 9.5, 0, 70, 9.65],
-        ['PM-FR-SmBox', 'Priority Mail Small Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'SM FLAT RATE BOX', 8.625, 5.375, 1.625, 70, 9.45],
-        ['PM-FR-MdBox1', 'Priority Mail Medium Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'MD FLAT RATE BOX', 11, 8.5, 5.5, 70, 16.10],
-        ['PM-FR-MdBox2', 'Priority Mail Medium Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'MD FLAT RATE BOX', 13.625, 11.875, 3.375, 70, 16.10],
-        ['PM-FR-LgBox', 'Priority Mail Large Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'LG FLAT RATE BOX', 12, 12, 5.5, 70, 21.50],
-        ['PM-FR-BgBox', 'Priority Mail Large Flat Rate Board Game Box', 'PRIORITY COMMERCIAL', '', 'LG FLAT RATE BOX', 23.687, 11.75, 3, 70, 21.50],
+//        ['PM-FR-SmBox', 'Priority Mail Small Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'SM FLAT RATE BOX', 8.625, 5.375, 1.625, 70, 9.45],
+//        ['PM-FR-MdBox1', 'Priority Mail Medium Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'MD FLAT RATE BOX', 11, 8.5, 5.5, 70, 16.10],
+//        ['PM-FR-MdBox2', 'Priority Mail Medium Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'MD FLAT RATE BOX', 13.625, 11.875, 3.375, 70, 16.10],
+//        ['PM-FR-LgBox', 'Priority Mail Large Flat Rate Box', 'PRIORITY COMMERCIAL', '', 'LG FLAT RATE BOX', 12, 12, 5.5, 70, 21.50],
+//        ['PM-FR-BgBox', 'Priority Mail Large Flat Rate Board Game Box', 'PRIORITY COMMERCIAL', '', 'LG FLAT RATE BOX', 23.687, 11.75, 3, 70, 21.50],
     ];
 
     /**
