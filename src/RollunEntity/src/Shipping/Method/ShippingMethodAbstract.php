@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method;
 
+use Psr\Log\LoggerInterface;
+use rollun\dic\InsideConstruct;
 use rollun\Entity\Product\Item\ItemInterface;
 use rollun\Entity\Product\Container\ContainerInterface as ProductContainerInterface;
 use rollun\Entity\Shipping\ShippingRequest;
@@ -44,6 +46,11 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
     protected $container;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $logger;
+
+    /**
      * @var bool
      */
     protected $canShipDangerous = true;
@@ -60,6 +67,9 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
         $this->shortName = $shortName;
         $this->maxWeight = $maxWeight;
         $this->container = $container;
+        InsideConstruct::setConstructParams([
+            'logger' => LoggerInterface::class,
+        ]);
     }
 
     /**
@@ -216,7 +226,18 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
      */
     protected function createDomesticZoneFile(string $treeDigitsZip, string $fileName): array
     {
-        $content = @file_get_contents(sprintf(self::DOMESTIC_ZONE_API, $treeDigitsZip, str_replace('_', '%2F', (new \DateTime())->format('m_d_Y'))));
+        $path = sprintf(
+            self::DOMESTIC_ZONE_API,
+            $treeDigitsZip,
+            str_replace('_', '%2F', (new \DateTime())->format('m_d_Y'))
+        );
+        if (!empty($this->logger)) {
+            $this->logger->info("Request to USPS API", [
+                'request' => $path,
+                'class' => get_class($this),
+            ]);
+        }
+        $content = @file_get_contents($path);
         if (!empty($content)) {
             // parse content
             $content = json_decode($content, true);

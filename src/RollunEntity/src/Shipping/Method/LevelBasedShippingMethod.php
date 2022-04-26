@@ -3,6 +3,8 @@ declare(strict_types=1);
 
 namespace rollun\Entity\Shipping\Method;
 
+use Psr\Log\LoggerInterface;
+use rollun\dic\InsideConstruct;
 use rollun\Entity\Shipping\ShippingRequest;
 
 /**
@@ -28,10 +30,18 @@ abstract class LevelBasedShippingMethod extends ShippingMethodAbstract
      */
     public function __construct(string $shortName, array $levels = null)
     {
+        $initLevels = $this->levels;
+
+        InsideConstruct::setConstructParams([
+            'logger' => LoggerInterface::class,
+        ]);
+
         $this->shortName = $shortName;
 
         if ($levels !== null) {
             $this->levels = $levels;
+        } else {
+            $this->levels = $initLevels;
         }
     }
 
