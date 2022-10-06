@@ -18,7 +18,7 @@ class PuPickUp extends AbstractPickUpProvider
      */
     protected function getAddCost(): float
     {
-        return 1;
+        return 1.3;
     }
 
     /**
