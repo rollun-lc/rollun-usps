@@ -83,7 +83,7 @@ class Package extends ShippingsAbstract
         return 'Can not be shipped';
     }
 
-    private function increaseCost(int $planWeight, int $zone, float $cost): float
+    private function increaseCost(float $planWeight, int $zone, float $cost): float
     {
         // convert to lb
         $planWeight = $planWeight / 16;

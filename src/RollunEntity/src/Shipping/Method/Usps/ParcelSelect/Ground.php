@@ -178,7 +178,7 @@ class Ground extends ShippingsAbstract
         return $result;
     }
 
-    private function increaseCost(int $planWeight, int $zone, float $cost): float
+    private function increaseCost(float $planWeight, int $zone, float $cost): float
     {
         if ($planWeight <= 10) {
             if ($zone <= 4) {
