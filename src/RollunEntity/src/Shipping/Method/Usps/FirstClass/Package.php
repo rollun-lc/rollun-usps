@@ -74,11 +74,40 @@ class Package extends ShippingsAbstract
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 
-                    return $row[$zone];
+                    // temporary increase cost for winter holidays
+                    return $this->increaseCost($row[0], $zone, $row[$zone]);
                 }
             }
         }
 
         return 'Can not be shipped';
+    }
+
+    private function increaseCost(float $planWeight, int $zone, float $cost): float
+    {
+        // convert to lb
+        $planWeight = $planWeight / 16;
+
+        if ($planWeight <= 10) {
+            if ($zone <= 4) {
+                $cost += 0.25;
+            } else {
+                $cost += 0.4;
+            }
+        } elseif ($planWeight <= 25) {
+            if ($zone <= 4) {
+                $cost += 0.75;
+            } else {
+                $cost += 1.6;
+            }
+        } elseif ($planWeight <= 70) {
+            if ($zone <= 4) {
+                $cost += 3;
+            } else {
+                $cost += 5.5;
+            }
+        }
+
+        return $cost;
     }
 }

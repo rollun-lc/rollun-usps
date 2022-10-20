@@ -34,7 +34,7 @@ class Ground extends ShippingsAbstract
      */
     const USPS_ZONE_COSTS
         = [
-            /* oz, zone 1, zone 2, zone 3, zone 4, zone 5, zone 6, zone 7, zone 8, zone 9*/
+            /* lb, zone 1, zone 2, zone 3, zone 4, zone 5, zone 6, zone 7, zone 8, zone 9*/
             [1, 7.26, 7.26, 7.56, 7.77, 8.38, 8.59, 8.72, 8.9, 8.9],
             [2, 7.84, 7.84, 8.01, 8.29, 9.3, 10.54, 11.01, 11.54, 11.54],
             [3, 8, 8, 8.35, 8.72, 10.04, 12.55, 13.75, 15.8, 15.8],
@@ -127,7 +127,8 @@ class Ground extends ShippingsAbstract
                     // get zone
                     $zone = $this->getZone($shippingRequest->getOriginationZipCode(), $shippingRequest->getDestinationZipCode());
 
-                    return $row[$zone];
+                    // temporary increase cost for winter holidays
+                    return $this->increaseCost($row[0], $zone, $row[$zone]);
                 }
             }
         }
@@ -175,5 +176,30 @@ class Ground extends ShippingsAbstract
         $result = $dimensions['Girth'] + $dimensions['Length'];
 
         return $result;
+    }
+
+    private function increaseCost(float $planWeight, int $zone, float $cost): float
+    {
+        if ($planWeight <= 10) {
+            if ($zone <= 4) {
+                $cost += 0.25;
+            } else {
+                $cost += 0.4;
+            }
+        } elseif ($planWeight <= 25) {
+            if ($zone <= 4) {
+                $cost += 0.75;
+            } else {
+                $cost += 1.6;
+            }
+        } elseif ($planWeight <= 70) {
+            if ($zone <= 4) {
+                $cost += 3;
+            } else {
+                $cost += 5.5;
+            }
+        }
+
+        return $cost;
     }
 }
