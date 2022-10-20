@@ -181,6 +181,13 @@ abstract class ShippingMethodAbstract implements ShippingMethodInterface, Shippi
      */
     public function getZone(string $zipFrom, string $zipTo): int
     {
+        // У ShippingMethodAbstract есть много наследников, и родительский конструктор в некоторых не вызывается,
+        // поэтому domesticZoneService не всегда проинициализирован.
+        // (Раньше функционал domesticZoneService был в этом классе, но понадобилось его вынести в отдельный)
+        // Было решено, что проще всего добавить тут проверку, и инициализировать его если поле пустое
+        if (empty($this->domesticZoneService)) {
+            $this->domesticZoneService = $this->createDomesticZoneService();
+        }
         return $this->domesticZoneService->getZone($zipFrom, $zipTo);
     }
 
