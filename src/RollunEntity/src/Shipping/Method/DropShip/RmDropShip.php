@@ -24,7 +24,7 @@ class RmDropShip extends LevelBasedShippingMethod
     protected $levels
         = [
             // weight, price
-            [9, 8.05], // If weight is 9 Lbs or less --> $8.05
+            [9, 8.61], // If weight is 9 Lbs or less --> $8.61
         ];
 
     /**
@@ -47,7 +47,7 @@ class RmDropShip extends LevelBasedShippingMethod
 
         while ($lastWeight < self::MAX_WEIGHT) {
             $lastWeight++;
-            $lastCost = $lastCost + 0.6; // +1 Lbs=+$0.6
+            $lastCost = $lastCost + 0.64; // +1 Lbs=+$0.64
             $levels[] = [$lastWeight, $lastCost];
         }
 
