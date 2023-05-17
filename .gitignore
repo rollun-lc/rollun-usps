@@ -1,6 +1,7 @@
 .idea
 .env
 composer.phar
+composer.lock
 clover.xml
 coveralls-upload.json
 vendor/
