@@ -26,6 +26,9 @@ if (file_exists('.env')) {
 $appEnv = getenv('APP_ENV');
 
 $aggregator = new ConfigAggregator([
+    \rollun\repository\ConfigProvider::class,
+    \rollun\utils\Metrics\ConfigProvider::class,
+    \rollun\utils\FailedProcesses\ConfigProvider::class,
     \Zend\Cache\ConfigProvider::class,
     \Zend\Mail\ConfigProvider::class,
     \Zend\Db\ConfigProvider::class,
