@@ -21,9 +21,8 @@ class WpsDropShip extends LevelBasedShippingMethod
      */
     protected $levels
         = [
-            // weight, price
-            [40, 16], // $16 DS - до 40 lbs
-            [999, 25] // $25 DS больше 40 lbs
+            // max weight, price
+            [999, 9.5] // $9.5 for all
         ];
 
     /**
